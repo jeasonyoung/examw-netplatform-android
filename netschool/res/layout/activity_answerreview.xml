@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/ashen"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/TopTitleLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="50.0dip"
+        android:background="@drawable/topbj"
+        android:orientation="vertical" >
+
+        <ImageButton
+            android:id="@+id/returnbtn"
+            android:layout_width="50.0dip"
+            android:layout_height="30.0dip"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10.0dip"
+            android:background="@color/none"
+            android:scaleType="centerCrop"
+            android:src="@drawable/returnbtn1" />
+
+        <TextView
+            android:id="@+id/TopTitle1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@color/none"
+            android:fadingEdge="vertical"
+            android:gravity="center"
+            android:text="@string/myAnswerStr"
+            android:textColor="@color/white"
+            android:textSize="@dimen/title_huge_size" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <RelativeLayout
+            android:id="@+id/loadLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center" >
+
+            <ProgressBar
+                android:id="@+id/loadingBar"
+                style="@android:style/Widget.ProgressBar.Inverse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/loadingBar"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10.0dip"
+                android:text="@string/SubloadStr"
+                android:textColor="@color/black" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/contentLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+            <LinearLayout
+                android:id="@+id/answerLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/contenttext_bg1"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="60.0dip"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical" >
+
+                    <ImageView
+                        android:id="@+id/answererImg"
+                        android:layout_width="40.0dip"
+                        android:layout_height="40.0dip"
+                        android:layout_marginTop="10.0dip"
+                        android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:id="@+id/answererStr"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10.0dip"
+                        android:text="@string/app_name"
+                        android:textColor="@color/blue"
+                        android:textSize="@dimen/text_little_size" />
+
+                    <TextView
+                        android:id="@+id/answererId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_little_size" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/answerStr"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5.0dip"
+                        android:text="@string/aboutText3"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_small_size" />
+
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" >
+
+                        <TextView
+                            android:id="@+id/answerTimeText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="5.0dip"
+                            android:textColor="@color/grey"
+                            android:textSize="@dimen/text_little_size" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/bestNumLayout"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" >
+
+                        <ImageView
+                            android:id="@+id/favourImg"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@+id/favourNumText"
+                            android:src="@drawable/favour" />
+
+                        <TextView
+                            android:id="@+id/favourNumText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="5.0dip"
+                            android:layout_toLeftOf="@+id/opposeImg"
+                            android:textColor="@color/blue" />
+
+                        <ImageView
+                            android:id="@+id/opposeImg"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@+id/opposeNumText"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/oppose" />
+
+                        <TextView
+                            android:id="@+id/opposeNumText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="5.0dip"
+                            android:layout_toLeftOf="@+id/pinglunImg"
+                            android:textColor="@color/blue" />
+
+                        <ImageView
+                            android:id="@+id/pinglunImg"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@+id/pinglunNumText"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/pinglun2" />
+
+                        <TextView
+                            android:id="@+id/pinglunNumText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10.0dip"
+                            android:textColor="@color/blue" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/endLayout"
+                android:layout_below="@id/answerLayout"
+                android:orientation="vertical" >
+
+                <ListView
+                    android:id="@+id/reviewList"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:cacheColorHint="@color/none"
+                    android:divider="@color/white"
+                    android:fadingEdge="none" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/endLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:background="@color/ashen2" >
+
+                <EditText
+                    android:id="@+id/reviewTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10.0dip"
+                    android:layout_marginTop="10.0dip"
+                    android:layout_toLeftOf="@+id/reviewBtn"
+                    android:hint="@string/reviewHint"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_small_size" />
+
+                <Button
+                    android:id="@+id/reviewBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="5.0dip"
+                    android:text="@string/pinglun" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </FrameLayout>
+
+</LinearLayout>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/EndBtnLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:background="@color/darkgray"
+    android:baselineAligned="false"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:weightSum="3.0" >
+
+    <LinearLayout
+        android:id="@+id/CourseCenter_layout_btn"
+        android:layout_width="0.0dip"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2.0dip"
+        android:layout_weight="1.0"
+        android:background="@drawable/bottom_big_btn"
+        android:clickable="true"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/CourseCenterImg"
+            android:layout_width="wrap_content"
+            android:layout_height="30.0dip"
+            android:background="@color/none"
+            android:paddingTop="5.0dip"
+            android:scaleType="centerInside"
+            android:src="@drawable/end_btn_img1" />
+
+        <TextView
+            android:id="@+id/endtext1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5.0dip"
+            android:text="@string/CourseCenter"
+            android:textColor="@color/white"
+            android:textSize="14.0dip" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/MyCourse_layout_btn"
+        android:layout_width="0.0dip"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2.0dip"
+        android:layout_weight="1.0"
+        android:background="@drawable/end2_btn_bg"
+        android:clickable="true"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/MyCourseImg"
+            android:layout_width="wrap_content"
+            android:layout_height="30.0dip"
+            android:background="@color/none"
+            android:paddingTop="5.0dip"
+            android:src="@drawable/end_btn_img2" />
+
+        <TextView
+            android:id="@+id/endtext2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5.0dip"
+            android:text="@string/CourseDown"
+            android:textColor="@color/white"
+            android:textSize="14.0dip" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/LearningRecord_layout_btn"
+        android:layout_width="0.0dip"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2.0dip"
+        android:layout_weight="1.0"
+        android:background="@drawable/end2_btn_bg"
+        android:clickable="true"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/LearningRecordImg"
+            android:layout_width="wrap_content"
+            android:layout_height="30.0dip"
+            android:background="@color/none"
+            android:src="@drawable/end_btn_img3" />
+
+        <TextView
+            android:id="@+id/endtext3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/LearningRecord"
+            android:textColor="@color/white"
+            android:textSize="14.0dip" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:background="@color/ashen" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:orientation="vertical" android:id="@+id/TopTitleLayout" android:background="@drawable/topbj" android:layout_width="fill_parent" android:layout_height="60.0dip">
+        <ImageButton android:id="@+id/returnbtn" android:background="@color/none" android:layout_width="50.0dip" android:layout_height="30.0dip" android:layout_marginLeft="10.0dip" android:src="@drawable/returnbtn1" android:scaleType="centerCrop" android:layout_centerVertical="true" />
+        <TextView android:textSize="25.0sp" android:textColor="@color/white" android:gravity="center" android:id="@+id/TopTitle1" android:background="@color/none" android:fadingEdge="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="@string/simulated_examsStr" android:layout_centerVertical="true" />
+    </RelativeLayout>
+    <FrameLayout android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <include layout="@layout/loading_layout" />
+        <LinearLayout android:id="@+id/questionContentLayout" android:layout_width="fill_parent" android:layout_height="fill_parent">
+            <ExpandableListView android:id="@+id/question_exam_expandListView" android:scrollbars="none" android:fadingEdge="none" android:layout_width="fill_parent" android:layout_height="fill_parent" android:drawSelectorOnTop="false" android:divider="@color/white" />
+        </LinearLayout>
+        <include layout="@layout/nodata_layout" />
+    </FrameLayout>
+</LinearLayout>

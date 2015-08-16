@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:background="@color/none" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TableLayout android:layout_width="fill_parent" android:layout_height="wrap_content">
+        <TableRow>
+            <TextView android:textSize="@dimen/text_large_size" android:textStyle="bold" android:textColor="@color/white" android:padding="5.0dip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/scoreTitleStr" />
+            <TextView android:textSize="@dimen/text_medium_size" android:textColor="@color/white" android:id="@+id/dialog_titleText" android:padding="5.0dip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1.0" />
+        </TableRow>
+        <TableRow>
+            <TextView android:textSize="@dimen/text_large_size" android:textStyle="bold" android:textColor="@color/white" android:padding="5.0dip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/scoreContentStr" />
+            <TextView android:textSize="@dimen/text_medium_size" android:textColor="@color/white" android:id="@+id/dialog_scoreText" android:padding="5.0dip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1.0" />
+        </TableRow>
+    </TableLayout>
+    <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:weightSum="3.0">
+        <Button android:textSize="@dimen/text_medium_size" android:textColor="@color/black" android:id="@+id/dialog_lookAnswer_btn" android:layout_width="0.0dip" android:layout_height="wrap_content" android:layout_margin="5.0dip" android:text="@string/dialogLookBtnStr" android:layout_weight="1.0" />
+        <Button android:textSize="@dimen/text_medium_size" android:textColor="@color/black" android:id="@+id/dialog_exit_btn" android:layout_width="0.0dip" android:layout_height="wrap_content" android:layout_margin="5.0dip" android:text="@string/dialogExitBtnStr" android:layout_weight="1.0" />
+        <Button android:textSize="@dimen/text_medium_size" android:textColor="@color/black" android:id="@+id/dialog_cancel_btn" android:layout_width="0.0dip" android:layout_height="wrap_content" android:layout_margin="5.0dip" android:text="@string/exam_exitCancelStr" android:layout_weight="1.0" />
+    </LinearLayout>
+</LinearLayout>

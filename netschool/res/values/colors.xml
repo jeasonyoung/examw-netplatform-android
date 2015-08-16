@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="grey">#ffc0c7c7</color>
+    <color name="oogrey">#0fc0c7c7</color>
+    <color name="black">#ff000000</color>
+    <color name="ashen">#fff6f6f6</color>
+    <color name="pink">#ffF4DADA</color>
+    <color name="white">#ffffffff</color>
+    <color name="none">#00000000</color>
+    <color name="textblue">#ff767676</color>
+    <color name="blue">#ff2182bd</color>
+    <color name="darkgray">#ff363f46</color>
+    <color name="Slightlywhite">#fffdfdfd</color>
+    <color name="ashen2">#ffe7e7e7</color>
+    <color name="list_item_bg">#ff97a3a1</color>
+    <color name="control_bg">#ff033045</color>
+    <color name="SlightlyBule">#ffd5eefa</color>
+    <color name="background_pressed">#ffff9999</color>
+    <color name="background">#ffe0f0f8</color>
+    <color name="Yellow">#ffe6e680</color>
+    <color name="Camblue">#ffc2edf8</color>
+    <color name="yellow">#ffffffdd</color>
+    <color name="lightgrey">#ffe7e7e7</color>
+    <color name="lightbule">#ff50b2f3</color>
+    <color name="lightbule2">#ffddf2ff</color>
+    <color name="lightgrey2">#ffa9b5bd</color>
+    <color name="lightyellew">#fff95a03</color>
+    <color name="localbule">#ff1d87c1</color>
+    <color name="red">#ffff0000</color>
+    <color name="green">#ff15A230</color>
+    <color name="darkyellew">#fffa5c17</color>
+    <color name="transparent">#00000000</color>
+</resources>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:background="@color/ashen2" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:orientation="vertical" android:id="@+id/TopTitleLayout" android:background="@drawable/topbj" android:layout_width="fill_parent" android:layout_height="60.0dip">
+        <ImageButton android:id="@+id/returnbtn" android:background="@color/none" android:layout_width="50.0dip" android:layout_height="30.0dip" android:layout_marginLeft="10.0dip" android:src="@drawable/returnbtn1" android:scaleType="centerCrop" android:layout_centerVertical="true" />
+        <TextView android:textSize="25.0dip" android:textColor="@color/white" android:gravity="center" android:id="@+id/TopTitle1" android:background="@color/none" android:fadingEdge="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="@string/answer_sheet" android:layout_centerVertical="true" />
+        <ImageButton android:id="@+id/refreshbtn" android:background="@color/none" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="10.0dip" android:src="@drawable/refresh_img" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+    </RelativeLayout>
+    <FrameLayout android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@+id/progressLayout" android:layout_width="fill_parent" android:layout_height="fill_parent">
+            <ProgressBar android:layout_width="wrap_content" android:layout_height="wrap_content" style="@android:style/Widget.ProgressBar.Large.Inverse" />
+        </LinearLayout>
+        <LinearLayout android:orientation="vertical" android:id="@+id/contextLayout" android:layout_width="fill_parent" android:layout_height="fill_parent">
+            <RelativeLayout android:background="@drawable/down_layout_bg" android:layout_width="fill_parent" android:layout_height="wrap_content">
+                <TextView android:textSize="14.0sp" android:textColor="@color/black" android:gravity="center" android:id="@+id/questionInfos_text" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="10.0dip" android:layout_marginBottom="10.0dip" android:layout_centerVertical="true" />
+            </RelativeLayout>
+            <LinearLayout android:orientation="horizontal" android:background="@drawable/question_bg1" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginBottom="-1.0dip">
+                <RadioGroup android:orientation="horizontal" android:id="@+id/AnswerTypeGroup" android:paddingTop="5.0dip" android:layout_width="wrap_content" android:layout_height="wrap_content">
+                    <RadioButton android:id="@+id/noAnswerBtn" android:layout_width="84.0dip" android:layout_height="48.0dip" android:checked="true" android:button="@drawable/question_sel_img2" />
+                    <RadioButton android:id="@+id/isAnswerBtn" android:layout_width="84.0dip" android:layout_height="48.0dip" android:layout_marginLeft="4.0dip" android:button="@drawable/question_sel_img1" />
+                </RadioGroup>
+                <TextView android:textSize="14.0sp" android:textColor="@color/blue" android:layout_gravity="center_vertical" android:id="@+id/loadedNumText" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="10.0dip" />
+            </LinearLayout>
+            <FrameLayout android:layout_width="fill_parent" android:layout_height="fill_parent">
+                <!--  
+                <com.kaoshida233.view.PullToRefreshView android:orientation="vertical" android:id="@+id/tmain_pull_refresh_view" android:background="@android:color/white" android:layout_width="fill_parent" android:layout_height="fill_parent">
+                    <ListView android:id="@+id/questionList" android:fadingEdge="none" android:layout_width="fill_parent" android:layout_height="fill_parent" android:listSelector="@color/ashen" android:divider="@color/white" />
+                </com.kaoshida233.view.PullToRefreshView> -->
+                <LinearLayout android:gravity="center_vertical" android:orientation="vertical" android:id="@+id/selectLoadingLayout" android:layout_width="fill_parent" android:layout_height="fill_parent">
+                    <ProgressBar android:layout_gravity="center" android:layout_width="40.0dip" android:layout_height="40.0dip" style="@android:style/Widget.ProgressBar.Large" />
+                    <TextView android:textSize="14.0sp" android:textColor="@color/black" android:layout_gravity="center" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="5.0dip" android:text="@string/pull_to_refresh_footer_refreshing_label" />
+                </LinearLayout>
+            </FrameLayout>
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>

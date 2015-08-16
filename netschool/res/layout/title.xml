@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/control_bg"
+    android:baselineAligned="false"
+    android:gravity="center_vertical"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:paddingLeft="20.0dip" >
+
+        <ImageButton
+            android:id="@+id/imageBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/back_button"
+            android:contentDescription="@string/back" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0" >
+
+        <TextView
+            android:id="@+id/videoName"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="center"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text="@string/hello_world"
+            android:textColor="#ffffffff" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/imgVolumn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@color/none"
+            android:contentDescription="@string/volumn"
+            android:src="@drawable/volume" />
+
+        <SeekBar
+            android:id="@+id/seekBar1"
+            style="@style/ProgressBar_Mini"
+            android:layout_width="60.0dip"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:thumb="@android:drawable/presence_invisible"
+            android:thumbOffset="0.0dip" />
+
+        <TextView
+            android:id="@+id/volumnSize"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:text="@string/volumn_size"
+            android:textColor="#ffffffff" />
+    </LinearLayout>
+
+</LinearLayout>

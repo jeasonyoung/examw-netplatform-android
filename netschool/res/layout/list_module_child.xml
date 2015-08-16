@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:background="@drawable/list_item_state_bg" android:padding="10.0dip" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:id="@+id/moduleIcoView" android:layout_width="40.0dip" android:layout_height="40.0dip" android:src="@drawable/exercise_exam_img" android:scaleType="centerInside" android:layout_alignParentLeft="true" />
+    <LinearLayout android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="5.0dip" android:layout_marginRight="5.0dip" android:layout_toLeftOf="@+id/arrow_r" android:layout_toRightOf="@id/moduleIcoView">
+        <TextView android:textSize="@dimen/text_medium_size" android:textColor="@color/black" android:id="@+id/chapterNameText" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="第一节 会计基础概述" />
+        <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="5.0dip">
+            <TextView android:textSize="@dimen/text_small_size" android:textColor="@color/darkgray" android:id="@+id/chapterNumText" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="总题数：22  已做 20 错题 12" />
+        </LinearLayout>
+    </LinearLayout>
+    <ImageView android:id="@+id/arrow_r" android:layout_width="20.0dip" android:layout_height="wrap_content" android:src="@drawable/arrow_right" android:scaleType="centerInside" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+</RelativeLayout>

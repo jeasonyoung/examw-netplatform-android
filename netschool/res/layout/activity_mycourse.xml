@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white"
+    android:gravity="fill_vertical" >
+
+    <RelativeLayout
+        android:id="@+id/TopTitleLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="50.0dip"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/topbj"
+        android:orientation="vertical" >
+
+        <ImageButton
+            android:id="@+id/returnbtn"
+            android:layout_width="50.0dip"
+            android:layout_height="30.0dip"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10.0dip"
+            android:background="@color/none"
+            android:scaleType="centerCrop"
+            android:src="@drawable/returnbtn1" />
+
+        <TextView
+            android:id="@+id/TopTitle1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@color/none"
+            android:fadingEdge="vertical"
+            android:gravity="center"
+            android:text="@string/CourseCenter"
+            android:textColor="@color/white"
+            android:textSize="@dimen/title_huge_size" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/LargeClasslistLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/EndBtnLayout"
+        android:layout_below="@id/TopTitleLayout"
+        android:orientation="vertical" >
+
+        <!-- @android:id/list -->
+        <TextView
+            android:id="@+id/courseTitle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10.0dip"
+            android:textSize="@dimen/title_medium_size"
+            android:textColor="@color/blue"
+            android:gravity="center" >
+        </TextView>
+		<View android:layout_width="fill_parent" android:layout_height="1.0dip" android:background="@drawable/topic_driver"></View>
+        <ListView
+            android:id="@+id/courserList"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/topic_driver"
+            android:dividerHeight="1.0dip"
+            android:fadingEdge="none" />
+    </LinearLayout>
+	<include layout="@layout/nodata_layout"/>
+	<LinearLayout
+        android:id="@+id/EndBtnLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/darkgray"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="4.0" >
+
+        <LinearLayout
+            android:id="@+id/Lookonline_layout_btn"
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_margin="2.0dip"
+            android:layout_weight="1.0"
+            android:background="@drawable/bottom_big_btn"
+            android:clickable="true"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/LookonlineImg"
+                android:layout_width="wrap_content"
+                android:layout_height="30.0dip"
+                android:background="@color/none"
+                android:paddingTop="5.0dip"
+                android:scaleType="centerInside"
+                android:src="@drawable/bottom_cen1" />
+
+            <TextView
+                android:id="@+id/endtext1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5.0dip"
+                android:text="@string/LookonlineBtn"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_small_size" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/Downloadto_layout_btn"
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_margin="2.0dip"
+            android:layout_weight="1.0"
+            android:background="@drawable/end2_btn_bg"
+            android:clickable="true"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/MyfileDownImg"
+                android:layout_width="wrap_content"
+                android:layout_height="30.0dip"
+                android:background="@color/none"
+                android:focusable="true"
+                android:paddingTop="5.0dip"
+                android:src="@drawable/my_end_btn_img2" />
+
+            <TextView
+                android:id="@+id/endtext2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5.0dip"
+                android:text="@string/DownloadtoBtn"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_small_size" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/MyfileDown_layout_btn"
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_margin="2.0dip"
+            android:layout_weight="1.0"
+            android:background="@drawable/end2_btn_bg"
+            android:clickable="true"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/MyfileDownImg1"
+                android:layout_width="wrap_content"
+                android:layout_height="30.0dip"
+                android:background="@color/none"
+                android:focusable="true"
+                android:paddingTop="5.0dip"
+                android:src="@drawable/my_end_btn_img3" />
+
+            <TextView
+                android:id="@+id/endtext3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5.0dip"
+                android:text="@string/MyfileDownBtn"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_small_size" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LearningRecord_layout_btn"
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_margin="2.0dip"
+            android:layout_weight="1.0"
+            android:background="@drawable/end2_btn_bg"
+            android:clickable="true"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/LearningRecordImg"
+                android:layout_width="wrap_content"
+                android:layout_height="30.0dip"
+                android:background="@color/none"
+                android:focusable="true"
+                android:paddingTop="5.0dip"
+                android:src="@drawable/my_end_btn_img4" />
+
+            <TextView
+                android:id="@+id/endtext4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5.0dip"
+                android:text="@string/LearningRecord"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_small_size" />
+        </LinearLayout>
+    </LinearLayout>
+    <!-- <include layout="@layout/end_button3" /> -->
+
+</RelativeLayout>

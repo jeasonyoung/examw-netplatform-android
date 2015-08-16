@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/ashen"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40.0dip"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reg_successStr"
+            android:textColor="@color/blue"
+            android:textSize="35.0sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="40.0dip" 
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/RegSucContentText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/reg_yourname"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_large_size" />
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/darkyellew"
+            android:textSize="@dimen/text_large_size" />
+    </LinearLayout>
+
+    <!-- <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20.0dip"
+        android:layout_marginRight="20.0dip" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reg_selectStr"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_large_size"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20.0dip" >
+
+        <LinearLayout
+            android:id="@+id/ReloadLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/whitetext_bg1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingBottom="20.0dip"
+            android:paddingTop="20.0dip" >
+
+            <ProgressBar
+                android:id="@+id/progressBar1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10.0dip"
+                android:text="@string/reg_loadingStr"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_large_size" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/regContentLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <Spinner
+                android:id="@+id/regSpinner1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/reg_spinner_img" />
+
+            <Spinner
+                android:id="@+id/regSpinner2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10.0dip"
+                android:background="@drawable/reg_spinner_img" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/regErrorLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/whitetext_bg1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="20.0dip" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reg_errorStr"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_large_size" />
+
+            <TextView
+                android:id="@+id/regRefreshText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:padding="5.0dip"
+                android:text="@string/reg_errorBtnStr"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/text_large_size" />
+        </LinearLayout>
+    </FrameLayout> -->
+
+    <Button
+        android:id="@+id/ReLoginBtn"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20.0dip"
+        android:layout_marginRight="20.0dip"
+        android:layout_marginBottom="40.0dip"
+        android:background="@drawable/submit_suggestion_btn1_bg"
+        android:text="@string/reg_gotoLogin"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_large_size" />
+
+</LinearLayout>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:background="@color/ashen" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:orientation="vertical" android:id="@+id/TopTitleLayout" android:background="@drawable/topbj" android:layout_width="fill_parent" android:layout_height="60.0dip">
+        <ImageButton android:id="@+id/returnbtn" android:background="@color/none" android:layout_width="50.0dip" android:layout_height="30.0dip" android:layout_marginLeft="10.0dip" android:src="@drawable/returnbtn1" android:scaleType="centerCrop" android:layout_centerVertical="true" />
+        <TextView android:textSize="25.0dip" android:textColor="@color/white" android:gravity="center" android:id="@+id/TopTitle1" android:background="@color/none" android:fadingEdge="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="@string/question_bank" android:layout_centerVertical="true" />
+    </RelativeLayout>
+    <ListView android:id="@+id/question_tier1_listView" android:fadingEdge="none" android:layout_width="fill_parent" android:layout_height="fill_parent" android:cacheColorHint="@color/none" android:divider="@color/white" />
+</LinearLayout>

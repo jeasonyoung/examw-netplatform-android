@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/listtext_bj2"
+    android:gravity="center_horizontal"
+    android:paddingBottom="10.0dip"
+    android:paddingTop="10.0dip" >
+    <TextView
+        android:id="@+id/filenameLab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:drawableLeft="@drawable/video"
+        android:layout_marginLeft="10.0dip"
+        android:drawablePadding="8.0dip"
+        android:ellipsize="marquee"
+        android:focusableInTouchMode="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:singleLine="true"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_small_size" />
+
+    <ImageView
+        android:id="@+id/filePlayImg"
+        android:layout_width="30.0dip"
+        android:layout_height="30.0dip"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10.0dip"
+        android:background="@color/none"
+        android:src="@drawable/palyico2" />
+</RelativeLayout>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true" android:drawable="@drawable/exam_answer_press_img" />
+    <item android:drawable="@drawable/exam_answer_nomal_img" />
+</selector>

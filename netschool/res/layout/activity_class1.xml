@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white"
+    android:gravity="fill_vertical" >
+
+    <LinearLayout
+        android:id="@+id/TopTitleLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="50.0dip"
+            android:background="@drawable/topbj" >
+
+            <ImageButton
+                android:id="@+id/returnbtn"
+                android:layout_width="50.0dip"
+                android:layout_height="30.0dip"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10.0dip"
+                android:background="@color/none"
+                android:scaleType="centerCrop"
+                android:src="@drawable/returnbtn1" />
+
+            <TextView
+                android:id="@+id/TopTitle1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:background="#00000000"
+                android:fadingEdge="vertical"
+                android:gravity="center"
+                android:text="@string/CourseCenter"
+                android:textColor="@color/white"
+                android:textSize="@dimen/title_huge_size" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/searchLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="50.0dip"
+            android:background="@drawable/seach_bg"
+            android:orientation="horizontal" >
+
+            <EditText
+                android:id="@+id/serchkey"
+                style="@style/searchtext"
+                android:layout_width="fill_parent"
+                android:layout_height="40.0dip"
+                android:layout_marginLeft="10.0dip"
+                android:layout_marginRight="10.0dip"
+                android:layout_marginTop="5.0dip"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingLeft="10.0dip" />
+
+            <ImageButton
+                android:id="@+id/searchImgBtn"
+                android:layout_width="40.0dip"
+                android:layout_height="40.0dip"
+                android:layout_alignBottom="@id/serchkey"
+                android:layout_alignRight="@id/serchkey"
+                android:layout_alignTop="@id/serchkey"
+                android:background="#00000000"
+                android:contentDescription="@string/seach"
+                android:scaleType="centerInside"
+                android:src="@drawable/search_map" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/LargeClasslistLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/EndBtnLayout"
+        android:layout_below="@id/TopTitleLayout"
+        android:orientation="vertical" >
+
+        <!-- @*android:id/list -->
+        <ListView
+            android:id="@+id/list"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/topic_driver"
+            android:dividerHeight="1.0dip"
+            android:fadingEdge="none" />
+    </LinearLayout>
+	<include layout="@layout/nodata_layout"/>
+    <include layout="@layout/end_buttons" />
+
+</RelativeLayout>

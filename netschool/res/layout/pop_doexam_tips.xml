@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:layout_gravity="center">
+	
+    <LinearLayout 
+        android:id="@+id/pop_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="25sp"
+        android:gravity="center_vertical"
+        android:background="@drawable/pop_bg2"
+        android:onClick="disPopupWin"
+        android:orientation="horizontal"
+        />
+</LinearLayout>

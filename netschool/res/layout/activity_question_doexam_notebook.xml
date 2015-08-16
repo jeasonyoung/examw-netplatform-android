@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/ashen"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/TopTitleLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="50.0dip"
+        android:background="@drawable/topbj"
+        android:orientation="vertical" >
+
+        <ImageButton
+            android:id="@+id/returnbtn"
+            android:layout_width="50.0dip"
+            android:layout_height="30.0dip"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10.0dip"
+            android:background="@color/none"
+            android:scaleType="centerCrop"
+            android:src="@drawable/returnbtn1" />
+
+        <TextView
+            android:id="@+id/TopTitle1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@color/none"
+            android:fadingEdge="vertical"
+            android:gravity="center"
+            android:text="@string/exam_notebookStr"
+            android:textColor="@color/white"
+            android:textSize="@dimen/title_huge_size" />
+
+        <Button
+            android:id="@id/submitBtn"
+            android:layout_width="50.0dip"
+            android:layout_height="30.0dip"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10.0dip"
+            android:background="@drawable/exam_select_bg"
+            android:text="@string/submitStr"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_large_size" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/lightbule2"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <EditText
+                android:id="@+id/editNoteEditText"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5.0dip"
+                android:layout_marginLeft="10.0dip"
+                android:layout_marginRight="10.0dip"
+                android:layout_marginTop="20.0dip"
+                android:background="@drawable/whitetext_bg1"
+                android:gravity="top"
+                android:hint="@string/exam_notebookHintStr"
+                android:minLines="12"
+                android:padding="3.0dip"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_medium_size" />
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5.0dip" >
+
+                <TextView
+                    android:id="@+id/notebook_editSizeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10.0dip"
+                    android:paddingTop="5.0dip"
+                    android:text="@string/notebookSizeStr"
+                    android:textColor="@color/lightbule"
+                    android:textSize="@dimen/text_small_size" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+
+                <Button
+                    android:id="@+id/exam_notebook_btn"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="20.0dip"
+                    android:layout_marginLeft="12.0dip"
+                    android:layout_marginRight="12.0dip"
+                    android:background="@drawable/notebook_btn_bg"
+                    android:text="@string/submitStr1" />
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="10.0dip"
+                    android:layout_below="@id/exam_notebook_btn" />
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+    <!--
+         <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/lightbule2"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/one_title_bg"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10.0dip"
+                android:scaleType="centerInside"
+                android:src="@drawable/pen_img" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10.0dip"
+                android:text="@string/exam_othernotebookStr"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_large_size" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+            <include layout="@layout/loading_layout" />
+
+            <include layout="@layout/nodata_layout" />
+
+            <LinearLayout
+                android:id="@+id/OtherContentLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="10.0dip"
+                android:layout_marginLeft="10.0dip"
+                android:layout_marginRight="10.0dip" >
+
+                <ListView
+                    android:id="@+id/otherNotebook_ListView"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:cacheColorHint="@color/none"
+                    android:divider="@color/white"
+                    android:dividerHeight="2.0dip"
+                    android:fadingEdge="none"
+                    android:scrollbars="none" />
+            </LinearLayout>
+        </FrameLayout>
+    </LinearLayout>
+    -->
+
+</LinearLayout>

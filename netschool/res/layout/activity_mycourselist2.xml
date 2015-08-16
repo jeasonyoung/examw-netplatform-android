@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/ashen"
+    android:gravity="fill_vertical" >
+
+    <RelativeLayout
+        android:id="@+id/TopTitleLayout3"
+        android:layout_width="fill_parent"
+        android:layout_height="50.0dip"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/topbj"
+        android:orientation="vertical" >
+
+        <ImageButton
+            android:id="@+id/returnbtn"
+            android:layout_width="50.0dip"
+            android:layout_height="30.0dip"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10.0dip"
+            android:background="@color/none"
+            android:scaleType="centerCrop"
+            android:src="@drawable/returnbtn1" />
+
+        <TextView
+            android:id="@+id/TopTitle2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="30.0dip"
+            android:layout_toRightOf="@id/returnbtn"
+            android:background="#00000000"
+            android:ellipsize="marquee"
+            android:fadingEdge="vertical"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="center"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text="@string/question_bank"
+            android:textColor="@color/white"
+            android:textSize="@dimen/title_huge_size" />
+    </RelativeLayout>
+    <!--
+    <LinearLayout android:gravity="center" android:orientation="horizontal" android:id="@+id/downModeLayout" android:background="@drawable/newold2" android:layout_width="fill_parent" android:layout_height="30.0dip" android:layout_margin="5.0dip" android:weightSum="2.0" android:layout_below="@id/TopTitleLayout3">
+        <Button android:id="@+id/NewVersionBtn" android:background="@color/none" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/NewVersionBtn" android:layout_weight="1.0" />
+        <Button android:id="@+id/OldVersionDownBtn" android:background="@color/none" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/OldVersionBtn" android:layout_weight="1.0" />
+    </LinearLayout>
+    -->
+
+    <View
+        android:id="@+id/spaceview"
+        android:layout_width="fill_parent"
+        android:layout_height="1.0dip"
+        android:layout_below="@id/TopTitleLayout3"
+        android:background="@color/grey" />
+
+    <RelativeLayout
+        android:id="@+id/explayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/EndBtnLayout"
+        android:layout_below="@id/spaceview" >
+
+        <ExpandableListView
+            android:id="@+id/explist2"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"/>
+           <!--  android:divider="@color/black"
+            android:drawSelectorOnTop="false"
+            android:fadingEdge="none" /> -->
+
+        <!-- <ListView
+            android:id="@+id/list2"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:divider="@color/white"
+            android:fadingEdge="none" /> -->
+    </RelativeLayout>
+	<include layout="@layout/nodata_layout"/>
+</RelativeLayout>

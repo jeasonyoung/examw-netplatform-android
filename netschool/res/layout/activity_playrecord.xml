@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/ashen"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="50.0dip"
+        android:background="@drawable/topbj" >
+
+        <ImageButton
+            android:id="@+id/returnbtn"
+            android:layout_width="50.0dip"
+            android:layout_height="30.0dip"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10.0dip"
+            android:background="@color/none"
+            android:scaleType="centerCrop"
+            android:src="@drawable/returnbtn1" />
+
+        <TextView
+            android:id="@+id/TopTitle1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="#00000000"
+            android:fadingEdge="vertical"
+            android:gravity="center"
+            android:text="@string/LearningRecord"
+            android:textColor="@color/white"
+            android:textSize="@dimen/title_huge_size" />
+    </RelativeLayout>
+    <!-- @android:id/list -->
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="5.0dip"
+        android:background="@drawable/set_layout_bj"
+        android:divider="@drawable/topic_driver"
+        android:dividerHeight="1.0dip"
+        android:fadingEdge="none"
+        android:padding="5.0dip" />
+
+</LinearLayout>

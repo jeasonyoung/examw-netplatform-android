@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/exam_answer_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_margin="10.0dip"
+    android:padding="5.0dip"
+    android:background="@drawable/answer_layout_bg"
+    android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            >
+            <TextView
+                android:id="@+id/myAnswerStr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5.0dip"
+                android:text="@string/exam_myAnswerStr"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_medium_size" />
+
+            <TextView
+                android:id="@+id/myAnswerTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5.0dip"
+                android:layout_toRightOf="@id/myAnswerStr"
+                android:layout_toLeftOf="@+id/answerResultImg"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_medium_size" />
+            <ImageView 
+                android:id="@+id/answerResultImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="3.0dip"
+                android:layout_marginRight="5.0dip"
+                android:src="@drawable/wrong_answer_pto"
+                />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <TextView
+                android:id="@+id/sysAnswerStr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5.0dip"
+                android:text="@string/exam_sysAnswerStr"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_medium_size" />
+
+            <TextView
+                android:id="@+id/sysAnswerTextView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/sysAnswerStr"
+                android:layout_toLeftOf="@+id/btn_note"
+                android:layout_margin="5.0dip"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_medium_size" />
+            <ImageButton 
+                android:id="@+id/btn_note"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="3.0dip"
+                android:layout_marginRight="5.0dip"
+                android:background="@drawable/btn_note"
+                />
+        </RelativeLayout>
+
+        <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="5.0dip"
+        android:orientation="vertical" >
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/Camblue"
+            android:padding="5.0dip"
+            android:text="@string/exam_analysisStr"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_medium_size" />
+
+        <TextView
+            android:id="@+id/exam_analysisTextView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_medium_size" />
+    </LinearLayout>
+
+</LinearLayout>

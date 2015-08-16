@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:background="@drawable/childlist_select" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_margin="10.0dip">
+        <CheckBox android:id="@+id/courseCheckBox" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="10.0dip" android:button="@drawable/checkbox_button_img" />
+        <LinearLayout android:orientation="vertical" android:id="@+id/totalLayout" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_toRightOf="@id/courseCheckBox">
+            <TextView android:textSize="14.0sp" android:textColor="@color/black" android:id="@+id/courseNameLab" android:layout_width="wrap_content" android:layout_height="wrap_content" android:singleLine="true" />
+            <TextView android:textSize="12.0sp" android:id="@+id/stateLab" android:layout_width="wrap_content" android:layout_height="wrap_content" android:singleLine="true" />
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

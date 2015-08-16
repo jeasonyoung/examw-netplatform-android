@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/doexam_mode4layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_marginBottom="5.0dip"
+    android:layout_marginLeft="5.0dip"
+    android:layout_marginRight="5.0dip"
+    android:layout_marginTop="10.0dip"
+    android:background="@color/none"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/exam_Content4"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5.0dip"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_medium_size" />
+
+    <GridView
+        android:id="@+id/decadeNumGridView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10.0dip"
+        android:layout_marginRight="10.0dip"
+        android:layout_marginTop="10.0dip"
+        android:fadingEdge="none"
+        android:numColumns="10"
+        android:scrollbars="none" />
+
+    <GridView
+        android:id="@+id/theUnitNumGridView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="10.0dip"
+        android:layout_marginRight="10.0dip"
+        android:fadingEdge="none"
+        android:numColumns="10"
+        android:scrollbars="none" />
+
+    <LinearLayout
+        android:id="@+id/exam_answer_layout4"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10.0dip"
+        android:layout_marginRight="10.0dip"
+        android:layout_marginTop="10.0dip"
+        android:background="@drawable/answer_layout_bg"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_margin="5.0dip"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5.0dip"
+                    android:text="@string/exam_myAnswerStr"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_medium_size" />
+
+                <TextView
+                    android:id="@+id/myAnswerTextView4"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5.0dip"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_medium_size" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5.0dip"
+                    android:text="@string/exam_sysAnswerStr"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_medium_size" />
+
+                <TextView
+                    android:id="@+id/sysAnswerTextView4"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5.0dip"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_medium_size" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/Camblue"
+                android:padding="5.0dip"
+                android:text="@string/exam_analysisStr"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_medium_size" />
+
+            <TextView
+                android:id="@+id/exam_analysisTextView4"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_medium_size" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/exam_ListView4"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:cacheColorHint="@color/none"
+        android:divider="@color/white"
+        android:fadingEdge="none"
+        android:scrollbars="none"
+        android:visibility="gone" />
+
+</LinearLayout>

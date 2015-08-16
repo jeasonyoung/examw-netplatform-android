@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/text_1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        android:paddingTop="3.0dip"
+        android:lineSpacingExtra="5.0dip"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_medium_size" />
+
+    <!-- <HorizontalScrollView
+        android:id="@+id/hscroll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scrollbars="none" >
+
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scrollbars="none" />
+    </HorizontalScrollView> -->
+
+    <ImageView
+        android:id="@+id/image1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:layout_gravity="center"
+        android:maxHeight="200.0dip"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        />
+    <TextView
+        android:id="@+id/text_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        android:lineSpacingExtra="5.0dip"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_medium_size" />
+</LinearLayout>
