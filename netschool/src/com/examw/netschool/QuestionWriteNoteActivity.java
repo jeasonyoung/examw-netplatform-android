@@ -2,6 +2,7 @@ package com.examw.netschool;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -19,7 +20,6 @@ import android.widget.Toast;
 
 import com.examw.netschool.dao.PaperDao;
 import com.examw.netschool.entity.ExamNote;
-import com.umeng.analytics.MobclickAgent;
 
 public class QuestionWriteNoteActivity extends Activity implements OnClickListener{
 	private ImageButton returnbtn;
@@ -30,9 +30,9 @@ public class QuestionWriteNoteActivity extends Activity implements OnClickListen
 	private String qid,username,paperId;
 	private final static int maxLength = 1000;
 	private PaperDao dao;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_question_doexam_notebook);
 		this.returnbtn = (ImageButton) this.findViewById(R.id.returnbtn);
@@ -76,18 +76,17 @@ public class QuestionWriteNoteActivity extends Activity implements OnClickListen
 	}
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		switch(v.getId())
 		{
-		case R.id.returnbtn:
-			this.finish();
-			return;
-		case R.id.exam_notebook_btn:
-			submit();
-			return;
-		case R.id.submitBtn:
-			submit();
-			return;
+			case R.id.returnbtn:
+				this.finish();
+				return;
+			case R.id.exam_notebook_btn:
+				submit();
+				return;
+			case R.id.submitBtn:
+				submit();
+				return;
 		}
 	}
 	private void submit()
@@ -98,22 +97,12 @@ public class QuestionWriteNoteActivity extends Activity implements OnClickListen
 			Toast.makeText(this, "还没有输入内容", Toast.LENGTH_SHORT).show();
 			return;
 		}
-		String addTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		String addTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
 		note = new ExamNote(qid,addTime,content,username,paperId);
 		dao.insertNote(note);
-		Toast.makeText(this, "笔记已添加", Toast.LENGTH_SHORT).show();
-		this.finish();
-	}
-	@Override
-	protected void onPause() {
-		super.onPause();
-		MobclickAgent.onPause(this);
-	};
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		MobclickAgent.onResume(this);
 		
+		Toast.makeText(this, "笔记已添加", Toast.LENGTH_SHORT).show();
+		
+		this.finish();
 	}
 }

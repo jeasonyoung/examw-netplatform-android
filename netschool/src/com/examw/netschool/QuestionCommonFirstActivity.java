@@ -18,7 +18,6 @@ import com.examw.netschool.dao.PaperDao;
 import com.examw.netschool.entity.ExamQuestion;
 import com.examw.netschool.entity.QuestionAdapterData;
 import com.google.gson.Gson;
-import com.umeng.analytics.MobclickAgent;
 
 /**
  * 问题类。
@@ -117,23 +116,5 @@ public class QuestionCommonFirstActivity extends Activity{
 		this.notebookListView = (ListView) this.findViewById(R.id.question_record_ListView);
 		this.returnbtn.setOnClickListener(new ReturnBtnClickListener(this));
 		this.title.setText(stringResId);
-	}
-	/*
-	 * 重载暂停。
-	 * @see android.app.Activity#onPause()
-	 */
-	@Override
-	protected void onPause() {
-		super.onPause();
-		MobclickAgent.onPause(this);
-	};
-	/*
-	 * 重载恢复。
-	 * @see android.app.Activity#onResume()
-	 */
-	@Override
-	protected void onResume() {
-		super.onResume();
-		MobclickAgent.onResume(this);
 	}
 }

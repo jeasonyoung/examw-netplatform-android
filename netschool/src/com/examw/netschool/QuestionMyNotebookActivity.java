@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.examw.netschool.adapter.QuestionMyNoteAdapter;
 import com.examw.netschool.dao.PaperDao;
 import com.examw.netschool.entity.ExamNote;
-import com.umeng.analytics.MobclickAgent;
 
 public class QuestionMyNotebookActivity extends Activity{
 	private ImageButton returnbtn;
@@ -28,9 +27,9 @@ public class QuestionMyNotebookActivity extends Activity{
 	private ArrayList<ExamNote> data;
 	private PaperDao dao;
 	private QuestionMyNoteAdapter mAdapter;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_question_doproblemrecord_tier2);
 		initView();
@@ -47,9 +46,7 @@ public class QuestionMyNotebookActivity extends Activity{
 		}
 		this.notebookListView.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
-			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-					int arg2, long arg3) {
-				// TODO Auto-generated method stub
+			public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) { 
 				dao.deleteNote(data.get(arg2));
 				data.remove(arg2);
 				mAdapter.notifyDataSetChanged();
@@ -61,6 +58,7 @@ public class QuestionMyNotebookActivity extends Activity{
 			}
 		});
 	}
+	
 	private void initData()
 	{
 		dao = new PaperDao(this);
@@ -68,6 +66,7 @@ public class QuestionMyNotebookActivity extends Activity{
 		this.paperTitle.setText(intent.getStringExtra("title"));
 		data = (ArrayList<ExamNote>) dao.findNotes(intent.getStringExtra("paperId"),intent.getStringExtra("username")); 
 	}
+	
 	private void initView()
 	{
 		this.returnbtn = (ImageButton) this.findViewById(R.id.returnbtn);
@@ -79,17 +78,5 @@ public class QuestionMyNotebookActivity extends Activity{
 		this.notebookListView = (ListView) this.findViewById(R.id.question_record_ListView);
 		this.returnbtn.setOnClickListener(new ReturnBtnClickListener(this));
 		this.title.setText(R.string.my_notebookStr);
-	}
-	@Override
-	protected void onPause() {
-		super.onPause();
-		MobclickAgent.onPause(this);
-	};
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		MobclickAgent.onResume(this);
-		
 	}
 }

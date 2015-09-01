@@ -20,7 +20,6 @@ import android.widget.TextView;
 
 import com.examw.netschool.util.Constant;
 import com.examw.netschool.util.HttpConnectUtil;
-import com.umeng.analytics.MobclickAgent;
 
 public class SearchActivity extends ListActivity {
 	private ImageButton returnBtn;
@@ -33,7 +32,6 @@ public class SearchActivity extends ListActivity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_search);
 		this.returnBtn = (ImageButton) this.findViewById(R.id.returnbtn);
@@ -48,24 +46,23 @@ public class SearchActivity extends ListActivity {
 			String words = URLEncoder.encode(URLEncoder.encode(keywords,"gbk"),"gbk");
 			new GetDataTask().execute(Constant.DOMAIN_URL+"mobile/searchExam?keywords="+words);
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		this.returnBtn.setOnClickListener(new ReturnBtnClickListener(this));
 	}
+	
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		// TODO Auto-generated method stub
 		Intent intent = new Intent(SearchActivity.this,Class3Activity.class);
 		intent.putExtra("name", names[position]);
 		intent.putExtra("examId", ids[position]);
 		SearchActivity.this.startActivity(intent);
 	}
+	
 	private class GetDataTask extends AsyncTask<String,Void,String>
 	{
 		@Override
 		protected String doInBackground(String... params) {
-			// TODO Auto-generated method stub
 			try{
 				String result = HttpConnectUtil.httpGetRequest(SearchActivity.this, params[0]);
 				if(result == null||"null".equals(result))
@@ -99,7 +96,6 @@ public class SearchActivity extends ListActivity {
 		}
 		@Override
 		protected void onPostExecute(String result) {
-			// TODO Auto-generated method stub
 			if(dialog!=null&&dialog.isShowing())
 			{
 				dialog.dismiss();
@@ -121,23 +117,10 @@ public class SearchActivity extends ListActivity {
 	}
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		if(dialog!=null)
 		{
 			dialog.dismiss();	
 		}
 		super.onDestroy();
-	}
-	@Override
-	protected void onPause() {
-		super.onPause();
-		MobclickAgent.onPause(this);
-	};
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		MobclickAgent.onResume(this);
-		
 	}
 }

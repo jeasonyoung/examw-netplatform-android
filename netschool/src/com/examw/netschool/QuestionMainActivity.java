@@ -15,7 +15,6 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.umeng.analytics.MobclickAgent;
 
 public class QuestionMainActivity extends Activity{
 	private GridView g;
@@ -99,15 +98,5 @@ public class QuestionMainActivity extends Activity{
 			tv.setText(txts[position]);
 			return v;
 		}
-	}
-	@Override
-	protected void onPause() {
-		super.onPause();
-		MobclickAgent.onPause(this);
-	};
-	@Override
-	protected void onResume() {
-		super.onResume();
-		MobclickAgent.onResume(this);
 	}
 }

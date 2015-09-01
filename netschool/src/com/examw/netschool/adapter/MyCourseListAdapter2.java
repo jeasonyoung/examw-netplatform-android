@@ -21,7 +21,6 @@ import com.examw.netschool.R;
 import com.examw.netschool.VideoPlayActivity;
 import com.examw.netschool.entity.Course;
 import com.examw.netschool.util.FileUtil;
-import com.umeng.analytics.MobclickAgent;
 
 public class MyCourseListAdapter2 extends BaseAdapter{
 	private Context context;
@@ -77,7 +76,7 @@ public class MyCourseListAdapter2 extends BaseAdapter{
 					return;
 				}
 				//umeng记录事件
-				MobclickAgent.onEvent(context,"online_listen");
+				//MobclickAgent.onEvent(context,"online_listen");
 				//
 				Course c = courses.get(position);
 				Intent intent = new Intent(context, VideoPlayActivity.class);

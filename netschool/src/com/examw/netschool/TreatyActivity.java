@@ -21,7 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.examw.netschool.util.Constant;
-import com.umeng.analytics.MobclickAgent;
 
 public class TreatyActivity extends Activity{
 	private TextView content;
@@ -46,7 +45,6 @@ public class TreatyActivity extends Activity{
 	{
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
 			HttpURLConnection conn = null;
 			try {
 				URL url = new URL(Constant.DOMAIN_URL+"mobile/getTreaty");
@@ -82,7 +80,6 @@ public class TreatyActivity extends Activity{
 				msg.setData(b);
 				handler.sendMessage(msg);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				handler.sendEmptyMessage(-1);
 			}finally
@@ -121,23 +118,10 @@ public class TreatyActivity extends Activity{
 	}
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		if(dialog!=null)
 		{
 			dialog.dismiss();	
 		}
 		super.onDestroy();
-	}
-	@Override
-	protected void onPause() {
-		super.onPause();
-		MobclickAgent.onPause(this);
-	};
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		MobclickAgent.onResume(this);
-		
-	}
+	}	
 }

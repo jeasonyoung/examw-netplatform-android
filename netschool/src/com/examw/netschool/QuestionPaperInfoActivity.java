@@ -31,7 +31,6 @@ import com.examw.netschool.entity.Paper;
 import com.examw.netschool.util.Constant;
 import com.examw.netschool.util.HttpConnectUtil;
 import com.google.gson.Gson;
-import com.umeng.analytics.MobclickAgent;
 
 public class QuestionPaperInfoActivity extends Activity implements OnClickListener{
 	private LinearLayout ruleInfo;
@@ -49,9 +48,9 @@ public class QuestionPaperInfoActivity extends Activity implements OnClickListen
 	private ExamRecord record;
 	private int tempTime;
 	private List<ExamQuestion> questionList;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_paperinfo);
 		Intent intent = this.getIntent();
@@ -68,6 +67,7 @@ public class QuestionPaperInfoActivity extends Activity implements OnClickListen
 		handler = new MyHandler(this);
 		new GetQuestionListThread().start();
 	}
+	
 	private void initView(String paperJson)
 	{
 		this.paperTitle = (TextView) this.findViewById(R.id.papertitle);
@@ -172,7 +172,6 @@ public class QuestionPaperInfoActivity extends Activity implements OnClickListen
 	}
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		switch(v.getId())
 		{
 		case R.id.returnbtn:
@@ -212,7 +211,7 @@ public class QuestionPaperInfoActivity extends Activity implements OnClickListen
 				Toast.makeText(this, "没有题目数据暂时不能练习", Toast.LENGTH_SHORT).show();
 				return;
 			}
-			MobclickAgent.onEvent(this,"Do_Exam_Paper");
+			//MobclickAgent.onEvent(this,"Do_Exam_Paper");
 			Intent intent = new Intent(this,QuestionDoExamActivity2.class);
 			intent.putExtra("paperName", paper.getPaperName());
 			intent.putExtra("paperId", paper.getPaperId());
@@ -365,23 +364,10 @@ public class QuestionPaperInfoActivity extends Activity implements OnClickListen
 	}
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		if(dialog!=null)
 		{
 			dialog.dismiss();	
 		}
 		super.onDestroy();
-	}
-	@Override
-	protected void onPause() {
-		super.onPause();
-		MobclickAgent.onPause(this);
-	};
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		MobclickAgent.onResume(this);
-		
 	}
 }

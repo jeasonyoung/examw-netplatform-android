@@ -24,7 +24,6 @@ import android.widget.Toast;
 
 import com.examw.netschool.util.Constant;
 import com.examw.netschool.util.HttpConnectUtil;
-import com.umeng.analytics.MobclickAgent;
 
 public class ZuHeClassActivity extends Activity implements OnClickListener{
 	private ImageButton returnBtn;
@@ -37,9 +36,9 @@ public class ZuHeClassActivity extends Activity implements OnClickListener{
 	private ProgressDialog dialog;
 	private Handler handler;
 	private String username;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_zuhe);
 		this.returnBtn = (ImageButton) this.findViewById(R.id.returnbtn);
@@ -61,11 +60,11 @@ public class ZuHeClassActivity extends Activity implements OnClickListener{
 		handler = new MyHandler(this);
 		this.list.setOnItemClickListener(new ItemClickListener());
 	}
+	
 	private class GetMyLessonThread extends Thread
 	{
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
 			try{
 				String result = HttpConnectUtil.httpGetRequest(ZuHeClassActivity.this, Constant.DOMAIN_URL+"mobile/findGradeOfPkg?pkgId="+pid);
 				if(result!=null&&!result.equals("null"))
@@ -109,6 +108,7 @@ public class ZuHeClassActivity extends Activity implements OnClickListener{
 			}
 		}
 	}
+	
 	static class MyHandler extends Handler {
         WeakReference<ZuHeClassActivity> mActivity;
         MyHandler(ZuHeClassActivity activity) {
@@ -139,13 +139,10 @@ public class ZuHeClassActivity extends Activity implements OnClickListener{
 	}
 	private class ItemClickListener implements OnItemClickListener
 	{
-		public ItemClickListener() {
-			// TODO Auto-generated constructor stub
-		}
+		public ItemClickListener() { }
+		
 		@Override
-		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-				long arg3) {
-			// TODO Auto-generated method stub
+		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,long arg3) {
 			Intent intent = new Intent(ZuHeClassActivity.this,ClassDetailActivity.class);
 			intent.putExtra("name", ((TextView)arg1.findViewById(R.id.text1)).getText().toString());
 			intent.putExtra("gid", gids[arg2]);
@@ -155,7 +152,6 @@ public class ZuHeClassActivity extends Activity implements OnClickListener{
 	}
 	
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		switch(v.getId())
 		{
 		default:return;
@@ -173,23 +169,10 @@ public class ZuHeClassActivity extends Activity implements OnClickListener{
 	}
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		if(dialog!=null)
 		{
 			dialog.dismiss();	
 		}
 		super.onDestroy();
-	}
-	@Override
-	protected void onPause() {
-		super.onPause();
-		MobclickAgent.onPause(this);
-	};
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		MobclickAgent.onResume(this);
-		
 	}
 }

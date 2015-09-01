@@ -44,7 +44,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.examw.netschool.util.Constant;
-import com.umeng.analytics.MobclickAgent;
 
 public class SettingActivity extends Activity implements OnCheckedChangeListener,OnClickListener{
 	private ImageButton returnBtn,clearCache;
@@ -428,15 +427,5 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 	  	    	}
 	      }
 	    }
-	}
-	@Override
-	protected void onPause() {
-		super.onPause();
-		MobclickAgent.onPause(this);
-	};
-	@Override
-	protected void onResume() {
-		super.onResume();
-		MobclickAgent.onResume(this);
 	}
 }

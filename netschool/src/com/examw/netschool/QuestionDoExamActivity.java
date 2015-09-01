@@ -71,7 +71,6 @@ import com.examw.netschool.entity.ExamRecord;
 import com.examw.netschool.entity.ExamRule;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.umeng.analytics.MobclickAgent;
 
 /**
  * 试题界面 有几个操作都共用此界面 doExam, examTitle 显示试卷标题,返回键提示是否退出考试,下面是交卷按钮
@@ -1083,14 +1082,14 @@ public class QuestionDoExamActivity extends Activity implements OnClickListener,
 			new TimerThread().start();
 		}
 		super.onResume();
-		MobclickAgent.onResume(this);
+		//MobclickAgent.onResume(this);
 	}
 
 	@Override
 	protected void onPause() {
 		timerFlag = false;
 		super.onPause();
-		MobclickAgent.onPause(this);
+		//MobclickAgent.onPause(this);
 	}
 
 	@Override

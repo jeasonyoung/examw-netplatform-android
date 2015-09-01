@@ -27,7 +27,6 @@ import com.examw.netschool.adapter.MyExpandableAdapter2;
 import com.examw.netschool.entity.UserClass;
 import com.examw.netschool.util.Constant;
 import com.examw.netschool.util.HttpConnectUtil;
-import com.umeng.analytics.MobclickAgent;
 
 public class QuestionFromCourseActivity extends Activity{
 	private SharedPreferences userinfo;
@@ -41,9 +40,10 @@ public class QuestionFromCourseActivity extends Activity{
 	private String[][] child;
 	private int[][] gids;
 	private int id;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+		
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_mycourselist2);
 		userinfo = getSharedPreferences("userinfo", 0);
@@ -66,7 +66,6 @@ public class QuestionFromCourseActivity extends Activity{
 	{
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
 			try{
 				String result = HttpConnectUtil.httpGetRequest(QuestionFromCourseActivity.this, Constant.DOMAIN_URL+"mobile/myLessons?stuId="+id);
 				if(result!=null&&!result.equals("null"))
@@ -168,9 +167,7 @@ public class QuestionFromCourseActivity extends Activity{
 	private class ChildClickListener implements OnChildClickListener
 	{
 		@Override
-		public boolean onChildClick(ExpandableListView parent, View v,
-				int groupPosition, int childPosition, long id) {
-			// TODO Auto-generated method stub
+		public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) { 
 			Intent intent = new Intent(QuestionFromCourseActivity.this,QuestionPaperListActivity.class);
 			intent.putExtra("name",((TextView)v.findViewById(R.id.text3)).getText().toString());
 			intent.putExtra("gid", QuestionFromCourseActivity.this.gids[groupPosition][childPosition]);
@@ -182,9 +179,7 @@ public class QuestionFromCourseActivity extends Activity{
 	private class GroupClickListener implements OnGroupClickListener
 	{
 		@Override
-		public boolean onGroupClick(ExpandableListView parent, View v,
-				int groupPosition, long id) {
-			// TODO Auto-generated method stub
+		public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
 			//如果没有子类了,表示是单独的课程
 			if(parent.getExpandableListAdapter().getChildrenCount(groupPosition)==0)
 			{
@@ -199,23 +194,10 @@ public class QuestionFromCourseActivity extends Activity{
 	}
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		if(dialog!=null)
 		{
 			dialog.dismiss();	
 		}
 		super.onDestroy();
-	}
-	@Override
-	protected void onPause() {
-		super.onPause();
-		MobclickAgent.onPause(this);
-	};
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		MobclickAgent.onResume(this);
-		
 	}
 }

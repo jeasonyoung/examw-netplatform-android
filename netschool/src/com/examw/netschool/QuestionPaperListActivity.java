@@ -27,7 +27,6 @@ import com.examw.netschool.dao.PaperDao;
 import com.examw.netschool.entity.Paper;
 import com.examw.netschool.util.Constant;
 import com.examw.netschool.util.HttpConnectUtil;
-import com.umeng.analytics.MobclickAgent;
 
 public class QuestionPaperListActivity extends Activity{
 	private int gid;
@@ -42,7 +41,6 @@ public class QuestionPaperListActivity extends Activity{
 	private PaperDao dao;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_questionblank_examtier2);
 		this.title = (TextView) this.findViewById(R.id.TopTitle1);
@@ -63,9 +61,7 @@ public class QuestionPaperListActivity extends Activity{
 		new GetPaperListThread().start();
 		this.paperList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-				// TODO Auto-generated method stub
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				Intent intent = new Intent(QuestionPaperListActivity.this,QuestionPaperInfoActivity.class);
 				intent.putExtra("gid", String.valueOf(gid));
 				intent.putExtra("paperid", papers.get(arg2).getPaperId());
@@ -80,7 +76,6 @@ public class QuestionPaperListActivity extends Activity{
 	{
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
 			if("local".equals(loginType))
 			{
 				papers = dao.findAllPapers(username);
@@ -186,23 +181,10 @@ public class QuestionPaperListActivity extends Activity{
 	}
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		if(dialog!=null)
 		{
 			dialog.dismiss();	
 		}
 		super.onDestroy();
-	}
-	@Override
-	protected void onPause() {
-		super.onPause();
-		MobclickAgent.onPause(this);
-	};
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		MobclickAgent.onResume(this);
-		
 	}
 }

@@ -44,7 +44,6 @@ import android.widget.Toast;
 
 import com.examw.netschool.util.Constant;
 import com.examw.netschool.util.HttpConnectUtil;
-import com.umeng.analytics.MobclickAgent;
 
 public class AnswerAskActivity extends Activity implements OnClickListener,OnItemSelectedListener{
 	private ImageButton returnbtn;
@@ -432,17 +431,5 @@ public class AnswerAskActivity extends Activity implements OnClickListener,OnIte
 				break;
 			}
 		}
-	}
-	@Override
-	protected void onPause() {
-		super.onPause();
-		MobclickAgent.onPause(this);
-	};
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		MobclickAgent.onResume(this);
-		
 	}
 }

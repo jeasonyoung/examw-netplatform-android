@@ -27,7 +27,6 @@ import com.examw.netschool.entity.Problem;
 import com.examw.netschool.util.Constant;
 import com.examw.netschool.util.HttpConnectUtil;
 import com.google.gson.Gson;
-import com.umeng.analytics.MobclickAgent;
 /**
  * 答案主界面
  * @author jeasonyoung
@@ -284,16 +283,4 @@ public class AnswerMainActivity extends ListActivity implements OnClickListener{
     	mIntent.putExtra("uid", uid);
     	this.startActivity(mIntent);
     }
-    @Override
-	protected void onPause() {
-		super.onPause();
-		MobclickAgent.onPause(this);
-	};
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		MobclickAgent.onResume(this);
-		
-	}
 }

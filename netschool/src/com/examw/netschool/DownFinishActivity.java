@@ -19,7 +19,6 @@ import android.widget.ListView;
 import com.examw.netschool.adapter.DownedListAdapter;
 import com.examw.netschool.dao.CourseDao;
 import com.examw.netschool.entity.Course;
-import com.umeng.analytics.MobclickAgent;
 /**
  * 下载完成。
  * @author jeasonyoung
@@ -72,7 +71,7 @@ public class DownFinishActivity extends BaseActivity {
 		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 			System.out.print("ItemClickListener 播放");
 			//
-			MobclickAgent.onEvent(DownFinishActivity.this,"download_listen");
+			//MobclickAgent.onEvent(DownFinishActivity.this,"download_listen");
 			//
 			Course c = list.get(arg2);
 			Intent intent = new Intent(DownFinishActivity.this, VideoPlayActivity.class);
@@ -171,23 +170,5 @@ public class DownFinishActivity extends BaseActivity {
 			}).create();
 			dialog.show();
 		}
-	}
-	/*
-	 * 暂停处理。
-	 * @see android.app.Activity#onPause()
-	 */
-	@Override
-	protected void onPause() {
-		super.onPause();
-		MobclickAgent.onPause(this);
-	};
-	/*
-	 * 恢复处理。
-	 * @see android.app.Activity#onResume()
-	 */
-	@Override
-	protected void onResume() {
-		super.onResume();
-		MobclickAgent.onResume(this);
 	}
 }

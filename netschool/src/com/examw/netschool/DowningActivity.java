@@ -20,7 +20,6 @@ import com.examw.netschool.dao.CourseDao;
 import com.examw.netschool.entity.DowningCourse;
 import com.examw.netschool.service.DownloadService;
 import com.examw.netschool.util.StringUtils;
-import com.umeng.analytics.MobclickAgent;
 
 /**
  *  视频下载UI。
@@ -80,24 +79,6 @@ public class DowningActivity extends BaseActivity{
 			nodata.setVisibility(View.VISIBLE);
 		}
 	}
-	/*
-	 * 重载恢复。
-	 * @see android.app.Activity#onResume()
-	 */
-	@Override
-	protected void onResume() {
-		super.onResume();
-		MobclickAgent.onResume(this);
-	}
-	/*
-	 * 重载暂停。
-	 * @see android.app.Activity#onPause()
-	 */
-	@Override
-	protected void onPause() {
-		super.onPause();
-		MobclickAgent.onPause(this);
-	};
 	
 	@Override
 	protected void onDestroy() {

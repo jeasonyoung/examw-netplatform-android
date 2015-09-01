@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.examw.netschool.util.Constant;
 import com.examw.netschool.util.HttpConnectUtil;
-import com.umeng.analytics.MobclickAgent;
 
 public class RegisterActivity extends Activity{
 	 private ImageButton returnbtn;
@@ -41,7 +40,7 @@ public class RegisterActivity extends Activity{
 	    setContentView(R.layout.activity_register);
 	    findViewsById();
 	  }
-	 //初始化控�?
+	 //初始化控
 	 private void findViewsById()
 	 {
 		 returnbtn = (ImageButton) this.findViewById(R.id.returnbtn);
@@ -79,7 +78,6 @@ public class RegisterActivity extends Activity{
 		 treatyBtn.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				Intent intent = new Intent(RegisterActivity.this,TreatyActivity.class);
 				RegisterActivity.this.startActivity(intent);
 			}
@@ -187,7 +185,6 @@ public class RegisterActivity extends Activity{
 	 {
 		 @Override
 		protected String doInBackground(String... params) {
-			// TODO Auto-generated method stub
 			 try{
 				 return HttpConnectUtil.httpGetRequest(RegisterActivity.this, params[0]);
 			 }catch(Exception e)
@@ -197,7 +194,6 @@ public class RegisterActivity extends Activity{
 		 }
 		 @Override
 		protected void onPostExecute(String result) {
-			// TODO Auto-generated method stub
 			super.onPostExecute(result);
 			dialog.dismiss();
 			try {
@@ -218,7 +214,6 @@ public class RegisterActivity extends Activity{
 					RegisterActivity.this.finish();
 				}
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				if("暂时连不上服务器".equals(result))
 				{
@@ -229,24 +224,11 @@ public class RegisterActivity extends Activity{
 		}
 	 }
 	 @Override
-		protected void onDestroy() {
-			// TODO Auto-generated method stub
-			if(dialog!=null)
-			{
-				dialog.dismiss();	
-			}
-			super.onDestroy();
+	protected void onDestroy() {
+		if(dialog!=null)
+		{
+			dialog.dismiss();	
 		}
-	 @Override
-		protected void onPause() {
-			super.onPause();
-			MobclickAgent.onPause(this);
-		};
-		@Override
-		protected void onResume() {
-			// TODO Auto-generated method stub
-			super.onResume();
-			MobclickAgent.onResume(this);
-			
-		}
+		super.onDestroy();
+	}
 }

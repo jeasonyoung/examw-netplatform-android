@@ -43,7 +43,6 @@ import com.examw.netschool.entity.Playrecord;
 import com.examw.netschool.player.VitamioVideoPlayer;
 import com.examw.netschool.util.Constant;
 import com.examw.netschool.util.StringUtils;
-import com.umeng.analytics.MobclickAgent;
 
 /**
  * 视频播放Activity基础类
@@ -366,14 +365,14 @@ public class VideoPlayActivity extends Activity implements OnTouchListener, OnGe
 	protected void onResume() {
 		super.onResume();
 		if(this.player != null)this.player.play();
-		MobclickAgent.onResume(this);
+		//MobclickAgent.onResume(this);
 	}
 	
 	@Override
 	protected void onPause() {
 		super.onPause();
 		if(this.player != null)this.player.pause();
-		MobclickAgent.onPause(this);
+		//MobclickAgent.onPause(this);
 	}
 	
 	@Override

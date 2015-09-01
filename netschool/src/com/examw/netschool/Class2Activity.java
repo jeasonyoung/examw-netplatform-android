@@ -20,8 +20,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.umeng.analytics.MobclickAgent;
-
 public class Class2Activity extends Activity implements OnClickListener{
 	private ListView list;
 	private TextView title;
@@ -139,17 +137,5 @@ public class Class2Activity extends Activity implements OnClickListener{
 			dialog.dismiss();
 		}
 		super.onDestroy();
-	}
-	@Override
-	protected void onPause() {
-		super.onPause();
-		MobclickAgent.onPause(this);
-	};
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		MobclickAgent.onResume(this);
-		
 	}
 }

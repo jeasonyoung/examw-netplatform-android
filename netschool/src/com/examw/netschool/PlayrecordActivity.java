@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.examw.netschool.dao.PlayrecordDao;
 import com.examw.netschool.entity.Playrecord;
-import com.umeng.analytics.MobclickAgent;
 /**
  * 播放记录类
  * @author jeasonyoung
@@ -80,7 +79,7 @@ public class PlayrecordActivity extends ListActivity{
 			}
 		}
 		//
-		MobclickAgent.onEvent(this,"record_listen");
+		//MobclickAgent.onEvent(this,"record_listen");
 		//
 		Intent intent = new Intent(this,VideoPlayActivity.class);
 		intent.putExtra("username", username);
@@ -147,23 +146,5 @@ public class PlayrecordActivity extends ListActivity{
 			playTime.setText("学习时间:"+r.getPlayTime());
 			return convertView;
 		}
-	}
-	/*
-	 * (non-Javadoc)
-	 * @see android.app.Activity#onPause()
-	 */
-	@Override
-	protected void onPause() {
-		super.onPause();
-		MobclickAgent.onPause(this);
-	};
-	/*
-	 * (non-Javadoc)
-	 * @see android.app.Activity#onResume()
-	 */
-	@Override
-	protected void onResume() {
-		super.onResume();
-		MobclickAgent.onResume(this);
 	}
 }

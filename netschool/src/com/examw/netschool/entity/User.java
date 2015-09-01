@@ -34,9 +34,9 @@ public class User extends BaseEntity{
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public User() {
-		// TODO Auto-generated constructor stub
-	}
+	
+	public User() { }
+	
 	public User(String uid, String username, String password) {
 		super();
 		this.uid = uid;

@@ -20,7 +20,6 @@ import android.widget.TextView;
 import com.examw.netschool.adapter.MyCourseListAdapter2;
 import com.examw.netschool.dao.CourseDao;
 import com.examw.netschool.entity.Course;
-import com.umeng.analytics.MobclickAgent;
 
 public class MyCourseDetailActivity extends BaseActivity implements OnClickListener{
 	private ImageButton rbtn;
@@ -33,9 +32,10 @@ public class MyCourseDetailActivity extends BaseActivity implements OnClickListe
 	private CourseDao dao;
 	private MyCourseListAdapter2 mAdapter;
 	private String loginType,username;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+		
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_mycourse);
 		dao = new CourseDao(this);
@@ -150,20 +150,7 @@ public class MyCourseDetailActivity extends BaseActivity implements OnClickListe
 			}
 			dao.save(username, list);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-	@Override
-	protected void onPause() {
-		super.onPause();
-		MobclickAgent.onPause(this);
-	};
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		MobclickAgent.onResume(this);
-		
 	}
 }

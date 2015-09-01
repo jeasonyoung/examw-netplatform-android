@@ -27,7 +27,6 @@ import com.examw.netschool.dao.UserClassDao;
 import com.examw.netschool.entity.UserClass;
 import com.examw.netschool.util.Constant;
 import com.examw.netschool.util.HttpConnectUtil;
-import com.umeng.analytics.MobclickAgent;
 
 public class MyCourseActivity extends BaseActivity implements OnClickListener {
 	private SharedPreferences userinfo;
@@ -46,7 +45,7 @@ public class MyCourseActivity extends BaseActivity implements OnClickListener {
 	private String username,loginType;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+		
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_mycourselist);
 		Intent intent = this.getIntent();
@@ -57,10 +56,8 @@ public class MyCourseActivity extends BaseActivity implements OnClickListener {
 		id = userinfo.getInt("id", 0);
 		expandList = (ExpandableListView) this.findViewById(R.id.explist2);
 		returnBtn = (ImageButton) this.findViewById(R.id.returnbtn);
-		outlineCourse = (LinearLayout) this
-				.findViewById(R.id.MyfileDown_layout_btn);
-		playrecord = (LinearLayout) this
-				.findViewById(R.id.LearningRecord_layout_btn);
+		outlineCourse = (LinearLayout) this.findViewById(R.id.MyfileDown_layout_btn);
+		playrecord = (LinearLayout) this.findViewById(R.id.LearningRecord_layout_btn);
 		returnBtn.setOnClickListener(this);
 		outlineCourse.setOnClickListener(this);
 		playrecord.setOnClickListener(this);
@@ -70,8 +67,7 @@ public class MyCourseActivity extends BaseActivity implements OnClickListener {
 		nodata = (LinearLayout) this.findViewById(R.id.nodataLayout);
 		handler = new MyHandler(this);
 		dao = new UserClassDao(this);
-		dialog = ProgressDialog.show(MyCourseActivity.this, null, "努力加载中请稍候",
-				true, true);
+		dialog = ProgressDialog.show(MyCourseActivity.this, null, "努力加载中请稍候",true, true);
 		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		new GetMyLessonThread().start();
 		
@@ -80,7 +76,6 @@ public class MyCourseActivity extends BaseActivity implements OnClickListener {
 	private class GetMyLessonThread extends Thread {
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
 			try {
 				if (!isLocalLogin) {
 					String result = HttpConnectUtil.httpGetRequest(
@@ -290,7 +285,6 @@ public class MyCourseActivity extends BaseActivity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		int id = v.getId();
 		switch (id) {
 		case R.id.LearningRecord_layout_btn: // 播放记录
@@ -309,17 +303,5 @@ public class MyCourseActivity extends BaseActivity implements OnClickListener {
 			this.finish();
 			return;
 		}
-	}
-	@Override
-	protected void onPause() {
-		super.onPause();
-		MobclickAgent.onPause(this);
-	};
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		MobclickAgent.onResume(this);
-		
 	}
 }

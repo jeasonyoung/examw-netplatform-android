@@ -23,7 +23,6 @@ import android.widget.Toast;
 import com.examw.netschool.adapter.MyExpandableAdapter2;
 import com.examw.netschool.util.Constant;
 import com.examw.netschool.util.HttpConnectUtil;
-import com.umeng.analytics.MobclickAgent;
 
 public class Class3Activity extends Activity implements OnClickListener{
 	private TextView title;
@@ -204,17 +203,5 @@ public class Class3Activity extends Activity implements OnClickListener{
 			dialog.dismiss();
 		}
 		super.onDestroy();
-	}
-	@Override
-	protected void onPause() {
-		super.onPause();
-		MobclickAgent.onPause(this);
-	};
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		MobclickAgent.onResume(this);
-		
 	}
 }

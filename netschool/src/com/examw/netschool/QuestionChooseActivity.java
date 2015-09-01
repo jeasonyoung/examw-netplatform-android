@@ -26,7 +26,6 @@ import com.examw.netschool.entity.ExamRecord;
 import com.examw.netschool.entity.ExamRule;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.umeng.analytics.MobclickAgent;
 
 /**
  * 问题选择类。
@@ -295,15 +294,5 @@ public class QuestionChooseActivity extends Activity implements OnClickListener{
 		for (ExamQuestion q : questionList) {
 			q.setUserAnswer(null);
 		}
-	}
-	@Override
-	protected void onPause() {
-		super.onPause();
-		MobclickAgent.onPause(this);
-	};
-	@Override
-	protected void onResume() {
-		super.onResume();
-		MobclickAgent.onResume(this);
 	}
 }

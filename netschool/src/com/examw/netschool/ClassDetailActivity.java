@@ -28,7 +28,6 @@ import com.examw.netschool.adapter.CourseDetailListAdapter;
 import com.examw.netschool.adapter.MyCourseListAdapter;
 import com.examw.netschool.util.Constant;
 import com.examw.netschool.util.HttpConnectUtil;
-import com.umeng.analytics.MobclickAgent;
 
 /**
  * 课程明细。
@@ -205,7 +204,7 @@ public class ClassDetailActivity extends Activity implements OnClickListener{
 		 */
 		@Override
 		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-			MobclickAgent.onEvent(ClassDetailActivity.this,"free_video_listen");
+			//MobclickAgent.onEvent(ClassDetailActivity.this,"free_video_listen");
 			Intent intent = new Intent(ClassDetailActivity.this, VideoPlayActivity.class);
 			intent.putExtra("name", ((TextView)arg1.findViewById(R.id.text4)).getText().toString());
 			intent.putExtra("url",urls.get(arg2));
@@ -221,15 +220,5 @@ public class ClassDetailActivity extends Activity implements OnClickListener{
 			dialog.dismiss();	
 		}
 		super.onDestroy();
-	}
-	@Override
-	protected void onPause() {
-		super.onPause();
-		MobclickAgent.onPause(this);
-	};
-	@Override
-	protected void onResume() {
-		super.onResume();
-		MobclickAgent.onResume(this);
 	}
 }

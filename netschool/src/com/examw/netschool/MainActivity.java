@@ -19,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.examw.netschool.app.AppContext;
-import com.umeng.analytics.MobclickAgent;
 /**
  * 主Activity类。
  * @author jeasonyoung
@@ -229,7 +228,7 @@ public class MainActivity extends BaseActivity{
 					public void onClick(DialogInterface dialog, int id) {
 						//停止下载服务
 						//Toast.makeText(this, "发请求注销", Toast.LENGTH_LONG).show();
-						MobclickAgent.onEvent(MainActivity.this,"LoginOut");
+						//MobclickAgent.onEvent(MainActivity.this,"LoginOut");
 						appContext.cleanLoginInfo();
 						MainActivity.this.startActivity(new Intent(MainActivity.this,LoginActivity.class));
 						MainActivity.this.finish();
@@ -243,19 +242,10 @@ public class MainActivity extends BaseActivity{
 				});
 			 localBuilder.create().show();
 		}
+		
 		protected void startSettingActivity(){
 			Intent intent = new Intent(this,SettingActivity.class);
 			intent.putExtra("username", username);
 			this.startActivity(intent);
 		};
-		@Override
-		protected void onPause() {
-			super.onPause();
-			MobclickAgent.onPause(this);
-		};
-		@Override
-		protected void onResume() {
-			super.onResume();
-			MobclickAgent.onResume(this);
-		}
 }

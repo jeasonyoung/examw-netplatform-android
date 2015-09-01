@@ -23,7 +23,6 @@ import com.examw.netschool.entity.ExamQuestion;
 import com.examw.netschool.entity.ExamRecord;
 import com.examw.netschool.entity.ExamRule;
 import com.google.gson.Gson;
-import com.umeng.analytics.MobclickAgent;
 
 public class QuestionRecordActivity extends Activity{
 	private ImageButton returnbtn;
@@ -46,9 +45,7 @@ public class QuestionRecordActivity extends Activity{
 		initData();
 		this.paperListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-				// TODO Auto-generated method stub
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) { 
 				ExamRecord r = recordList.get(arg2);
 				loadingLayout.setVisibility(View.VISIBLE);
 				itemClickMethod(r);
@@ -56,9 +53,7 @@ public class QuestionRecordActivity extends Activity{
 		});
 		this.paperListView.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
-			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-					int arg2, long arg3) {
-				// TODO Auto-generated method stub
+			public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				showDeleteWindow(arg2);
 				return true;
 			}
@@ -77,7 +72,6 @@ public class QuestionRecordActivity extends Activity{
 	}
 	@Override
 	protected void onStart() {
-		// TODO Auto-generated method stub
 		this.loadingLayout.setVisibility(View.GONE);
 		super.onStart();
 	}
@@ -114,7 +108,6 @@ public class QuestionRecordActivity extends Activity{
 			}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int id) {
-					// TODO Auto-generated method stub
 					dialog.cancel();
 				}                      
 			});
@@ -189,17 +182,5 @@ public class QuestionRecordActivity extends Activity{
 				isDone.append(i, true);
 			}
 		}
-	}
-	@Override
-	protected void onPause() {
-		super.onPause();
-		MobclickAgent.onPause(this);
-	};
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		MobclickAgent.onResume(this);
-		
 	}
 }

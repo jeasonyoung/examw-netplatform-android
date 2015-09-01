@@ -29,7 +29,6 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.examw.netschool.util.Constant;
-import com.umeng.analytics.MobclickAgent;
 
 public class SuggestionActivity extends Activity implements OnClickListener{
 	private ImageButton returnbtn;
@@ -137,15 +136,5 @@ public class SuggestionActivity extends Activity implements OnClickListener{
 				Toast.makeText(SuggestionActivity.this, "提交失败,稍后再试", Toast.LENGTH_LONG).show();
 			}
 		}
-	}
-	@Override
-	protected void onPause() {
-		super.onPause();
-		MobclickAgent.onPause(this);
-	};
-	@Override
-	protected void onResume() {
-		super.onResume();
-		MobclickAgent.onResume(this);
 	}
 }

@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.examw.netschool.app.AppContext;
-import com.umeng.analytics.MobclickAgent;
 
 public class GuideActivity extends Activity
 {
@@ -26,8 +25,9 @@ public class GuideActivity extends Activity
 	  private ViewPager guidePage;	//引导界面轮转
 	  private ArrayList<View> d;
 
-	  protected void onCreate(Bundle paramBundle)
-	  {
+	@SuppressWarnings("deprecation")
+	protected void onCreate(Bundle paramBundle)
+	{
 	    super.onCreate(paramBundle);
 	    requestWindowFeature(1);
 	    LayoutInflater localLayoutInflater = getLayoutInflater();
@@ -54,10 +54,10 @@ public class GuideActivity extends Activity
 	    });
 	    PagerAdapter pagerAdapter = new MyViewPagerAdapter(this.d);
 	    this.guidePage.setAdapter(pagerAdapter);
+	    
 	    this.guidePage.setOnPageChangeListener(new OnPageChangeListener() {
 			@Override
 			public void onPageSelected(int arg0) {
-				// TODO Auto-generated method stub
 				if(arg0==4)
 				{
 					GuideActivity.this.startBtn.setVisibility(View.VISIBLE);
@@ -78,19 +78,8 @@ public class GuideActivity extends Activity
 			}
 		});
 	  }
-	  @Override
-		protected void onPause() {
-			super.onPause();
-			MobclickAgent.onPause(this);
-		};
-		@Override
-		protected void onResume() {
-			// TODO Auto-generated method stub
-			super.onResume();
-			MobclickAgent.onResume(this);
-			
-		}
 }
+
 class MyViewPagerAdapter extends PagerAdapter{  
     private List<View> mListViews;  
     public MyViewPagerAdapter(List<View> mListViews) {  
