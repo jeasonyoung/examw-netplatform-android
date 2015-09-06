@@ -28,7 +28,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.examw.netschool.util.Constant;
+import com.examw.netschool.app.Constant;
 
 public class SuggestionActivity extends Activity implements OnClickListener{
 	private ImageButton returnbtn;

@@ -24,7 +24,7 @@ public class DownloadDao {
 	 * @param context 上下文。
 	 */
 	public DownloadDao(Context context) {
-		this.dbHelper = new MyDBHelper(context);
+		//this.dbHelper = new MyDBHelper(context);
 	}
 	/**
 	 *  获取每条线程已经下载的文件长度。

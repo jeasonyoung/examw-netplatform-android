@@ -43,7 +43,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.examw.netschool.util.Constant;
+import com.examw.netschool.app.Constant;
 
 public class SettingActivity extends Activity implements OnCheckedChangeListener,OnClickListener{
 	private ImageButton returnBtn,clearCache;

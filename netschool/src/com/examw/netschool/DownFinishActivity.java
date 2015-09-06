@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.examw.netschool.adapter.DownedListAdapter;
-import com.examw.netschool.dao.CourseDao;
 import com.examw.netschool.entity.Course;
 /**
  * 下载完成。
@@ -26,7 +25,7 @@ import com.examw.netschool.entity.Course;
  */
 public class DownFinishActivity extends BaseActivity {
 	private ListView listview;
-	private CourseDao dao;
+	//private CourseDao dao;
 	private List<Course> list;
 	private LinearLayout nodata;
 	private BaseAdapter mAdapter;
@@ -46,8 +45,8 @@ public class DownFinishActivity extends BaseActivity {
 		this.nodata = (LinearLayout) this.findViewById(R.id.down_nodataLayout);
 		this.username = getIntent().getStringExtra("username");
 		
-		if (this.dao == null)this.dao = new CourseDao(this);
-		this.list = this.dao.findAllDowned(username);
+//		if (this.dao == null)this.dao = new CourseDao(this);
+//		this.list = this.dao.findAllDowned(username);
 		if (this.list.size() == 0) {
 			this.nodata.setVisibility(View.VISIBLE);
 		}
@@ -158,7 +157,7 @@ public class DownFinishActivity extends BaseActivity {
 					Course c = list.get(index);
 					new File(c.getFilePath()).delete();
 					//Log.i("DownFinish","删除了文件");
-					dao.updateState(c.getUserName(), c.getFileUrl(), 0);
+					//dao.updateState(c.getUserName(), c.getFileUrl(), 0);
 					list.remove(index);
 					mAdapter.notifyDataSetChanged();
 				}

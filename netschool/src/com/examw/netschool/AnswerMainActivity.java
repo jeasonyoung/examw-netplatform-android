@@ -23,9 +23,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.examw.netschool.adapter.ProblemListAdapter;
+import com.examw.netschool.app.Constant;
 import com.examw.netschool.entity.Problem;
-import com.examw.netschool.util.Constant;
-import com.examw.netschool.util.HttpConnectUtil;
 import com.google.gson.Gson;
 /**
  * 答案主界面
@@ -97,7 +96,7 @@ public class AnswerMainActivity extends ListActivity implements OnClickListener{
             // Simulates a background job.
             try {
             	String result = null;
-            	result = HttpConnectUtil.httpGetRequest(AnswerMainActivity.this, params[0]);
+            	//result = HttpConnectUtil.httpGetRequest(AnswerMainActivity.this, params[0]);
             	return result;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -241,7 +240,7 @@ public class AnswerMainActivity extends ListActivity implements OnClickListener{
 				try
 				{
 					String url = Constant.DOMAIN_URL+"mobile/MyQuestions?username="+username+"&page="+mListItems.size()/PAGESIZE+1;
-					String result = HttpConnectUtil.httpGetRequest(AnswerMainActivity.this, url);
+					String result = "";//HttpConnectUtil.httpGetRequest(AnswerMainActivity.this, url);
 					LinkedList<Problem> list = parseJson(result);
 					Message msg = handler.obtainMessage();
 					msg.what = 1;

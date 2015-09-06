@@ -36,12 +36,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.examw.netschool.dao.CourseDao;
+import com.examw.netschool.app.Constant;
 import com.examw.netschool.dao.PlayrecordDao;
 import com.examw.netschool.downloads.MultiThreadDownload;
 import com.examw.netschool.entity.Playrecord;
 import com.examw.netschool.player.VitamioVideoPlayer;
-import com.examw.netschool.util.Constant;
 import com.examw.netschool.util.StringUtils;
 
 /**
@@ -61,7 +60,6 @@ public class VideoPlayActivity extends Activity implements OnTouchListener, OnGe
 	private VideoView videoView;
 	
 	private RelativeLayout videoLoadingLayout;
-	//private Handler handler;
 	private GestureDetector gestureDetector;
 	private AudioManager audioManager;
 	
@@ -81,6 +79,7 @@ public class VideoPlayActivity extends Activity implements OnTouchListener, OnGe
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.d(TAG, "初始化...");
 		//检查播放器依赖库
 		if(!LibsChecker.checkVitamioLibs(this))return;
 		//设置不要标题栏，必须在setContentView之前
@@ -123,8 +122,8 @@ public class VideoPlayActivity extends Activity implements OnTouchListener, OnGe
 		this.btnReturn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				VideoPlayActivity.this.backRecord();
-				VideoPlayActivity.this.finish();
+				backRecord();
+				finish();
 			}
 		});
 		//
@@ -263,7 +262,7 @@ public class VideoPlayActivity extends Activity implements OnTouchListener, OnGe
 				}
 				Toast.makeText(this, "本地文件已经被删除", Toast.LENGTH_SHORT).show();
 				//修改courseTab中的记录
-				new CourseDao(this).updateState(this.username, this.httpUrl, 0);
+				//new CourseDao(this).updateState(this.username, this.httpUrl, 0);
 				this.finish();
 				return null;
 			}

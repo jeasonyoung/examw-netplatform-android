@@ -19,8 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.examw.netschool.util.Constant;
-import com.examw.netschool.util.HttpConnectUtil;
+import com.examw.netschool.app.Constant;
 
 public class RegisterActivity extends Activity{
 	 private ImageButton returnbtn;
@@ -186,7 +185,7 @@ public class RegisterActivity extends Activity{
 		 @Override
 		protected String doInBackground(String... params) {
 			 try{
-				 return HttpConnectUtil.httpGetRequest(RegisterActivity.this, params[0]);
+				 return "";//HttpConnectUtil.httpGetRequest(RegisterActivity.this, params[0]);
 			 }catch(Exception e)
 			 {
 				 return "暂时连不上服务器";

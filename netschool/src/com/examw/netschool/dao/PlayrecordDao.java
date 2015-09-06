@@ -19,7 +19,7 @@ public class PlayrecordDao {
 	 * @param context 上下文。
 	 */
 	public PlayrecordDao(Context context) {
-		this.dbHelper = new MyDBHelper(context);
+		//this.dbHelper = new MyDBHelper(context);
 	}
 	//保存播放记录
 	public void save(Playrecord record)

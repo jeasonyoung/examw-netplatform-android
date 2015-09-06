@@ -42,8 +42,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.examw.netschool.util.Constant;
-import com.examw.netschool.util.HttpConnectUtil;
+import com.examw.netschool.app.Constant;
 
 public class AnswerAskActivity extends Activity implements OnClickListener,OnItemSelectedListener{
 	private ImageButton returnbtn;
@@ -262,8 +261,8 @@ public class AnswerAskActivity extends Activity implements OnClickListener,OnIte
 	            // Simulates a background job.
 	            try {
 	            	String[] result = new String[2];
-	            	result[0] = HttpConnectUtil.httpGetRequest(AnswerAskActivity.this, params[0]);
-	            	result[1] = HttpConnectUtil.httpGetRequest(AnswerAskActivity.this, params[1]);
+	            	//result[0] = HttpConnectUtil.httpGetRequest(AnswerAskActivity.this, params[0]);
+	            	//result[1] = HttpConnectUtil.httpGetRequest(AnswerAskActivity.this, params[1]);
 	            	return result;
 	            } catch (Exception e) {
 	                e.printStackTrace();
@@ -386,22 +385,22 @@ public class AnswerAskActivity extends Activity implements OnClickListener,OnIte
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			try{
-			String result = HttpConnectUtil.httpGetRequest(
-					AnswerAskActivity.this,
-					Constant.DOMAIN_URL+"mobile/myLessons?stuId="
-							+ uid);
-			if(result!=null&&!result.equals("null"))
-			{
-				handler.sendEmptyMessage(1);
-			}else
-			{
-				handler.sendEmptyMessage(-1);
-			}
-			}catch(Exception e)
-			{
-				handler.sendEmptyMessage(-2);
-			}
+//			try{
+//			String result = HttpConnectUtil.httpGetRequest(
+//					AnswerAskActivity.this,
+//					Constant.DOMAIN_URL+"mobile/myLessons?stuId="
+//							+ uid);
+//			if(result!=null&&!result.equals("null"))
+//			{
+//				handler.sendEmptyMessage(1);
+//			}else
+//			{
+//				handler.sendEmptyMessage(-1);
+//			}
+//			}catch(Exception e)
+//			{
+//				handler.sendEmptyMessage(-2);
+//			}
 		}
 	}
 	static class MyHandler extends Handler

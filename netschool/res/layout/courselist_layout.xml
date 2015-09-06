@@ -13,17 +13,22 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10.0dip"
+        android:layout_marginStart="10dp"
         android:layout_marginRight="5.0dip"
+        android:layout_marginEnd="5dp"
         android:layout_toLeftOf="@+id/Downprogresstext"
-        android:layout_toRightOf="@+id/filetypeImg"
+        android:layout_toStartOf="@id/Downprogresstext"
         android:background="@drawable/childlist_select"
         android:drawableLeft="@drawable/filetype_1"
+        android:drawableStart="@drawable/filetype_1"
         android:drawablePadding="8.0dip"
         android:gravity="center_vertical"
         android:paddingBottom="10.0dip"
         android:paddingTop="10.0dip"
-        android:text="hahahaha"
         android:textSize="@dimen/text_medium_size" />
+    
+    <!--   android:layout_toRightOf="@+id/filetypeImg"
+        android:layout_toEndOf="@id/filetypeImg" -->
 
     <TextView
         android:id="@+id/Downprogresstext"
@@ -31,6 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/playerBtn"
+        android:layout_toStartOf="@id/playerBtn"
         android:gravity="center_vertical"
         android:textSize="@dimen/text_small_size" />
 
@@ -39,8 +45,10 @@
         android:layout_width="30.0dip"
         android:layout_height="30.0dip"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="10.0dip"
+        android:layout_marginEnd="10dp"
         android:background="@color/none"
         android:contentDescription="@string/playBtn"
         android:gravity="center_vertical"

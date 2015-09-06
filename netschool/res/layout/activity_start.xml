@@ -10,8 +10,10 @@
         android:layout_width="136.0dip"
         android:layout_height="55.0dip"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="28dp"
+        android:layout_marginStart="28dp"
         android:layout_marginTop="28dp"
         android:contentDescription="@string/start_nologo"
         android:src="@drawable/toplogo"
@@ -22,11 +24,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="18dp"
+        android:layout_marginEnd="18dp"
         android:paddingBottom="10.0dip"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:text="@string/start_words"
         android:textColor="#ffffffff"
         android:textSize="@dimen/text_medium_size"
         android:textStyle="bold" />
+    
 </RelativeLayout>

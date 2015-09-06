@@ -60,7 +60,7 @@
                     android:layout_width="60.0dip"
                     android:layout_height="60.0dip"
                     android:layout_marginLeft="10.0dip"
-                    android:src="@drawable/youeclass_logo" />
+                    android:src="@drawable/app_logo" />
 
                 <TextView
                     android:id="@+id/appnametext"

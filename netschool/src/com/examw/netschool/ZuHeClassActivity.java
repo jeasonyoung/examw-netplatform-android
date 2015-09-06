@@ -22,8 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.examw.netschool.util.Constant;
-import com.examw.netschool.util.HttpConnectUtil;
+import com.examw.netschool.app.Constant;
 
 public class ZuHeClassActivity extends Activity implements OnClickListener{
 	private ImageButton returnBtn;
@@ -66,7 +65,7 @@ public class ZuHeClassActivity extends Activity implements OnClickListener{
 		@Override
 		public void run() {
 			try{
-				String result = HttpConnectUtil.httpGetRequest(ZuHeClassActivity.this, Constant.DOMAIN_URL+"mobile/findGradeOfPkg?pkgId="+pid);
+				String result = "";//HttpConnectUtil.httpGetRequest(ZuHeClassActivity.this, Constant.DOMAIN_URL+"mobile/findGradeOfPkg?pkgId="+pid);
 				if(result!=null&&!result.equals("null"))
             	{
             		//解析json字符串,配置expandableListView的adapter

@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.examw.netschool.adapter.DowningListAdapter;
-import com.examw.netschool.dao.CourseDao;
 import com.examw.netschool.entity.DowningCourse;
 import com.examw.netschool.service.DownloadService;
 import com.examw.netschool.util.StringUtils;
@@ -33,7 +32,7 @@ public class DowningActivity extends BaseActivity{
 	private DowningListAdapter mAdapter;
 	private DownloadServiceConnection serviceConnection = new DownloadServiceConnection();
 	private DownloadService.IFileDownloadService fileDownloadService;
-	private CourseDao courseDao = new CourseDao(this);
+	//private CourseDao courseDao = new CourseDao(this);
 	private List<DowningCourse> dataSource;
 	private String username;
 	/*
@@ -57,7 +56,7 @@ public class DowningActivity extends BaseActivity{
 		String name =  intent.getStringExtra("name");
 		String url = intent.getStringExtra("url");
 		//加载数据
-		this.dataSource = this.courseDao.findAllDowning(this.username);
+		this.dataSource = null;//this.courseDao.findAllDowning(this.username);
 		//初始化从课程列表中点击的要下载项
 		if(!StringUtils.isEmpty(name) && !StringUtils.isEmpty(url))
 		{
@@ -70,7 +69,7 @@ public class DowningActivity extends BaseActivity{
 				Log.d(TAG, "添加须下载课程["+name+"=>"+url+"]到集合...");
 				this.dataSource.add(downing);
 				//添加到数据库
-				this.courseDao.updateState(this.username, downing.getFileUrl(), DowningCourse.STATE_DOWNING);
+				//this.courseDao.updateState(this.username, downing.getFileUrl(), DowningCourse.STATE_DOWNING);
 			}
 		}
 		this.mAdapter = new DowningListAdapter(getApplicationContext(), this.dataSource);
@@ -177,7 +176,7 @@ public class DowningActivity extends BaseActivity{
 						 fileDownloadService.cancelDownload(this.course);
 					 }
 					 //删除数据库记录
-					 courseDao.deleteDowing(username, this.course.getFileUrl());
+					// courseDao.deleteDowing(username, this.course.getFileUrl());
 					 //从数据集合中移除
 					 dataSource.remove(this.course);
 					 //更新UI

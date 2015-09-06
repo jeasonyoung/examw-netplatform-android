@@ -18,8 +18,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.examw.netschool.util.Constant;
-import com.examw.netschool.util.HttpConnectUtil;
+import com.examw.netschool.app.Constant;
 
 public class SearchActivity extends ListActivity {
 	private ImageButton returnBtn;
@@ -64,7 +63,7 @@ public class SearchActivity extends ListActivity {
 		@Override
 		protected String doInBackground(String... params) {
 			try{
-				String result = HttpConnectUtil.httpGetRequest(SearchActivity.this, params[0]);
+				String result = "";//HttpConnectUtil.httpGetRequest(SearchActivity.this, params[0]);
 				if(result == null||"null".equals(result))
 				{
 					return null;

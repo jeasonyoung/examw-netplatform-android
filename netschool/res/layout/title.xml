@@ -11,7 +11,10 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1.0"
-        android:paddingLeft="20.0dip" >
+        android:paddingLeft="20.0dip"
+        android:paddingStart="20dp"
+        android:paddingRight="0dp"
+        android:paddingEnd="0dp" >
 
         <ImageButton
             android:id="@+id/imageBack"

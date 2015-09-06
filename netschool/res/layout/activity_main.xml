@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/background"
+    android:gravity="fill_vertical"
+    tools:context=".MainActivity" >
+
+    <LinearLayout
+        android:id="@+id/MainTopLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="50.0dip"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/topbj"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/TopLogoImg"
+            android:layout_width="wrap_content"
+            android:layout_height="40.0dip"
+            android:layout_gravity="center"
+            android:src="@drawable/toplogo"
+            android:contentDescription="@string/MainActivity_lab" />
+        
+    </LinearLayout>
+
+    <GridView
+        android:id="@+id/gridview1"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/MainTopLayout"
+        android:layout_margin="20.0dip"
+        android:background="#00000000"
+        android:horizontalSpacing="30.0dip"
+        android:numColumns="3"
+        android:verticalSpacing="30.0dip" />
+
+</RelativeLayout>

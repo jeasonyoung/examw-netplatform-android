@@ -1,6 +1,6 @@
 package com.examw.netschool.entity;
 
-import com.examw.netschool.util.Constant;
+import com.examw.netschool.app.Constant;
 import com.examw.netschool.util.StringUtils;
 /**
  * 课程数据模型。

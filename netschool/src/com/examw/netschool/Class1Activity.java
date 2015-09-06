@@ -24,8 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.examw.netschool.util.Constant;
-import com.examw.netschool.util.HttpConnectUtil;
+import com.examw.netschool.app.Constant;
 
 public class Class1Activity extends Activity implements OnClickListener{
 	private ListView list;
@@ -68,7 +67,7 @@ public class Class1Activity extends Activity implements OnClickListener{
 		public void run() {
 			// TODO Auto-generated method stub
 			try{
-				String result = HttpConnectUtil.httpGetRequest(Class1Activity.this, Constant.DOMAIN_URL+"mobile/examTree");
+				String result = "";//HttpConnectUtil.httpGetRequest(Class1Activity.this, Constant.DOMAIN_URL+"mobile/examTree");
 				if(result!=null&&!result.equals("null"))
             	{
             		//解析json字符串,配置ListView的adapter

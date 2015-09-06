@@ -26,8 +26,7 @@ import android.widget.Toast;
 
 import com.examw.netschool.adapter.CourseDetailListAdapter;
 import com.examw.netschool.adapter.MyCourseListAdapter;
-import com.examw.netschool.util.Constant;
-import com.examw.netschool.util.HttpConnectUtil;
+import com.examw.netschool.app.Constant;
 
 /**
  * 课程明细。
@@ -116,7 +115,7 @@ public class ClassDetailActivity extends Activity implements OnClickListener{
 		@Override
 		public void run() {
 			try{
-				String result = HttpConnectUtil.httpGetRequest(ClassDetailActivity.this, Constant.DOMAIN_URL+"mobile/findFreeClass?gid="+gid);
+				String result = "";//HttpConnectUtil.httpGetRequest(ClassDetailActivity.this, Constant.DOMAIN_URL+"mobile/findFreeClass?gid="+gid);
 				if(result!=null&&!result.equals("null"))
             	{
             		//解析json字符串,配置ListView的adapter

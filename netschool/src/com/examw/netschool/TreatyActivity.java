@@ -20,7 +20,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.examw.netschool.util.Constant;
+import com.examw.netschool.app.Constant;
 
 public class TreatyActivity extends Activity{
 	private TextView content;
