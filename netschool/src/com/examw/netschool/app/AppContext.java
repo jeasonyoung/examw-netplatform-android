@@ -16,6 +16,7 @@ import android.net.NetworkInfo;
 import android.os.Environment;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.WindowManager;
 
 /**
  * 全局应用程序类：用于保存和调用全局应用配置及访问网络数据
@@ -40,6 +41,8 @@ public class AppContext extends Application {
 	 */
 	public static final ExecutorService pools_fixed = Executors.newFixedThreadPool(10);
 	
+	//窗口管理器
+	private WindowManager windowManager;
 	//连接管理
 	private ConnectivityManager connectivityManager;
 	//电话管理
@@ -49,6 +52,17 @@ public class AppContext extends Application {
 	//包信息
 	private PackageInfo packageInfo;
 	
+	/**
+	 * 获取窗体管理器。
+	 * @return 窗体管理器。
+	 */
+	public WindowManager getWindowManager() {
+		if(this.windowManager == null){
+			this.windowManager = (WindowManager)this.getSystemService(Context.WINDOW_SERVICE);
+			Log.d(TAG, "从系统服务中加载窗体管理器...");
+		}
+		return this.windowManager;
+	}
 	//获取连接管理
 	private ConnectivityManager getConnectivityManager(){
 		if(this.connectivityManager == null){
@@ -65,8 +79,11 @@ public class AppContext extends Application {
 		}
 		return this.telephonyManager;
 	}
-	//获取音频管理
-	private AudioManager getAudioManager(){
+	/**
+	 * 获取音频管理。
+	 * @return 音频管理。
+	 */
+	public AudioManager getAudioManager(){
 		if(this.audioManager == null){
 			this.audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
 			Log.d(TAG, "从系统服务中加载音频管理器...");

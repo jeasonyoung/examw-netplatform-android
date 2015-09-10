@@ -6,17 +6,13 @@ import android.annotation.SuppressLint;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.examw.netschool.dao.PlayrecordDao;
-import com.examw.netschool.entity.Playrecord;
+import com.examw.netschool.model.PlayRecord;
 /**
  * 播放记录类
  * @author jeasonyoung
@@ -24,10 +20,10 @@ import com.examw.netschool.entity.Playrecord;
  */
 public class PlayrecordActivity extends ListActivity{
 	private ImageButton returnBtn;
-	private ArrayList<Playrecord> recordList;
+	private ArrayList<PlayRecord> recordList;
 	private String username;
 	private String loginType;
-	private PlayrecordDao dao = new PlayrecordDao(this);
+	//private PlayRecordDao dao = new PlayRecordDao(this);
 	private RecordListAdapter mAdapter;
 	/*
 	 * 重载创建。
@@ -49,12 +45,12 @@ public class PlayrecordActivity extends ListActivity{
 	 */
 	@Override
 	protected void onStart() {
-		if(recordList==null){
-			this.recordList = (ArrayList<Playrecord>) this.dao.getRecordList(username);
-		}else{
-			this.recordList.clear();
-			this.recordList.addAll(this.dao.getRecordList(username));
-		}
+//		if(recordList==null){
+//			this.recordList = (ArrayList<PlayRecord>) this.dao.getRecordList(username);
+//		}else{
+//			this.recordList.clear();
+//			this.recordList.addAll(this.dao.getRecordList(username));
+//		}
 		if(this.mAdapter==null){
 			this.mAdapter = new RecordListAdapter();
 			this.setListAdapter(mAdapter);
@@ -69,26 +65,26 @@ public class PlayrecordActivity extends ListActivity{
 	 */
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Playrecord r = this.recordList.get(position);
-		if("local".equals(loginType))
-		{
-			if(r.getCourseFilePath()==null)
-			{
-				Toast.makeText(this, "您没有下载该视频", Toast.LENGTH_SHORT).show();
-				return;
-			}
-		}
-		//
-		//MobclickAgent.onEvent(this,"record_listen");
-		//
-		Intent intent = new Intent(this,VideoPlayActivity.class);
-		intent.putExtra("username", username);
-		intent.putExtra("name", r.getCourseName());
-		intent.putExtra("url", r.getCourseFilePath()==null?r.getCourseUrl():r.getCourseFilePath());
-		intent.putExtra("httpUrl", r.getCourseUrl());
-		intent.putExtra("loginType", loginType);
-		intent.putExtra("courseid", r.getCourseId());
-		this.startActivity(intent);	
+//		PlayRecord r = this.recordList.get(position);
+//		if("local".equals(loginType))
+//		{
+//			if(r.getCourseFilePath()==null)
+//			{
+//				Toast.makeText(this, "您没有下载该视频", Toast.LENGTH_SHORT).show();
+//				return;
+//			}
+//		}
+//		//
+//		//MobclickAgent.onEvent(this,"record_listen");
+//		//
+//		Intent intent = new Intent(this,VideoPlayActivity.class);
+//		intent.putExtra("username", username);
+//		intent.putExtra("name", r.getCourseName());
+//		intent.putExtra("url", r.getCourseFilePath()==null?r.getCourseUrl():r.getCourseFilePath());
+//		intent.putExtra("httpUrl", r.getCourseUrl());
+//		intent.putExtra("loginType", loginType);
+//		intent.putExtra("courseid", r.getCourseId());
+//		this.startActivity(intent);	
 	}
 	/**
 	 * 
@@ -135,15 +131,15 @@ public class PlayrecordActivity extends ListActivity{
 		 */
 		@SuppressLint("ViewHolder") @Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			LayoutInflater mInflater = LayoutInflater.from(PlayrecordActivity.this);
-			Playrecord  r = recordList.get(position);
-			convertView = mInflater.inflate(R.layout.list_playrecord, null);
-			TextView coursename = (TextView) convertView.findViewById(R.id.coursenamelab);
-			TextView currentTime = (TextView) convertView.findViewById(R.id.currentTimeLab);
-			TextView playTime = (TextView) convertView.findViewById(R.id.palytimelab);
-			coursename.setText(r.getCourseName());
-			currentTime.setText("已学习到:"+r.getFormatCurrentTime());
-			playTime.setText("学习时间:"+r.getPlayTime());
+//			LayoutInflater mInflater = LayoutInflater.from(PlayrecordActivity.this);
+//			PlayRecord  r = recordList.get(position);
+//			convertView = mInflater.inflate(R.layout.list_playrecord, null);
+//			TextView coursename = (TextView) convertView.findViewById(R.id.coursenamelab);
+//			TextView currentTime = (TextView) convertView.findViewById(R.id.currentTimeLab);
+//			TextView playTime = (TextView) convertView.findViewById(R.id.palytimelab);
+//			coursename.setText(r.getCourseName());
+//			currentTime.setText("已学习到:"+r.getFormatCurrentTime());
+//			playTime.setText("学习时间:"+r.getPlayTime());
 			return convertView;
 		}
 	}

@@ -5,13 +5,12 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.examw.netschool.model.Lesson;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-
-import com.examw.netschool.db.MyDBHelper;
-import com.examw.netschool.model.Lesson;
 
 /**
  * 课程资源数据操作。
@@ -19,17 +18,24 @@ import com.examw.netschool.model.Lesson;
  * @author jeasonyoung
  * @since 2015年9月5日
  */
-public class LessonDao {
+public class LessonDao extends BaseDao {
 	private static final String TAG = "LessonDao";
-	private final MyDBHelper dbHelper;
 	/**
 	 * 构造函数。
 	 * @param context
 	 * @param userId
 	 */
 	public LessonDao(Context context, String userId){
+		super(context, userId);
 		Log.d(TAG, "初始化...");
-		this.dbHelper = new MyDBHelper(context, userId);
+	}
+	/**
+	 * 构造函数。
+	 * @param dao
+	 */
+	public LessonDao(BaseDao dao){
+		super(dao);
+		Log.d(TAG, "初始化...");
 	}
 	/**
 	 * 删除班级ID下的课程资源数据。
@@ -105,12 +111,13 @@ public class LessonDao {
 		if(StringUtils.isBlank(classId)) return lessons;
 		SQLiteDatabase db = null;
 		try {
+			//创建sql
+			final String query = "SELECT id,name,videoUrl,highVideoUrl,superVideoUrl,time,orderNo FROM tbl_Lessones WHERE class_id = ? ORDER BY orderNo";
+			Log.d(TAG, "sql:" + query);
 			//初始化
 			db = this.dbHelper.getReadableDatabase();
 			//查询数据
-			final Cursor cursor = db.rawQuery("SELECT id,name,videoUrl,highVideoUrl,superVideoUrl,time,orderNo FROM tbl_Lessones WHERE class_id = ? ORDER BY orderNo", new String[]{  
-					StringUtils.trimToEmpty(classId)
-			});
+			final Cursor cursor = db.rawQuery(query, new String[]{ StringUtils.trimToEmpty(classId) });
 			while(cursor.moveToNext()){
 				final Lesson lesson = new Lesson();
 				//课程资源ID
@@ -138,5 +145,51 @@ public class LessonDao {
 			if(db != null) db.close();
 		} 
 		return lessons;
+	}
+	/**
+	 * 加载课程资源数据。
+	 * @param lessonId
+	 * 课程资源ID。
+	 * @return
+	 */
+	public Lesson getLesson(String lessonId){
+		Log.d(TAG, "加载课程资源["+lessonId+"]....");
+		if(StringUtils.isBlank(lessonId)) return null;
+		Lesson lesson = null;
+		SQLiteDatabase db = null;
+		try {
+			//创建sql
+			final String query = "SELECT id,name,videoUrl,highVideoUrl,superVideoUrl,time,orderNo FROM tbl_Lessones WHERE id = ? ";
+			Log.d(TAG, "sql:" + query);
+			//初始化
+			db = this.dbHelper.getReadableDatabase();
+			//查询数据
+			final Cursor cursor = db.rawQuery(query, new String[]{ StringUtils.trimToEmpty(lessonId) });
+			while(cursor.moveToNext()){
+				lesson = new Lesson();
+				//课程资源ID
+				lesson.setId(StringUtils.trimToNull(cursor.getString(0)));
+				//课程资源名称
+				lesson.setName(StringUtils.trimToNull(cursor.getString(1)));
+				//课程资源视频URL
+				lesson.setVideoUrl(StringUtils.trimToNull(cursor.getString(2)));
+				//课程资源高清视频URL
+				lesson.setHighVideoUrl(StringUtils.trimToNull(cursor.getString(3)));
+				//课程资源超清视频URL
+				lesson.setSuperVideoUrl(StringUtils.trimToNull(cursor.getString(4)));
+				//考试时长
+				lesson.setTime(Integer.valueOf(cursor.getInt(5)));
+				//排序号
+				lesson.setOrderNo(Integer.valueOf(cursor.getInt(6)));
+				break;
+			}
+			cursor.close();
+		} catch (Exception e) {
+			Log.e(TAG, "加载数据异常:" + e.getMessage(), e);
+		}finally{
+			//关闭连接
+			if(db != null) db.close();
+		}
+		return lesson;
 	}
 }

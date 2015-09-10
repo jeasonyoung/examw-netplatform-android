@@ -19,8 +19,7 @@ public class MyDBHelper extends SQLiteOpenHelper {
 	 * @param context
 	 * @param userId
 	 */
-	public MyDBHelper(Context context, String userId)
-	{
+	public MyDBHelper(Context context, String userId){
 		super(context, "eschool_" + (StringUtils.isBlank(userId) ? "_" :  userId) + ".db", null, VERSION);
 		Log.d(TAG, "初始化数据库操作:eschool_" +(StringUtils.isBlank(userId) ? "_" :  userId) + ".db...");
 	}
@@ -34,7 +33,8 @@ public class MyDBHelper extends SQLiteOpenHelper {
 		db.execSQL("CREATE TABLE tbl_MyCourses(id TEXT,pid TEXT DEFAULT NULL,name TEXT,type TEXT,orderNo INTEGER DEFAULT 0,CONSTRAINT pk_tbl_MyCourses PRIMARY KEY(id,pid));");
 		//2.课程资源
 		db.execSQL("CREATE TABLE tbl_Lessones(id TEXT PRIMARY KEY,class_id TEXT,name TEXT,videoUrl TEXT,highVideoUrl TEXT,superVideoUrl TEXT,time INTEGER DEFAULT 0,orderNo INTEGER DEFAULT 0);");
-		//3
+		//3.播放记录
+		db.execSQL("CREATE TABLE tbl_PlayRecords(id TEXT PRIMARY KEY,lesson_id TEXT,playTime INTEGER DEFAULT 0, createTime TIMESTAMP DEFAULT (datetime('now', 'localtime')));");
 		
 		
 //		db.execSQL("CREATE TABLE ClassTab(_ID INTEGER PRIMARY KEY AUTOINCREMENT,CLASSID TEXT,CLASSNAME TEXT,USERNAME TEXT,FATHERCLASSID TEXT,CLASSTYPE TEXT)");
@@ -61,7 +61,8 @@ public class MyDBHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE  IF EXISTS tbl_MyCourses;");
 		//2.课程资源
 		db.execSQL("DROP TABLE  IF EXISTS tbl_Lessones;");
-		
+		//3.播放记录
+		db.execSQL("DROP TABLE  IF EXISTS tbl_PlayRecords;");
 		
 		//重新创建表结构
 		this.onCreate(db);

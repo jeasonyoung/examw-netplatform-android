@@ -1,6 +1,8 @@
 package com.examw.netschool.model;
 
 import java.io.Serializable;
+
+import org.apache.commons.lang3.StringUtils;
 /**
  * 课程资源数据。
  * 
@@ -42,16 +44,16 @@ public class Lesson implements Serializable,Comparable<Lesson> {
 		this.name = name;
 	}
 	/**
-	 * 获取视频URL。
-	 * @return 视频URL。
+	 * 获取标清视频URL。
+	 * @return 标清视频URL。
 	 */
 	public String getVideoUrl() {
 		return videoUrl;
 	}
 	/**
-	 * 设置视频URL。
+	 * 设置标清视频URL。
 	 * @param videoUrl 
-	 *	  视频URL。
+	 *	  标清视频URL。
 	 */
 	public void setVideoUrl(String videoUrl) {
 		this.videoUrl = videoUrl;
@@ -85,6 +87,20 @@ public class Lesson implements Serializable,Comparable<Lesson> {
 	 */
 	public void setSuperVideoUrl(String superVideoUrl) {
 		this.superVideoUrl = superVideoUrl;
+	}
+	/**
+	 * 获取优先视频URL。
+	 * @return 优先视频URL。
+	 */
+	public String getPriorityUrl(){
+		//标清视频URL
+		if(StringUtils.isNotBlank(this.videoUrl)) return this.videoUrl;
+		//高清视频URL
+		if(StringUtils.isNotBlank(this.highVideoUrl)) return this.highVideoUrl;
+		//超清视频URL
+		if(StringUtils.isNotBlank(this.superVideoUrl)) return this.superVideoUrl;
+		//没有视频
+		return null;
 	}
 	/**
 	 * 获取视频时长。

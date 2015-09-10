@@ -5,30 +5,28 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.examw.netschool.model.MyCourse;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-
-import com.examw.netschool.db.MyDBHelper;
-import com.examw.netschool.model.MyCourse;
 /**
  * 我的课程数据操作。
  * 
  * @author jeasonyoung
  * @since 2015年9月2日
  */
-public class MyCourseDao {
+public class MyCourseDao extends BaseDao {
 	private final static String TAG = "MyCourseDao";
-	private final MyDBHelper dbHelper;
 	/**
 	 * 构造函数。
 	 * @param context
 	 * @param userId
 	 */
 	public MyCourseDao(Context context, String userId){
+		super(context, userId);
 		Log.d(TAG, "初始化...");
-		this.dbHelper = new MyDBHelper(context, userId);
 	}
 	/**
 	 * 删除全部数据。

@@ -9,6 +9,9 @@ public final class Constant {
 	public static final String CONST_USERID = "user_id", CONST_USERNAME = "user_name";
 	public static final String CONST_CLASS_ID = "class_id", CONST_CLASS_NAME = "class_name";
 	public static final String CONST_LESSON_ID = "lesson_id", CONST_LESSON_NAME = "lesson_name";
+	public static final String CONST_LESSON_RECORD_ID = "lesson_record_id";
+	
+	public static final int PAGE_SIZE = 15;
 	/**
 	 * HOST API ROOT URL。
 	 */

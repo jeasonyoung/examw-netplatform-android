@@ -39,8 +39,11 @@
          <!-- 我的课程资源 -->
          <activity android:name=".MyCourseLessonActivity" android:screenOrientation="portrait" />
          
-         <!-- 播放 -->
-         <activity android:name=".VideoPlayActivity" android:screenOrientation="landscape"/>
+         <!-- 播放-->
+         <activity android:name=".VideoPlayActivity" android:process=":vitamio"
+             android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+             android:screenOrientation="landscape"/>
          
          <!-- 下载 -->
          <activity android:name=".DownloadActivity" android:screenOrientation="portrait" />
@@ -109,7 +112,7 @@
         
         <!-- vitamio初始化 -->
         <activity android:name="io.vov.vitamio.activity.InitActivity"
-            android:configChanges="orientation|keyboardHidden|navigation"
+            android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
             android:launchMode="singleTop"
             android:theme="@android:style/Theme.NoTitleBar"
            	android:windowSoftInputMode="stateAlwaysHidden" />
