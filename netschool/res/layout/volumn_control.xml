@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-
+<!-- 音频控制栏 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/control_bg"
     android:baselineAligned="false"
     android:gravity="center_vertical"
     android:orientation="horizontal" >
 
+    <!-- 返回按钮布局 -->
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1.0"
         android:paddingLeft="20.0dip"
@@ -17,21 +18,24 @@
         android:paddingRight="0dp"
         android:paddingEnd="0dp" >
 
-        <ImageButton
-            android:id="@+id/imageBack"
+        <!-- 返回按钮 -->
+        <ImageButton android:id="@+id/imageBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/back_button"
             android:contentDescription="@string/back" />
+        
     </LinearLayout>
+    
+    <!-- 标题名称布局 -->
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1.0" >
 
-        <TextView
-            android:id="@+id/videoName"
-            android:layout_width="fill_parent"
+        <!-- 标题 -->
+        <TextView android:id="@+id/videoName"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
             android:focusable="true"
@@ -42,16 +46,18 @@
             android:singleLine="true"
             android:text="@string/hello_world"
             android:textColor="#ffffffff" />
+        
     </LinearLayout>
 
+    <!-- 音量控制布局 -->
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1.0"
         android:orientation="horizontal" >
 
-        <ImageButton
-            android:id="@+id/imgVolumn"
+        <!-- 音量按钮 -->
+        <ImageButton android:id="@+id/imgVolumn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -59,8 +65,8 @@
             android:contentDescription="@string/volumn"
             android:src="@drawable/volume" />
 
-        <SeekBar
-            android:id="@+id/seekBar1"
+        <!-- 音量进度 -->
+        <SeekBar android:id="@+id/volSeekBar"
             style="@style/ProgressBar_Mini"
             android:layout_width="60.0dip"
             android:layout_height="wrap_content"
@@ -68,8 +74,8 @@
             android:thumb="@android:drawable/presence_invisible"
             android:thumbOffset="0.0dip" />
 
-        <TextView
-            android:id="@+id/volumnSize"
+        <!-- 音量值 -->
+        <TextView android:id="@+id/volumnSize"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

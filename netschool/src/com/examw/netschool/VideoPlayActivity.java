@@ -42,6 +42,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
 import io.vov.vitamio.LibsChecker;
 import io.vov.vitamio.MediaPlayer;
 import io.vov.vitamio.MediaPlayer.OnBufferingUpdateListener;
@@ -91,7 +92,7 @@ public class VideoPlayActivity extends Activity implements OnTouchListener, OnGe
 													WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		
 		//设置内容布局
-		this.setContentView(R.layout.videoview);
+		this.setContentView(R.layout.video_view);
 		
 		//初始化
 		this.appContext = (AppContext)this.getApplication();
@@ -123,8 +124,18 @@ public class VideoPlayActivity extends Activity implements OnTouchListener, OnGe
 		this.gestureDetector.setIsLongpressEnabled(true);
 		//初始化更新工具栏
 		this.autoUpdateVideoSeekHandler = new AutoUpdateVideoSeekHandler(this);
+	}
+	/*
+	 * 重置启动。
+	 * @see android.app.Activity#onStart()
+	 */
+	@Override
+	protected void onStart() {
+		Log.d(TAG, "重置启动...");
 		//异步加载数据
 		new AsynLoadVideoData().execute((Void)null);
+		//
+		super.onStart();
 	}
 	//加载视频播放View
 	@SuppressLint("ClickableViewAccessibility")
@@ -146,17 +157,17 @@ public class VideoPlayActivity extends Activity implements OnTouchListener, OnGe
 		this.videoLoadingLayout.setVisibility(View.VISIBLE);
 	}
 	//设置视频播放
-		private void setVideoView(String url){
+		private void setVideoView(Uri uri){
 			Log.d(TAG, "加载视频播放View...");
-			//URL不存在
-			if(StringUtils.isBlank(url)){
-				Log.d(TAG, "URL为空!");
+			//URI不存在
+			if(uri == null){
+				Log.d(TAG, "URI为空!");
 				//关闭Activity
 				finish();
 				return;
 			}
 			//设置播放地址
-			videoView.setVideoURI(Uri.parse(url));
+			videoView.setVideoURI(uri);
 			//设置播放缓冲事件监听
 			videoView.setOnBufferingUpdateListener(this.onBufferingUpdateListener);
 			//设置播放预备事件监听
@@ -261,9 +272,15 @@ public class VideoPlayActivity extends Activity implements OnTouchListener, OnGe
 		this.tvTitle = (TextView)titleView.findViewById(R.id.videoName);
 		//返回按钮
 		this.btnReturn =  (ImageButton)titleView.findViewById(R.id.imageBack);
-		this.btnReturn.setOnClickListener(new OnClickListener() { @Override public void onClick(View v) { backRecord(); finish(); } });
+		this.btnReturn.setOnClickListener(new OnClickListener() { 
+			@Override 
+			public void onClick(View v) { 
+				backRecord(); 
+				finish(); 
+			} 
+		});
 		//音量拖拽条
-		this.volumnBar = (SeekBar)titleView.findViewById(R.id.seekBar1);
+		this.volumnBar = (SeekBar)titleView.findViewById(R.id.volSeekBar);
 		//音量百分数
 		this.tvVolumnSize = (TextView)titleView.findViewById(R.id.volumnSize);
 		//获取音频管理
@@ -712,13 +729,13 @@ public class VideoPlayActivity extends Activity implements OnTouchListener, OnGe
 		}
 	}
 	//异步加载视频数据。
-	private class AsynLoadVideoData extends AsyncTask<Void, Void, String>{
+	private class AsynLoadVideoData extends AsyncTask<Void, Void, Object>{
 		/*
 		 * 重载后台线程处理。
 		 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
 		 */
 		@Override
-		protected String doInBackground(Void... params) {
+		protected Object doInBackground(Void... params) {
 			try{
 				Log.d(TAG, "后台线程加载数据处理...");
 				//惰性初始化播放记录
@@ -755,7 +772,12 @@ public class VideoPlayActivity extends Activity implements OnTouchListener, OnGe
 				//获取优先视频URL
 				final String url = lesson.getPriorityUrl();
 				Log.d(TAG, "video-url:" + url);
-				return url;
+				//检查网络状态
+				if(appContext != null && !appContext.isNetworkConnected()){
+					Log.d(TAG, "未连接网络!");
+					return "未连接网络!";
+				}
+				return Uri.parse(url);
 			}catch(Exception e){
 				Log.e(TAG, "后台线程加载数据异常:" + e.getMessage(), e);
 			}
@@ -766,12 +788,19 @@ public class VideoPlayActivity extends Activity implements OnTouchListener, OnGe
 		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
 		 */
 		@Override
-		protected void onPostExecute(String result) {
+		protected void onPostExecute(Object result) {
 			Log.d(TAG, "前台主线程处理...");
 			//重置标题
 			if(tvTitle != null) tvTitle.setText(lessonName);
+			if((result != null) && (result instanceof String)){
+				//显示提示
+				Toast.makeText(appContext, (String)result, Toast.LENGTH_SHORT).show();
+				//关闭
+				finish();
+				return;
+			}
 			//播放视频
-			setVideoView(result);
+			setVideoView((Uri)result);
 		}
 	}
 	
