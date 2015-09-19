@@ -1,5 +1,9 @@
 package com.examw.netschool;
 
+import com.examw.netschool.app.AppContext;
+import com.examw.netschool.app.AppContext.LoginState;
+import com.examw.netschool.app.Constant;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -9,8 +13,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -18,10 +20,6 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
-import com.examw.netschool.app.AppContext;
-import com.examw.netschool.app.AppContext.LoginState;
-import com.examw.netschool.app.Constant;
 /**
  * 主Activity类。
  * @author jeasonyoung
@@ -74,43 +72,43 @@ public class MainActivity extends Activity{
 		//
         super.onDestroy();
 	}
-	/*
-	 * 
-	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
-	 */
-	@Override
-	 public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(Menu.NONE, Menu.FIRST+1, 1, "设置").setIcon(android.R.drawable.ic_menu_edit);
-		menu.add(Menu.NONE, Menu.FIRST+2, 2, "帮助").setIcon(android.R.drawable.ic_menu_help);
-		menu.add(Menu.NONE, Menu.FIRST+4, 4, "注销").setIcon(android.R.drawable.ic_menu_set_as);
-		return true;
-	}
-	/*
-	 * 
-	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
-	 */
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		 switch(item.getItemId()){
-			 case Menu.FIRST+1:{
-				 //设置
-				final Intent intent = new Intent(this,SettingActivity.class);
-				intent.putExtra(Constant.CONST_USERNAME, username);	
-				this.startActivity(intent);
-				 break;
-			 }
-			 case Menu.FIRST+2:{
-				 //帮助
-				 this.startActivity(new Intent(this, HelpActivity.class));
-				 break;
-			 }
-			 case Menu.FIRST+4:{
-				 this.showDialog();		
-				 break;
-			 }
-		 }
-		 return true;
-	 }
+//	/*
+//	 * 
+//	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+//	 */
+//	@Override
+//	 public boolean onCreateOptionsMenu(Menu menu) {
+//		menu.add(Menu.NONE, Menu.FIRST+1, 1, "设置").setIcon(android.R.drawable.ic_menu_edit);
+//		menu.add(Menu.NONE, Menu.FIRST+2, 2, "帮助").setIcon(android.R.drawable.ic_menu_help);
+//		menu.add(Menu.NONE, Menu.FIRST+4, 4, "注销").setIcon(android.R.drawable.ic_menu_set_as);
+//		return true;
+//	}
+//	/*
+//	 * 
+//	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
+//	 */
+//	@Override
+//	public boolean onOptionsItemSelected(MenuItem item) {
+//		 switch(item.getItemId()){
+//			 case Menu.FIRST+1:{
+//				 //设置
+//				final Intent intent = new Intent(this,SettingActivity.class);
+//				intent.putExtra(Constant.CONST_USERNAME, username);	
+//				this.startActivity(intent);
+//				 break;
+//			 }
+//			 case Menu.FIRST+2:{
+//				 //帮助
+//				 this.startActivity(new Intent(this, HelpActivity.class));
+//				 break;
+//			 }
+//			 case Menu.FIRST+4:{
+//				 this.showDialog();		
+//				 break;
+//			 }
+//		 }
+//		 return true;
+//	 }
 	 /**
 		 * 自定义一个消息提示窗口
 		 * @param msg
@@ -158,8 +156,8 @@ public class MainActivity extends Activity{
 				};
 			private final Class<?>[] classes = {
 					MyCourseActivity.class,
-					Class1Activity.class,
-					AnswerMainActivity.class,
+					FreeExperienceActivity.class,
+					//AnswerMainActivity.class,
 					PlayrecordActivity.class,
 					SuggestionActivity.class
 				};

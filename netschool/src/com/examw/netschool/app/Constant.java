@@ -12,6 +12,20 @@ public final class Constant {
 	public static final String CONST_LESSON_RECORD_ID = "lesson_record_id";
 	
 	public static final int PAGE_SIZE = 15;
+	
+	/**
+	 *  Handler消息Message的What类型为文本消息。
+	 */
+	public static final int HANLDER_WHAT_MSG = 0;
+	/**
+	 * Handler消息Message的What类型为更新进度。
+	 */
+	public static final int HANLDER_WHAT_PROGRESS = 1;
+	/**
+	 * Handler消息Message的What类型为更新状态。
+	 */
+	public static final int HANLDER_WHAT_STATE = 2;
+	
 	/**
 	 * HOST API ROOT URL。
 	 */
@@ -57,6 +71,6 @@ public final class Constant {
 
 	
 	
-	public static final String MEDIA_DOMAIN_URL = "v.dalischool.com";
-	public static final String NGINX_URL = "http://v.dalischool.com:8091/";
+//	public static final String MEDIA_DOMAIN_URL = "v.dalischool.com";
+//	public static final String NGINX_URL = "http://v.dalischool.com:8091/";
 }

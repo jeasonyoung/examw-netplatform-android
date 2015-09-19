@@ -140,4 +140,12 @@ public class Lesson implements Serializable,Comparable<Lesson> {
 	public int compareTo(Lesson o) {
 		return this.orderNo - o.orderNo;
 	}
+	/*
+	 * 重载。
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "["+this.getId()+"]" + this.getName();
+	}
 }

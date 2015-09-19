@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- 免费体验Activity布局 -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:gravity="fill_vertical">
+    
+    <!-- top banner -->
+    <LinearLayout android:id="@+id/top_banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
+        
+        <!-- 标题 -->
+	    <RelativeLayout 
+	        android:layout_width="match_parent"
+	        android:layout_height="50dp"
+	        android:background="@drawable/topbj">
+	        
+	        <!-- 返回按钮 -->
+	        <ImageButton android:id="@+id/btn_return"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_alignParentLeft="true"
+	                android:layout_alignParentStart="true"
+	                android:layout_centerVertical="true"
+	                android:layout_marginLeft="10dp"
+	                android:layout_marginStart="10dp"
+	                android:background="@color/none"
+	                android:scaleType="centerCrop"
+	                android:src="@drawable/returnbtn1" 
+	                android:contentDescription="@string/btn_lesson_center_return"/>
+	        <!-- 标题 -->
+	        <TextView
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_centerInParent="true"
+	                android:layout_centerVertical="true"
+	                android:background="#00000000"
+	                android:fadingEdge="vertical"
+	                android:gravity="center"
+	                android:text="@string/btn_lesson_center_title"
+	                android:textColor="@color/white"
+	                android:textSize="@dimen/title_huge_size" />
+	    </RelativeLayout>
+	    
+	    <!-- 搜索框 -->
+	    <RelativeLayout 
+	        android:layout_width="match_parent"
+	        android:layout_height="50dp"
+	        android:background="@drawable/seach_bg">
+	        
+	        <EditText android:id="@+id/searchKey"
+                style="@style/searchtext"
+                android:layout_width="match_parent"
+                android:layout_height="40dip"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+                android:layout_marginTop="5dip"
+                android:inputType="text"
+                android:maxLines="1" />
+
+            <ImageButton
+                android:id="@+id/btnSearch"
+                android:layout_width="40.0dip"
+                android:layout_height="40.0dip"
+                android:layout_alignBottom="@id/searchKey"
+                android:layout_alignRight="@id/searchKey"
+                android:layout_alignEnd="@id/searchKey"
+                android:layout_alignTop="@id/searchKey"
+                android:background="#00000000"
+                android:contentDescription="@string/seach"
+                android:scaleType="centerInside"
+                android:src="@drawable/search_map" />
+	        
+	    </RelativeLayout>
+    </LinearLayout>
+
+    <!-- Fragement View -->
+    <FrameLayout android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_buttons"
+        android:layout_below="@id/top_banner"
+        android:background="@color/red"/>
+    
+    <!-- 底部菜单 -->
+    <LinearLayout android:id="@+id/bottom_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/darkgray"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="3">
+        
+        <!-- 课程中心 -->
+        <TextView android:id="@+id/btn_lesson_center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:background="@drawable/bottom_big_btn"
+            android:drawableTop="@drawable/end_btn_img1"
+            android:drawablePadding="2dp"
+            android:gravity="center_horizontal"
+            android:text="@string/btn_lesson_center_title"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:layout_weight="1"/>
+        
+        <!-- 我的课程 -->
+        <TextView android:id="@+id/btn_lesson_my"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:background="@drawable/end2_btn_bg"
+            android:drawableTop="@drawable/end_btn_img2"
+            android:drawablePadding="2dp"
+            android:gravity="center_horizontal"
+            android:text="@string/btn_lesson_center_my"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:layout_weight="1"/>
+        
+        <!-- 播放记录  -->
+        <TextView android:id="@+id/btn_lesson_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:background="@drawable/end2_btn_bg"
+            android:drawableTop="@drawable/end_btn_img3"
+            android:drawablePadding="2dp"
+            android:gravity="center_horizontal"
+            android:text="@string/btn_lesson_center_record"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:layout_weight="1"/>
+        
+    </LinearLayout>
+    
+</RelativeLayout>

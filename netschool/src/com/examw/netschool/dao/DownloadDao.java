@@ -1,210 +1,292 @@
 package com.examw.netschool.dao;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-import android.annotation.SuppressLint;
+import org.apache.commons.lang3.StringUtils;
+
+import com.examw.netschool.model.Download;
+import com.examw.netschool.model.Download.DownloadState;
+import com.examw.netschool.model.DownloadComplete;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.examw.netschool.db.MyDBHelper;
-
 /**
- * 下载进度数据操作类。
+ * 下载数据操作类。
  * @author jeasonyoung
- *负责视频文件多线程下载的过程的记录，以便进行断点下载。
  */
-public class DownloadDao {
+public class DownloadDao extends BaseDao {
 	private static final String TAG = "DownloadDao";
-	private MyDBHelper dbHelper;
 	/**
 	 * 构造函数。
-	 * @param context 上下文。
+	 * @param context
+	 * @param userId
 	 */
-	public DownloadDao(Context context) {
-		//this.dbHelper = new MyDBHelper(context);
+	public DownloadDao(Context context, String userId) {
+		super(context, userId);
+		Log.d(TAG, "初始化...");
 	}
 	/**
-	 *  获取每条线程已经下载的文件长度。
-	 * @param url
-	 * @param userName
+	 * 构造函数。
+	 * @param dao
+	 */
+	public DownloadDao(BaseDao dao){
+		super(dao);
+		Log.d(TAG, "初始化..");
+	}
+	/**
+	 * 是否存在下载课程资源。
+	 * @param lessonId
 	 * @return
 	 */
-	@SuppressLint("UseSparseArrays") 
-	public  Map<Integer, Long> loadAllData(String url, String userName){
-		Log.d(TAG, "获取每条线程已经下载的文件长度...");
-		final String query_sql = "select thread_id,complete_size from DownloadTab where url =? and username = ?";
-		Map<Integer, Long> map = new HashMap<Integer, Long>();
- 		SQLiteDatabase db =  this.dbHelper.getReadableDatabase();
-		Cursor cursor = db.rawQuery(query_sql, new String[]{url,userName});
-		while(cursor.moveToNext()){
-			map.put(Integer.valueOf(cursor.getInt(0)), Long.valueOf(cursor.getLong(1)));
-		}
-		//关闭游标
-		cursor.close();
-		//关闭链接
-		db.close();
-		return map;
-	}
-	/**
-	 * 保存每条线程已经下载的文件长度
-	 * @param url
-	 * @param userName
-	 * @param map
-	 */
-	public void save(String url,String userName,Map<Integer, Long> map){
-		Log.d(TAG, "开始保存每条线程已经下载的文件长度...");
-		final String insert_sql = "insert into DownloadTab(thread_id,complete_size,url,username)values(?,?,?,?)";
+	public boolean hasDownload(String lessonId){
+		Log.d(TAG, "是否存在下载课程资源["+lessonId+"]...");
+		boolean result = false;
+		if(StringUtils.isBlank(lessonId)) return result;
 		SQLiteDatabase db = null;
-		try {
-			if(map == null || map.size() == 0)return;
-			db = this.dbHelper.getWritableDatabase();
-			db.beginTransaction();
-			for(Map.Entry<Integer, Long> entry : map.entrySet()){
-				db.execSQL(insert_sql, new Object[]{entry.getKey(),entry.getValue(),url, userName });
+		try{
+			final String query = "SELECT COUNT(0) FROM tbl_Downloads WHERE lessonId = ? ";
+			Log.d(TAG, "sql:" + query);
+			//初始化
+			db = this.dbHelper.getReadableDatabase();
+			//查询数据
+			final Cursor cursor = db.rawQuery(query, new String[]{ StringUtils.trimToEmpty(lessonId) });
+			while(cursor.moveToNext()){
+				result = cursor.getInt(0) > 0;
+				break;
 			}
-			db.setTransactionSuccessful();
-		} catch (Exception e) {
-			Log.e(TAG, "保存每条线程已经下载的文件长度时发生异常：" + e.getMessage(), e);
+			cursor.close();
+		}catch(Exception e){
+			Log.e(TAG, "发生异常:" + e.getMessage(),	e);
 		}finally{
-			if(db != null){
-				db.endTransaction();
-				db.close();
-			}
+			if(db != null) db.close();
 		}
+		return result;
 	}
 	/**
-	 * 实时更新每条线程已下载的文件长度。
-	 * @param url
-	 * @param userName
-	 * @param threadId
-	 * @param pos
+	 * 加载下载数据。
+	 * @param state
+	 * @return
 	 */
-	public void update(String url,String userName, int threadId, long pos){
-		Log.d(TAG, "开始更新线程["+threadId+"]已下载的文件长度["+pos+"]...");
-		final String update_sql = "update DownloadTab set complete_size=?  where url=? and username=? and thread_id=?";
+	public List<Download> loadDownloads(DownloadState state){
+		Log.d(TAG, "加载下载状态["+ state+"]数据...");
+		if(state == null) return null;
+		final List<Download> list = new ArrayList<Download>();
 		SQLiteDatabase db = null;
-		try {
-			db = this.dbHelper.getWritableDatabase();
-			db.beginTransaction();
-			db.execSQL(update_sql,new Object[] { pos, url, userName, threadId });
-			db.setTransactionSuccessful();
-		} catch (Exception e) {
-			Log.d(TAG, "更新线程["+threadId+"]下载量["+pos+"]发生异常:" + e.getMessage(), e);
+		try{
+			final String query = "SELECT a.lessonId,b.name,a.filePath,a.fileSize,a.state FROM tbl_Downloads a "
+					+ " INNER JOIN tbl_Lessones b ON b.id = a.lessonId "
+					+ " WHERE a.state = ? ";
+			Log.d(TAG, "sql:" + query);
+			//初始化
+			db = this.dbHelper.getReadableDatabase();
+			//查询数据
+			final Cursor cursor = db.rawQuery(query, new String[]{ String.valueOf(state.getValue()) });
+			while(cursor.moveToNext()){
+				//添加到数据集合
+				list.add(this.createDownload(cursor));
+			}
+			cursor.close();
+		}catch(Exception e){
+			Log.e(TAG, "发生异常:" + e.getMessage(),	e);
 		}finally{
-			if(db != null){
-				db.endTransaction();
-				db.close();
-			}
+			if(db != null) db.close();
 		}
+		return list;
 	}
 	/**
-	 * 更新下载课程文件信息
-	 * @param url
-	 * @param userName
-	 * @param filePath
-	 * @param fileSize
+	 * 加载正在的下载数据。
+	 * @param state
+	 * @return
 	 */
-	public void updateDowningCourseFile(String url,String userName,String filePath, long fileSize){
-		Log.d(TAG, "更新下载课程文件信息...");
-		final String update_sql = "update CourseTab set filesize=?,filepath=?,state = 1 where fileurl = ? and username = ? ";
+	public List<DownloadComplete> loadDownings(){
+		Log.d(TAG, " 加载正在的下载数据...");
+		final List<DownloadComplete> list = new ArrayList<DownloadComplete>();
 		SQLiteDatabase db = null;
-		try {
-			db = this.dbHelper.getWritableDatabase();
-			db.beginTransaction();
-			db.execSQL(update_sql, new Object[]{ fileSize, filePath, url, userName });
-			db.setTransactionSuccessful();
-		} catch (Exception e) {
-			Log.d(TAG, "更新下载课程文件信息异常:" + e.getMessage(), e);
+		try{
+			final String query = "SELECT a.lessonId,b.name,a.filePath,a.fileSize,a.state,SUM(completeSize) completeSize FROM tbl_Downloads a "
+					+ " INNER JOIN tbl_Lessones b ON b.id = a.lessonId "
+					+ " LEFT OUTER JOIN tbl_Downing c ON c.lessonId = a.lessonId "
+					+ " WHERE a.state <> ? "
+					+ " GROUP BY a.lessonId,b.name,a.filePath,a.fileSize,a.state";
+			Log.d(TAG, "sql:" + query);
+			//初始化
+			db = this.dbHelper.getReadableDatabase();
+			//查询数据
+			final Cursor cursor = db.rawQuery(query, new String[]{ String.valueOf(DownloadState.FINISH.getValue()) });
+			while(cursor.moveToNext()){
+				//初始化
+				final DownloadComplete data = new DownloadComplete(this.createDownload(cursor));
+				//设置下载量
+				data.setCompleteSize(cursor.getLong(5));
+				//添加到数据集合
+				list.add(data);
+			}
+			cursor.close();
+		}catch(Exception e){
+			Log.e(TAG, "发生异常:" + e.getMessage(),	e);
 		}finally{
-			if(db != null){
-				db.endTransaction();
-				db.close();
-			}
+			if(db != null) db.close();
 		}
+		return list;
+	}
+	//创建数据转换
+	private Download createDownload(final Cursor cursor){
+		 //初始化
+		final Download data = new Download();
+		//0.课程资源ID 
+		data.setLessonId(cursor.getString(0));
+		//1.课程资源名称
+		data.setLessonName(cursor.getString(1));
+		//2.下载文件路径
+		data.setFilePath(cursor.getString(2));
+		//3.下载文件大小
+		data.setFileSize(cursor.getLong(3));
+		//4.下载状态
+		data.setState(cursor.getInt(4));
+		//
+		return data;
 	}
 	/**
-	 * 删除下载记录
-	 * @param url
-	 * @param userName
+	 * 获取下载数据。
+	 * @param lessonId
+	 * @return
 	 */
-	public void delete(String url,String userName){
-		Log.d(TAG, "开始删除课程["+url+"]下载记录...");
+	public Download getDownload(String lessonId){
+		Log.d(TAG, "加载课程资源["+lessonId+"]下载数据...");
+		Download data = null;
 		SQLiteDatabase db = null;
-		try {
-			db = this.dbHelper.getWritableDatabase();
-			db.beginTransaction();
-			this.deleteAllRecord(db, url, userName);
-			db.setTransactionSuccessful();
-		} catch (Exception e) { 
-			Log.e(TAG, "删除课程["+url+"]下载记录发生异常：" + e.getMessage(), e);
+		try{
+			final String query = "SELECT a.lessonId,b.name,a.filePath,a.fileSize,a.state FROM tbl_Downloads a "
+					+ " INNER JOIN tbl_Lessones b ON b.id = a.lessonId "
+					+ " WHERE a.lessonId = ? ";
+			Log.d(TAG, "sql:" + query);
+			//初始化
+			db = this.dbHelper.getReadableDatabase();
+			//查询数据
+			final Cursor cursor = db.rawQuery(query, new String[]{ lessonId });
+			while(cursor.moveToNext()){
+				//
+				data = this.createDownload(cursor);
+				
+				break;
+			}
+			cursor.close();
+		}catch(Exception e){
+			Log.e(TAG, "发生异常:" + e.getMessage(),	e);
 		}finally{
-			if(db != null){
-				db.endTransaction();
-				db.close();
-			}
+			if(db != null) db.close();
 		}
-	}
-	//删除全部下载记录。
-	private void deleteAllRecord(SQLiteDatabase db, String url,String userName){
-		final String delete_sql = "delete from DownloadTab where url=? and username=?";
-		if(db == null) return;
-		db.execSQL(delete_sql, new Object[]{url, userName});
+		return data;
 	}
 	/**
-	 * 更新课程完成的数据
-	 * @param url
-	 * @param userName
-	 * @param finishSize
-	 * @param fileSize
+	 * 添加课程资源下载。
+	 * @param data
+	 * @return
 	 */
-	public void updateCourseFinish(String url,String userName,long finishSize, long fileSize){
-		Log.d(TAG, "更新课程["+url+"]完成文件下载量["+finishSize+"/"+fileSize+"]...");
-		final String update_sql = "update CourseTab set finishsize=?,filesize=?  where fileurl=? and username=?";
+	public boolean add(Download data){
+		boolean result = false;
+		if(data == null) return result;
+		Log.d(TAG, "创建课程资源["+data.getLessonId()+"]下载数据...");
+		if(StringUtils.isBlank(data.getLessonId())) return result;
 		SQLiteDatabase db = null;
-		try {
+		try{
+			//初始化
 			db = this.dbHelper.getWritableDatabase();
+			//开始事务
 			db.beginTransaction();
-			db.execSQL(update_sql, new Object[]{finishSize,fileSize, url, userName});
-			db.setTransactionSuccessful();
-		} catch (Exception e) {
-			Log.d(TAG, "更新课程["+url+"]完成文件下载量["+finishSize+"/"+fileSize+"]异常:" + e.getMessage(), e);
-		}finally{
-			if(db != null){
-				db.endTransaction();
-				db.close();
-			}
-		}
-	}
-	/**
-	 * 完成文件下载后，删除对应的下载记录，更新课程信息。
-	 * @param url
-	 * @param userName
-	 * @param filePath
-	 */
-	public void finish(String url,String userName, String filePath){
-		Log.d(TAG, "更新完成课程["+url+"]文件下载["+filePath+"]操作...");
-		final String update_sql = "update CourseTab set filepath=?, state=2 where fileurl=? and username=?";
-		SQLiteDatabase db = null;
-		try {
-			db = this.dbHelper.getWritableDatabase();
-			//开始事务处理
-			db.beginTransaction();
-			//删除下载记录
-			this.deleteAllRecord(db, url, userName);
-			//更新数据
-			db.execSQL(update_sql, new Object[]{filePath, url, userName});
+			//新增数据
+			db.execSQL("INSERT INTO tbl_Downloads(lessonId,filePath,fileSize,state) VALUES(?,?,?,?,?)", new Object[]{
+				data.getLessonId(),data.getFilePath(),data.getFileSize(), data.getState()	
+			});
 			//提交事务
 			db.setTransactionSuccessful();
-		} catch (Exception e) {
-			Log.e(TAG, "更新完成课程["+url+"]下载后发生异常：" + e.getMessage(), e);
+			result = true;
+		}catch(Exception e){
+			Log.e(TAG, "发生异常:" + e.getMessage(), e);
 		}finally{
-			if(db != null){
-				db.endTransaction();
-				db.close();
-			}
+			if(db != null) db.close();
+		}
+		return result;
+	}
+	/**
+	 * 更新数据。
+	 * @param data
+	 * @return
+	 */
+	public boolean update(Download data){
+		boolean result = false;
+		if(data == null) return result;
+		Log.d(TAG, "更新课程资源["+data.getLessonId()+"]下载数据...");
+		if(StringUtils.isBlank(data.getLessonId())) return result;
+		SQLiteDatabase db = null;
+		try{
+			//初始化
+			db = this.dbHelper.getWritableDatabase();
+			//开始事务
+			db.beginTransaction();
+			//新增数据
+			db.execSQL("UPDATE tbl_Downloads SET filePath = ?,fileSize = ?,state = ? WHERE lessonId = ?", new Object[]{
+				data.getFilePath(), data.getFileSize(), data.getState(),data.getLessonId()
+			});
+			//提交事务
+			db.setTransactionSuccessful();
+			result = true;
+		}catch(Exception e){
+			Log.e(TAG, "发生异常:" + e.getMessage(), e);
+		}finally{
+			if(db != null) db.close();
+		}
+		return result;
+	}
+	/**
+	 * 更新数据状态。
+	 * @param lessonId
+	 * @param state
+	 */
+	public void update(String lessonId, DownloadState state){
+		Log.d(TAG, "更新课程资["+lessonId+"]源状态");
+		if(StringUtils.isBlank(lessonId) || state == null) return;
+		SQLiteDatabase db = null;
+		try{
+			//初始化
+			db = this.dbHelper.getWritableDatabase();
+			//开始事务
+			db.beginTransaction();
+			//新增数据
+			db.execSQL("UPDATE tbl_Downloads SET state = ? WHERE lessonId = ?", new Object[]{ state.getValue(), lessonId });
+			//提交事务
+			db.setTransactionSuccessful();
+		}catch(Exception e){
+			Log.e(TAG, "发生异常:" + e.getMessage(), e);
+		}finally{
+			if(db != null) db.close();
+		}
+	}
+	/**
+	 * 删除数据。
+	 * @param lessonId
+	 */
+	public void delete(String lessonId){
+		Log.d(TAG, "删除数据..." + lessonId);
+		if(StringUtils.isBlank(lessonId)) return;
+		SQLiteDatabase db = null;
+		try{
+			//初始化
+			db = this.dbHelper.getWritableDatabase();
+			//开始事务
+			db.beginTransaction();
+			//新增数据
+			db.execSQL("DELETE FROM tbl_Downloads WHERE lessonId = ?", new Object[]{ lessonId });
+			//提交事务
+			db.setTransactionSuccessful();
+		}catch(Exception e){
+			Log.e(TAG, "发生异常:" + e.getMessage(), e);
+		}finally{
+			if(db != null) db.close();
 		}
 	}
 }

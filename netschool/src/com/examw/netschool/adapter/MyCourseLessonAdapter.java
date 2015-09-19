@@ -17,6 +17,9 @@ import com.examw.netschool.DownloadActivity;
 import com.examw.netschool.R;
 import com.examw.netschool.VideoPlayActivity;
 import com.examw.netschool.app.Constant;
+import com.examw.netschool.dao.DownloadDao;
+import com.examw.netschool.model.Download;
+import com.examw.netschool.model.Download.DownloadState;
 import com.examw.netschool.model.Lesson;
 
 /**
@@ -31,6 +34,7 @@ public class MyCourseLessonAdapter extends BaseAdapter{
 	private final LayoutInflater inflater;
 	private final List<Lesson> list;
 	private final String userId;
+	private DownloadDao downloadDao;
 	/**
 	 * 构造函数。
 	 * @param context
@@ -125,25 +129,28 @@ public class MyCourseLessonAdapter extends BaseAdapter{
 			//
 			this.nameView.setText(lesson.getName());
 			this.nameView.setOnClickListener(this);
-			//
-//			final LessonState state = LessonState.parse(lesson.getState());
-//			switch(state){
-//				case None:{//未下载
-					this.downView.setText("未下载");
-					this.downView.setTextColor(MyCourseLessonAdapter.this.context.getResources().getColor(R.color.grey));
-//					break;
-//				}
-//				case Downloading:{//正下载
-//					this.downView.setText(state.getName());
-//					this.downView.setTextColor(MyCourseLessonAdapter.this.context.getResources().getColor(R.color.red));
-//					break;
-//				}
-//				case Downloaded:{//已下载
-//					this.downView.setText(state.getName());
-//					this.downView.setTextColor(MyCourseLessonAdapter.this.context.getResources().getColor(R.color.green));
-//					break;
-//				}
-//			}
+			
+			//惰性加载数据操作
+			if(downloadDao == null){
+				Log.d(TAG, "惰性加载数据...");
+				downloadDao = new DownloadDao(context, userId);
+			}
+			//是否存在
+			if(downloadDao.hasDownload(lesson.getId())){//已下载
+				//加载下载数据
+				final Download download = downloadDao.getDownload(lesson.getId());
+				final DownloadState state = DownloadState.parse(download.getState());
+				if(state== DownloadState.FINISH){//下载完成
+					this.downView.setText(state.getName());
+					this.downView.setTextColor(context.getResources().getColor(R.color.green));
+				}else{//下载中
+					this.downView.setText(state.getName());
+					this.downView.setTextColor(context.getResources().getColor(R.color.red));
+				}
+			}else{//未下载
+				this.downView.setText("未下载");
+				this.downView.setTextColor(context.getResources().getColor(R.color.grey));
+			}
 		}
 		/*
 		 * 点击事件处理。

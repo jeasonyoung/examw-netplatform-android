@@ -1,7 +1,5 @@
 package com.examw.netschool.dao;
 
-import com.examw.netschool.db.MyDBHelper;
-
 import android.content.Context;
 import android.util.Log;
 

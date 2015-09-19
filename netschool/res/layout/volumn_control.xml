@@ -1,42 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 音频控制栏 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/control_bg"
-    android:baselineAligned="false"
-    android:gravity="center_vertical"
-    android:orientation="horizontal" >
-
-    <!-- 返回按钮布局 -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1.0"
-        android:paddingLeft="20.0dip"
-        android:paddingStart="20dp"
-        android:paddingRight="0dp"
-        android:paddingEnd="0dp" >
-
-        <!-- 返回按钮 -->
-        <ImageButton android:id="@+id/imageBack"
+    android:layout_height="40dp"
+    android:paddingTop="5dp"
+    android:background="@color/control_bg">
+    
+    <!-- 返回按钮 -->
+    <ImageButton android:id="@+id/imageBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
             android:background="@drawable/back_button"
             android:contentDescription="@string/back" />
-        
-    </LinearLayout>
     
-    <!-- 标题名称布局 -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1.0" >
-
-        <!-- 标题 -->
-        <TextView android:id="@+id/videoName"
-            android:layout_width="match_parent"
+    <!-- 标题 -->
+     <TextView android:id="@+id/videoName"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_toLeftOf="@+id/vol_control_volumn"
+            android:layout_toStartOf="@id/vol_control_volumn"
+            android:layout_toRightOf="@id/imageBack"
+            android:layout_toEndOf="@id/imageBack"
+            android:layout_centerVertical="true"
             android:ellipsize="marquee"
             android:focusable="true"
             android:focusableInTouchMode="true"
@@ -46,14 +38,18 @@
             android:singleLine="true"
             android:text="@string/hello_world"
             android:textColor="#ffffffff" />
-        
-    </LinearLayout>
 
     <!-- 音量控制布局 -->
-    <LinearLayout
-        android:layout_width="fill_parent"
+    <LinearLayout android:id="@+id/vol_control_volumn"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1.0"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
         android:orientation="horizontal" >
 
         <!-- 音量按钮 -->
@@ -84,4 +80,4 @@
             android:textColor="#ffffffff" />
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

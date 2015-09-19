@@ -1,61 +1,62 @@
 package com.examw.netschool.service;
 
-import java.io.File;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
+
+import org.apache.commons.lang3.StringUtils;
+
+import com.examw.netschool.app.AppContext;
+import com.examw.netschool.app.Constant;
+import com.examw.netschool.dao.DownloadDao;
+import com.examw.netschool.model.Download;
+import com.examw.netschool.model.Download.DownloadState;
+import com.examw.netschool.service.MultiThreadDownload.OnDownloadProgressListener;
 
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.NetworkInfo.State;
 import android.os.Binder;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.StatFs;
+import android.os.Message;
 import android.util.Log;
-
-import com.examw.netschool.downloads.MultiThreadDownload;
-import com.examw.netschool.entity.DowningCourse;
 /**
  * 课程视频下载服务。
  * @author jeasonyoung
  *
  */
-public class DownloadService extends Service {
+public class DownloadService extends Service implements IDownloadService {
 	 private static final String TAG = "DownloadService";
 	 private static final long THREAD_SLEEP = 500;
 	 
-	 private ExecutorService pools;
-	 
-	 private BlockingQueue<DowningCourse> downloadQueue;
-	 private Map<DowningCourse, MultiThreadDownload> downloadThreads;
-	 private Map<DowningCourse, Integer> downloadPositions;
-	 private Handler downloadHandler;
-	 
+	 private final ExecutorService pools;	 
+	 private final Queue<Download> downloadQueue;
+	 private final Map<String, Download> downloadPosCache;
+	 private final Map<String, MultiThreadDownload> downloadThreads;
+	 private Handler handler;
+	
 	 private IBinder binder;
-	 private boolean isStop;
+	 private boolean stop;
+	 
+	 private DownloadDao downloadDao;
 	/**
 	 * 构造函数。
 	 */
 	public DownloadService(){
 		//下载服务队列轮询单线程池
 		this.pools = Executors.newSingleThreadExecutor();
-		//下载队列(线程安全)
-		this.downloadQueue = new LinkedBlockingQueue<DowningCourse>();
-		//下载线程集合(线程安全)
-		this.downloadThreads = new ConcurrentHashMap<DowningCourse, MultiThreadDownload>();
-		//下载课程位置集合(线程安全)
-		this.downloadPositions = new ConcurrentHashMap<DowningCourse, Integer>();
+		//下载队列
+		this.downloadQueue = new LinkedList<Download>();
+		//下载位置集合缓存
+		this.downloadPosCache = new HashMap<String, Download>();
+ 		//下载线程集合
+ 		this.downloadThreads =  new HashMap<String, MultiThreadDownload>();
 		//服务绑定接口
-		this.binder = new FileDownloadServiceBinder();
+		this.binder = new FileDownloadServiceBinder(this);
 	}
 	/*
 	 * 重载服务绑定。
@@ -64,7 +65,9 @@ public class DownloadService extends Service {
 	@Override
 	public IBinder onBind(Intent intent) {
 		Log.d(TAG, "下载服务被绑定...");
-		this.isStop = false;
+		//重置下载。
+		this.stop = false;
+		//
 		return this.binder;
 	}
 	/*
@@ -75,9 +78,90 @@ public class DownloadService extends Service {
 	public void onCreate() {
 		Log.d(TAG, "下载服务正在被创建...");
 		//执行文件下载管理线程。
-		pools.execute(new FileDownloadManagerThread());
+		pools.execute(this.downloadThreadMgr);
+		//
 		super.onCreate();
 	}
+	//下载线程管理
+	private Runnable downloadThreadMgr = new Runnable() {
+		@Override
+		public void run() {
+			Log.d(TAG, "下载轮询线程...");
+			while(!stop){
+				try{
+					//线程等待
+					Thread.sleep(THREAD_SLEEP);
+					//检查网络是否可用
+					if(!checkNetwork(AppContext.getContext())){
+						Log.d(TAG, "网络不可用...");
+						sendMessage(DownloadState.FAIL, "网络不可用!");
+						continue;
+					}
+					//从队列中弹出需要下载课程
+					final Download download = downloadQueue.poll();
+					if(download == null || StringUtils.isBlank(download.getLessonId())){
+						Log.d(TAG, "下载队列已空!");
+						continue;
+					}
+					Log.d(TAG, "准备开始下载课程["+download+"]...");
+					//下载线程
+					MultiThreadDownload threadDownload = downloadThreads.get(download.getLessonId());
+					if(threadDownload == null ){
+						Log.d(TAG, "初始化下载线程["+download+"]...");
+						//初始化下载线程
+						threadDownload = new MultiThreadDownload(download);
+						//设置进度监听器
+						threadDownload.setOnDownloadProgressListener(downloadProgressListeners);
+						//添加下载线程
+						downloadThreads.put(download.getLessonId(), threadDownload);
+					}
+					//下载状态
+					DownloadState state = DownloadState.parse(download.getState());
+					try{
+						//下载中状态
+						state = DownloadState.DOWNING;
+						download.setState(state.getValue());
+						//更新下载状态
+						sendUpdateState(download.getLessonId(), state);
+						//更新数据
+						asyncUpdateDownload(download);
+						
+						//启动下载
+						threadDownload.start();
+						
+						//下载完成
+						download.setState((state = DownloadState.FINISH).getValue());
+						asyncUpdateDownload(download);
+						sendUpdateState(download.getLessonId(), state);
+					}catch(Exception e){
+						download.setState((state = DownloadState.FAIL).getValue());
+						Log.e(TAG, "下载课程["+download+"]异常:" + e.getMessage(), e);
+						//更新下载状态
+						sendUpdateState(download.getLessonId(),state);
+						//发生下载消息
+						sendMessage(state, e.getMessage());
+						//取消下载
+						cancelDownload(download.getLessonId());
+					}
+				}catch(Exception e){
+					Log.e(TAG, "下载轮询线程:" + e.getMessage(), e);
+				}
+			}
+		}
+	};
+	//下载进度监听器
+	private OnDownloadProgressListener downloadProgressListeners = new OnDownloadProgressListener(){
+		/*
+		 * 更新下载进度。
+		 * @see com.examw.netschool.downloads.MultiThreadDownload.OnDownloadProgressListener#onProgress(com.examw.netschool.model.Download, int)
+		 */
+		@Override
+		public void onProgress(Download download, int per) {
+			if(download == null || StringUtils.isBlank(download.getLessonId()) || per < 0) return;
+			Log.d(TAG, "更新课程["+download+"]下载进度:" + per);
+			sendProgressUpdate(download.getLessonId(), per);
+		}
+	};
 	/*
 	 * 重载服务摧毁时方法。
 	 * @see android.app.Service#onDestroy()
@@ -85,412 +169,298 @@ public class DownloadService extends Service {
 	@Override
 	public void onDestroy() {
 		Log.d(TAG, "下载服务将被摧毁...");
-		this.isStop = true;
-		//停止下载线程。
+		//设置下载停止
+		this.stop = true;
+		//停止下载线程
 		pools.shutdown();
+		//销毁下载销毁
 		super.onDestroy();
 	}
-	
-	//检测网络
-	private synchronized static final boolean checkNetwork(Context context,InnerMessage innerMessage){
-		Log.d(TAG, "开始检查网络...");
-		String msg = null;
-		ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo network = connectivityManager.getActiveNetworkInfo();
-		if(network != null){
-			State state = network.getState();
-			switch(network.getType()){
-				case ConnectivityManager.TYPE_WIFI:{//wifi
-					if(state  == State.CONNECTED || state == State.CONNECTING){
-						return true;
-					}
-					break;
-				}
-				case ConnectivityManager.TYPE_MOBILE:{
-					if(state  == State.CONNECTED || state == State.CONNECTING){
-						SharedPreferences settings = context.getSharedPreferences("settingfile", 0);
-						boolean isDownUse3G = settings.getBoolean("setDownIsUse3G", true);
-						if(!isDownUse3G){
-							msg = "当前网络为2G/3G,要下载请修改设置或开启wifi";
-							if(innerMessage != null){
-								innerMessage.show(msg);
-							}
-							Log.d(TAG, msg);
-						}else{
-							msg = "当前网络为2G/3G";
-							if(innerMessage != null){
-								innerMessage.show(msg);
-							}
-							Log.d(TAG, msg);
-						}
-						return isDownUse3G;
-					}
-					break;
-				}
-				default:break;
-			}
-		}
-		msg = "请检查您的网络!";
-		if(innerMessage != null){
-			innerMessage.show(msg);
-		}
-		Log.d(TAG, "当前网络类型:["+network.getTypeName()+"],网络状态:["+network.getState()+"]!=>" + msg );
-		return false;
-	}
-	
-	//创建文件下载目录。
-	private synchronized static final File createDownloadSaveFileDir(String userName, long fileSize) throws Exception{
-		Log.d(TAG, "创建下载目录.");
-		File root = Environment.getExternalStorageDirectory();
-		if(root == null || !root.exists()){//如果SD卡不存在，则检查内部存储
-			Log.d(TAG, "未检测到SD卡,将使用内部存储!");
-			// throw new Exception("未检测到SD卡，请检查SD是否插好！");
-			 root =  Environment.getDataDirectory();
-		}
-		if(fileSize > 0){
-			StatFs statFs = new StatFs(root.getPath());
-			long  space = (long)(statFs.getAvailableBlocks() * statFs.getBlockSize());
-			if(space > 0 &&  space <  fileSize){
-				Log.d(TAG, "路径["+root.getPath()+"]剩余空间["+space+"]不足["+fileSize+"],不能下载!");
-				throw new Exception("可用容量不足，不能下载！");
-			}
-		}
-		return new File(root + File.separator + "eschool" + File.separator + userName + File.separator + "video");
-	}
-	
-	/**
-	 * 添加课程下载。
-	 * @param course
-	 * @param pos
+	/*
+	 * 设置UI处理Handler。
+	 * @see com.examw.netschool.service.FileDownloadService#setHandler(android.os.Handler)
 	 */
-	protected void addCourseDownload(final DowningCourse course, final int pos){
-		if(course == null || pos < 0) return;
-		Log.d(TAG, "添加下载课程["+pos+"."+course+"]到队列...");
-		boolean result = false;
-		if(!this.downloadQueue.contains(course) && ((course.getState() != DowningCourse.STATE_PAUSE) 
-				&& (course.getState() != DowningCourse.STATE_FINISH))){//如果队列中不存在则加入对尾
-				result = this.downloadQueue.offer(course);
-				Log.d(TAG, "课程["+pos+"."+course.getCourseName()+"]压入到队尾:" + result); 
+	@Override
+	public void setHandler(Handler handler) {
+		Log.d(TAG, "设置UI消息处理Handler...");
+		this.handler = handler;
+	}
+	//发送进度更新
+	private void sendProgressUpdate(String id, int per){
+		if(this.handler != null && StringUtils.isNotBlank(id)){
+			//初始化消息
+			final Message msg = new Message();
+			//消息类型:更新进度
+			msg.what = Constant.HANLDER_WHAT_PROGRESS;
+			//下载课程ID
+			msg.obj = id;
+			//进度
+			msg.arg1 = per;
+			//发送消息
+			this.handler.sendMessage(msg);
 		}
+	}
+	//发送消息
+	private void sendMessage(DownloadState state, String msg){
+		if(this.handler != null && StringUtils.isNotBlank(msg)){
+			Log.d(TAG, "发送文本消息:" + msg);
+			//初始化消息
+			final Message message = new Message();
+			//消息类型:文本消息
+			message.what = Constant.HANLDER_WHAT_MSG;
+			//状态
+			message.arg1 = state.getValue();
+			//消息内容
+			message.obj = msg;
+			//发送消息
+			this.handler.sendMessage(message);
+		}
+	}
+	//发送状态更新
+	private synchronized void sendUpdateState(String id, DownloadState state){
+		if(this.handler != null && StringUtils.isNotBlank(id)){
+			Log.d(TAG, "发送状态更新:["+id+"]" + state);
+			//初始化消息
+			final Message msg = new Message();
+			//消息类型:更新进度
+			msg.what = Constant.HANLDER_WHAT_PROGRESS;
+			//下载课程ID
+			msg.obj = id;
+			//状态
+			msg.arg1 = state.getValue();
+			//发送消息
+			this.handler.sendMessage(msg);
+		}
+	}
+	/*
+	 *  添加下载。
+	 * @see com.examw.netschool.service.IDownloadService#addDownload(com.examw.netschool.model.Download)
+	 */
+	@Override
+	public void addDownload(Download download) {
+		Log.d(TAG, "添加下载课程["+download+"]到队列...");
+		final String lessonId;
+		if(download == null || StringUtils.isBlank(lessonId = download.getLessonId())) return;
+		//下载状态
+		final DownloadState state = DownloadState.NONE;
+		//设置下载状态值。
+		download.setState(state.getValue());
+		//如果在队列中存在则忽略
+		if(this.downloadQueue.contains(download)){
+			Log.d(TAG, "课程["+download+"]已在队列中存在!"); 
+			return;
+		}
+		//将课程加入到队列尾部
+		final boolean result = this.downloadQueue.offer(download);
+		Log.d(TAG, "课程["+download+"]压入到队尾:" + result); 
 		//设置位置集合
-		this.downloadPositions.put(course, pos);
+		this.downloadPosCache.put(lessonId, download);
+		//更新到数据库
+		this.asyncUpdateDownload(download);
 		//发送UIHandler
-		String msg = "["+course.getCourseName() +"]"+ (result ? "已添加到下载队列排队!" : "下载队列中已存在!");
-		this.sendHandlerMessage(course, DowningCourse.STATE_WAITTING, msg);
-		Log.d(TAG, msg);
+		this.sendUpdateState(lessonId, state);
 	}
-	/**
-	 * 取消课程下载。
-	 * @param course
+	/*
+	 * 取消下载。
+	 * @see com.examw.netschool.service.IDownloadService#cancelDownload(java.lang.String)
 	 */
-	protected  void cancelCourseDownload(final DowningCourse course){
-		if(course == null)return;
-		Log.d(TAG, "取消课程["+course.getCourseName()+"]下载...");
+	@Override
+	public void cancelDownload(String id) {
+		if(StringUtils.isBlank(id)) return;
+		final Download download = this.downloadPosCache.get(id);
+		if(download == null) return;
+		Log.d(TAG, "取消课程["+ download +"]下载...");
+		//下载状态
+		final DownloadState state = DownloadState.CANCEL;
+		//设置下载状态值。
+		download.setState(state.getValue());
 		//如果在队列中排序则从队列中移除
-		if(this.downloadQueue.contains(course)){
-			boolean result = this.downloadQueue.remove(course);
-			Log.d(TAG, "课程["+course.getCourseName()+"]从队列中移除:" + result);
+		if(this.downloadQueue.contains(download)){
+			boolean result = this.downloadQueue.remove(download);
+			Log.d(TAG, "课程["+download+"]从队列中移除:" + result);
 		}
-		//发送UIHandler
-		String msg = course.getCourseName() + " 已取消下载!";
-		this.sendHandlerMessage(course, DowningCourse.STATE_CANCEL, msg);
-		//移除相关缓存
-		this.removeCourseCache(course);
-		Log.d(TAG, msg);
-	}
-	/**
-	 * 暂停课程下载。
-	 * @param course
-	 */
-	protected void pauseCourseDownload(final DowningCourse course){
-		if(course == null)return;
-		Log.d(TAG, "暂停课程["+course.getCourseName()+"]下载...");
-		//从下载线程集合中获取下载线程
-		MultiThreadDownload threadDownload = this.downloadThreads.get(course);
-		if(threadDownload != null){
-			Log.d(TAG, "停止线程下载...");
-			threadDownload.Stop();
+		//取消下载
+		final MultiThreadDownload multiThreadDownload = this.downloadThreads.get(id);
+		if(multiThreadDownload != null){
+			//停止下载
+			multiThreadDownload.setStop(true);
+			//移除下载线程集合
+			this.downloadThreads.remove(id);
 		}
-		//发送UIHandler
-		String msg = course.getCourseName() + " 下载已暂停!";
-		this.sendHandlerMessage(course, DowningCourse.STATE_PAUSE,  msg);
-		Log.d(TAG, msg);
-	}
-	/**
-	 * 继续课程下载。
-	 * @param course
-	 */
-	protected void continueCourseDownload(final DowningCourse course){
-		if(course == null)return;
-		Log.d(TAG, "继续课程["+course.getCourseName()+"]下载...");
-		if(!this.downloadQueue.contains(course) && (course.getState() != DowningCourse.STATE_FINISH)){//如果队列中不存在则加入对尾
-			boolean result = this.downloadQueue.offer(course);
-			Log.d(TAG, "课程["+course.getCourseName()+"]压入到队尾:" + result);
+		//移除下载位置缓存
+		if(this.downloadPosCache.containsKey(id)){
+			this.downloadPosCache.remove(id);
 		}
-		//发送UIHandler
-		String msg = course.getCourseName() + " 重新进入排队中...";
-		this.sendHandlerMessage(course, DowningCourse.STATE_WAITTING,  msg);
-		Log.d(TAG, msg);
+		//更新到数据库
+		this.asyncDeleteDownload(download);
+		//发送状态消息
+		this.sendUpdateState(id, state);
 	}
-	/**
-	 * 移除课程相关缓存
-	 * @param course
+	/*
+	 * 暂停下载。
+	 * @see com.examw.netschool.service.IDownloadService#pauseDownload(java.lang.String)
 	 */
-	private void removeCourseCache(DowningCourse course){
-		Log.d(TAG, "移除课程["+course.getCourseName()+"]下载相关缓存...");
-		//移除下载线程对象
-		if(this.downloadThreads.size() > 0 && this.downloadThreads.containsKey(course)){
-			MultiThreadDownload threadDownload = this.downloadThreads.get(course);
-			//如果现在存在，就停止下载
-			if(threadDownload != null){
-				threadDownload.Stop();
-				Log.d(TAG, "课程["+course.getCourseName()+"]下载停止...");
+	@Override
+	public void pauseDownload(String id) {
+		if(StringUtils.isBlank(id)) return;
+		final Download download = this.downloadPosCache.get(id);
+		if(download == null) return;
+		Log.d(TAG, "暂停课程["+ download +"]下载...");
+		//下载状态
+		final DownloadState state = DownloadState.PAUSE;
+		//设置下载状态值。
+		download.setState(state.getValue());
+		//如果在队列中排序则从队列中移除
+		if(this.downloadQueue.contains(download)){
+			boolean result = this.downloadQueue.remove(download);
+			Log.d(TAG, "课程["+download+"]从队列中移除:" + result);
+		}
+		//暂停下载
+		final MultiThreadDownload multiThreadDownload = this.downloadThreads.get(id);
+		if(multiThreadDownload != null){
+			//停止下载
+			multiThreadDownload.setStop(true);
+			//移除下载线程集合
+			this.downloadThreads.remove(id);
+		}
+		//更新到数据库
+		this.asyncUpdateDownload(download);
+		//发送状态消息
+		this.sendUpdateState(id, state);
+	}
+	/*
+	 * 继续下载。
+	 * @see com.examw.netschool.service.IDownloadService#continueDownload(java.lang.String)
+	 */
+	@Override
+	public void continueDownload(String id) {
+		if(StringUtils.isBlank(id)) return;
+		final Download download = this.downloadPosCache.get(id);
+		if(download == null) return;
+		Log.d(TAG, "继续课程["+ download +"]下载...");
+		//添加到下载
+		this.addDownload(download);
+	}
+	//异步更新下载状态
+	private void asyncUpdateDownload(final Download download){
+		if(download == null) return;
+		AppContext.pools_fixed.execute(new Runnable() {
+			@Override
+			public void run() {
+				try{
+					Log.d(TAG, "开始异步更新下载数据..");
+					if(downloadDao == null){
+						Log.d(TAG, "惰性初始化下载数据操作...");
+						downloadDao = new DownloadDao(AppContext.getContext(), AppContext.getCurrentUserId());
+					}
+					//更新数据
+					downloadDao.update(download);
+				}catch(Exception e){
+					Log.e(TAG, "异步更新下载数据异常:" + e.getMessage(), e);
+				}
 			}
-			//从集合中移除
-			this.downloadThreads.remove(course);
-			Log.d(TAG, "移除课程["+course.getCourseName()+"]的下载线程对象缓存!");
-		}
+		});
 	}
-	/**
-	 * 获取下载线程。
-	 * @param course
-	 * @return
-	 */
-	private MultiThreadDownload getDownloadThread(DowningCourse course) {
-		 Log.d(TAG, "获取下载课程[" + course.getCourseName() +"]线程...");
-		 return  (this.downloadThreads.size() == 0) ? null : this.downloadThreads.get(course);
-	}
-	/**
-	 * 添加下载线程。
-	 * @param course
-	 * @param thread
-	 */
-	private synchronized void addDownloadThread(DowningCourse course, MultiThreadDownload thread){
-		Log.d(TAG, "添加课程["+course.getCourseName()+"]下载线程到缓存...");
-		if(course != null && thread != null){
-			//设置文件大小
-			course.setFileSize(thread.getFileSize());
-			Log.d(TAG, "设置文件大小=>"+thread.getFileSize()+"/" + course.getFileSize() + "...");
-			//添加到下载线程集合
-			this.downloadThreads.put(course, thread);
-		}
-	}	
-	/**
-	 * 发送处理消息
-	 * @param course
-	 * @param msgType
-	 * @param msg
-	 */
-	private void sendHandlerMessage(DowningCourse course,int msgType,String msg){
-		try {
-			Log.d(TAG, "开始发送前台UI处理消息：" + msgType);
-			if (this.downloadHandler == null) return;
-			Integer pos = (course == null || this.downloadPositions.size() == 0) ? -1 : this.downloadPositions.get(course);
-			if (pos == null) pos = -1;
-			this.downloadHandler.sendMessage(this.downloadHandler.obtainMessage(msgType, pos, 0, msg));
-			if (course != null) {
-				Log.d(TAG, "发送课程[" + pos + "." + course.getCourseName() + "]前台UI处理消息：type=>" + msgType + ",msg=>" + msg);
-			} else {
-				Log.d(TAG, "发送前台消息:" + msg);
+	//异步删除下载课程
+	private void asyncDeleteDownload(final Download download){
+		if(download == null) return;
+		AppContext.pools_fixed.execute(new Runnable() {
+			@Override
+			public void run() {
+				try{
+					Log.d(TAG, "开始异步更新下载数据..");
+					if(downloadDao == null){
+						Log.d(TAG, "惰性初始化下载数据操作...");
+						downloadDao = new DownloadDao(AppContext.getContext(), AppContext.getCurrentUserId());
+					}
+					//删除数据
+					downloadDao.delete(download.getLessonId());
+				}catch(Exception e){
+					Log.e(TAG, "异步更新下载数据异常:" + e.getMessage(), e);
+				}
 			}
-		} catch (Exception e) {
-			Log.d(TAG, "发送处理消息异常:" + e.getMessage(), e);
-		}
+		});
 	}
-	/**
-	 * 发送下载进度。
-	 * @param course
-	 * @param totalFileSize
-	 */
-	private void sendHandlerDownloadProgress(DowningCourse course, long totalFileSize){
-		try {
-			Log.d(TAG, "开始发送下载进度...");
-			if (course == null || this.downloadHandler == null) return;
-			//设置课程下载量
-			course.setFinishSize(totalFileSize);
-			Integer pos = (this.downloadPositions.size() == 0) ? -1 : this.downloadPositions.get(course);
-			if (pos == null) pos = -1;
-			Log.d(TAG, "发送课程[" + pos + "." + course.getCourseName() + "]下载进度:" + totalFileSize);
-			this.downloadHandler.sendMessage(this.downloadHandler.obtainMessage(DowningCourse.STATE_DOWNING, pos, 0, Long.valueOf(totalFileSize)));
-		} catch (Exception e) {
-			Log.d(TAG, "发送下载进度异常:" + e.getMessage(), e);
-		}
-	}
-	
-	//文件下载管理线程(负责轮询下载队列)。
-	private final class FileDownloadManagerThread extends Thread implements InnerMessage,MultiThreadDownload.OnDownloadProgressListener{
-		private static final String TAG = "FileDownloadManagerThread";
-		private DowningCourse course;
-		//线程执行体
-		@Override
-		public void run() {
-			Log.d(TAG, "下载服务队列轮询线程启动...");
-			while(!isStop){
-				try {
-					//线程等待
-					Thread.sleep(THREAD_SLEEP);
-					//从队列中获取需要下载的课程
-					this.course = downloadQueue.peek();
-					if(this.course == null){
-						continue;
-					}
-					Log.d(TAG, "开始下载课程：" + this.course.getCourseName() + "...");
-					//检查网络
-					if(!checkNetwork(getApplicationContext(), this)){
-						sendHandlerMessage(this.course, DowningCourse.STATE_NETFAIL, "网络不可用");
-						continue;
-					}
-					//下载线程创建
-					MultiThreadDownload threadDownload = getDownloadThread(this.course);
-					if(threadDownload == null){
-						threadDownload = new MultiThreadDownload(DownloadService.this, this.course.getUserName(), this.course.getFileUrl());
-						addDownloadThread(this.course, threadDownload);
-					}
-					try {
-						//创建保存路径，并检查容量
-						File savePath = createDownloadSaveFileDir(this.course.getUserName(), threadDownload.getFileSize());
-						Log.d(TAG, "本地保存地址:" + savePath.getAbsolutePath());
-						threadDownload.setSavePath(savePath);
-					} catch (Exception e) {
-						Log.e(TAG, "创建课程["+this.course.getUserName()+"]下载线程时发生异常:" + e.getMessage(), e);
-						sendHandlerMessage(this.course, DowningCourse.STATE_NETFAIL, e.getMessage());
-						continue;
-					}
-					//开始下载数据。
-					long totalSize = threadDownload.download(this);
-					if(totalSize == threadDownload.getFileSize()){//下载完成
-						//发送完成UI消息
-						sendHandlerMessage(this.course, DowningCourse.STATE_FINISH, "["+this.course.getCourseName()+"]下载完成!");
-						//移除全部缓存
-						removeCourseCache(this.course);
-					}else{//暂停
-						sendHandlerMessage(this.course, DowningCourse.STATE_PAUSE, "["+this.course.getCourseName()+"]下载已暂停!");
-					}
-				} catch (Exception e) {
-					Log.d(TAG, "下载队列轮询线程发生异常:" + e.getMessage(),e);
-				}finally{
-					if(this.course != null){//课程从队列中移除
-						DowningCourse dc = downloadQueue.poll();
-						if(dc != null) Log.d(TAG, "课程["+dc.getCourseName()+"]从队列中成功移除!");
-					}
+	//检测网络
+	private synchronized static final boolean checkNetwork(Context context) throws Exception{
+		Log.d(TAG, "开始检查网络...");
+		final AppContext appContext =  (AppContext)context.getApplicationContext();
+		if(appContext != null){
+			switch(appContext.getNetworkType()){
+				case WIFI:{//Wi-Fi
+					return appContext.isNetworkConnected();
+				}
+				case CNNET:
+				case CNWAP:{
+					throw new Exception("当前网络为2G/3G,要下载请修改设置或开启wifi!");
+				}
+				case NONE:{//没有网络
+					throw new Exception("请检查您的网络!");
 				}
 			}
 		}
-		/*
-		 * 显示内部消息
-		 * @see com.youeclass.service.DownloadService.InnerMessage#show(java.lang.String)
-		 */
-		@Override
-		public void show(String msg) {
-			sendHandlerMessage(null, 0, msg);
-		}
-		/*
-		 * 更新下载进度
-		 * @see com.youeclass.downloads.MultiThreadDownload.OnDownloadProgressListener#onDownloadSize(long)
-		 */
-		@Override
-		public void onDownloadSize(long size) {
-			//发送下载进度
-			sendHandlerDownloadProgress(this.course, size);
-		}
+		return false;
 	}
 	/**
 	 * 课程下载服务接口实现。
 	 * @author jeasonyoung
 	 *
 	 */
-	private final class FileDownloadServiceBinder extends Binder implements IFileDownloadService{
+	private final class FileDownloadServiceBinder extends Binder implements IDownloadService{
 		private static final String TAG = "FileDownloadServiceBinder";
+		private final  IDownloadService service;
+		/**
+		 * 构造函数。
+		 * @param service
+		 */
+		public FileDownloadServiceBinder(IDownloadService service){
+			Log.d(TAG, "初始化...");
+			this.service = service;
+		}
 		/*
 		 * 设置UI处理Handler。
-		 * @see com.youeclass.service.DownloadService.IFileDownloadService#setHandler(android.os.Handler)
+		 * @see com.examw.netschool.service.DownloadService.IFileDownloadService#setHandler(android.os.Handler)
 		 */
 		@Override
 		public void setHandler(Handler handler) {
-			if(handler == null)return;
-			 Log.d(TAG, "设置UI处理Handler...");
-			 downloadHandler = handler;
+			Log.d(TAG, "设置UI处理Handler...");
+			this.service.setHandler(handler);
 		}
 		/*
-		 * 添加下载课程
-		 * @see com.youeclass.service.DownloadService.IFileDownloadService#addDownload(com.youeclass.entity.DowningCourse, int, android.os.Handler)
-		 */
-		@Override
-		public void addDownload(DowningCourse course, int position) {
-			Log.d(TAG, "添加下载课程["+course+"]到队列...");
-			addCourseDownload(course, position);
-		}
-		/*
-		 * 取消下载
-		 * @see com.youeclass.service.DownloadService.IFileDownloadService#cancelDownload(com.youeclass.entity.DowningCourse)
-		 */
-		@Override
-		public void cancelDownload(DowningCourse course) {
-			Log.d(TAG, "取消课程["+course.getCourseName()+"]下载...");
-			cancelCourseDownload(course);
-		}
-		/*
-		 * 暂停下载
-		 * @see com.youeclass.service.DownloadService.IFileDownloadService#pauseDownload(com.youeclass.entity.DowningCourse)
-		 */
-		@Override
-		public void pauseDownload(DowningCourse course) {
-			Log.d(TAG, "暂停课程["+course.getCourseName()+"]下载...");
-			pauseCourseDownload(course);
-		}
-		/*
-		 * 继续下载
-		 * @see com.youeclass.service.DownloadService.IFileDownloadService#continueDownload(com.youeclass.entity.DowningCourse)
-		 */
-		@Override
-		public void continueDownload(DowningCourse course) {
-			Log.d(TAG, "继续课程["+course.getCourseName()+"]下载...");
-			continueCourseDownload(course);
-		}
-	}
-	/**
-	 * 内部消息接口
-	 * @author jeasonyoung
-	 *
-	 */
-	private interface InnerMessage{
-		/**
-		 * 显示消息。
-		 * @param msg
-		 */
-		void show(String msg);
-	}
-	/**
-	 * 文件下载服务接口。
-	 * @author jeasonyoung
-	 *
-	 */
-	public interface IFileDownloadService{
-		/**
-		 * 设置UI处理Handler。
-		 * @param handler
-		 */
-		void setHandler(Handler handler);
-		/**
 		 * 添加下载。
-		 * @param course
-		 * @param position
+		 * @see com.examw.netschool.service.IDownloadService#addDownload(com.examw.netschool.model.Download)
 		 */
-		void addDownload(DowningCourse course, int position);
-		/**
+		@Override
+		public void addDownload(Download download) {
+			Log.d(TAG, "添加下载["+download+"]...");
+			this.service.addDownload(download);
+		}
+		/*
 		 * 取消下载。
-		 * @param course
+		 * @see com.examw.netschool.service.IDownloadService#cancelDownload(java.lang.String)
 		 */
-		void cancelDownload(DowningCourse course);
-		/**
+		@Override
+		public void cancelDownload(String lessonId) {
+			Log.d(TAG, "取消下载["+lessonId+"]...");
+			this.service.cancelDownload(lessonId);
+		}
+		/*
 		 * 暂停下载。
-		 * @param course
+		 * @see com.examw.netschool.service.IDownloadService#pauseDownload(java.lang.String)
 		 */
-		void pauseDownload(DowningCourse course);
-		/**
+		@Override
+		public void pauseDownload(String lessonId) {
+			Log.d(TAG, "暂停下载["+lessonId+"]...");
+			this.service.pauseDownload(lessonId);
+		}
+		/*
 		 * 继续下载。
-		 * @param course
+		 * @see com.examw.netschool.service.IDownloadService#continueDownload(java.lang.String)
 		 */
-		void continueDownload(DowningCourse course);
+		@Override
+		public void continueDownload(String lessonId) {
+			Log.d(TAG, "继续下载["+lessonId+"]...");
+			this.service.continueDownload(lessonId);
+		}
 	}
 }

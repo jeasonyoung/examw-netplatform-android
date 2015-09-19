@@ -37,7 +37,7 @@ public class PlayrecordActivity extends ListActivity{
 		this.username = intent.getStringExtra("username");
 		this.loginType = intent.getStringExtra("loginType");
 		this.returnBtn = (ImageButton) this.findViewById(R.id.returnbtn);
-		this.returnBtn.setOnClickListener(new ReturnBtnClickListener(this));
+		//this.returnBtn.setOnClickListener(new ReturnBtnClickListener(this));
 	}
 	/*
 	 * 重载开始。

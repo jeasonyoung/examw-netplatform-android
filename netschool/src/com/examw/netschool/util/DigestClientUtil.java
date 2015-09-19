@@ -99,7 +99,7 @@ public final class DigestClientUtil {
 	 * 摘要请求。
 	 * @return
 	 */
-	public static String sendDigestRequest(HttpUriRequest method){
+	private static String sendDigestRequest(HttpUriRequest method){
 		try {
 			//创建密码证书
 			final Credentials credentials = new UsernamePasswordCredentials(Constant.DOMAIN_Username, Constant.DOMAIN_Password);

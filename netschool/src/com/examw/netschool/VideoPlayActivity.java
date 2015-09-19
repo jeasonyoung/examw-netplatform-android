@@ -1,5 +1,6 @@
 package com.examw.netschool;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -8,8 +9,11 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.examw.netschool.app.AppContext;
 import com.examw.netschool.app.Constant;
+import com.examw.netschool.dao.DownloadDao;
 import com.examw.netschool.dao.LessonDao;
 import com.examw.netschool.dao.PlayRecordDao;
+import com.examw.netschool.model.Download;
+import com.examw.netschool.model.Download.DownloadState;
 import com.examw.netschool.model.Lesson;
 import com.examw.netschool.model.PlayRecord;
 
@@ -157,26 +161,26 @@ public class VideoPlayActivity extends Activity implements OnTouchListener, OnGe
 		this.videoLoadingLayout.setVisibility(View.VISIBLE);
 	}
 	//设置视频播放
-		private void setVideoView(Uri uri){
-			Log.d(TAG, "加载视频播放View...");
-			//URI不存在
-			if(uri == null){
-				Log.d(TAG, "URI为空!");
-				//关闭Activity
-				finish();
-				return;
-			}
-			//设置播放地址
-			videoView.setVideoURI(uri);
-			//设置播放缓冲事件监听
-			videoView.setOnBufferingUpdateListener(this.onBufferingUpdateListener);
-			//设置播放预备事件监听
-			videoView.setOnPreparedListener(this.onPreparedListener);
-			//设置播放完成事件监听
-			videoView.setOnCompletionListener(this.onCompletionListener);
-			//设置焦点
-			videoView.requestFocus();
+	private void setVideoView(Uri uri){
+		Log.d(TAG, "加载视频播放View...");
+		//URI不存在
+		if(uri == null){
+			Log.d(TAG, "URI为空!");
+			//关闭Activity
+			finish();
+			return;
 		}
+		//设置播放地址
+		videoView.setVideoURI(uri);
+		//设置播放缓冲事件监听
+		videoView.setOnBufferingUpdateListener(this.onBufferingUpdateListener);
+		//设置播放预备事件监听
+		videoView.setOnPreparedListener(this.onPreparedListener);
+		//设置播放完成事件监听
+		videoView.setOnCompletionListener(this.onCompletionListener);
+		//设置焦点
+		videoView.requestFocus();
+	}
 	//播放缓冲事件处理
 	private OnBufferingUpdateListener onBufferingUpdateListener = new OnBufferingUpdateListener() {
 		@Override
@@ -544,7 +548,6 @@ public class VideoPlayActivity extends Activity implements OnTouchListener, OnGe
 		if(topBar != null && videoView != null){
 			Log.d(TAG, "显示顶部工具栏...");
 			topBar.showAtLocation(videoView, Gravity.TOP, 0, 0);
-			//topBar.update(height - 50, 0, width, 50);
 			topBar.update();
 		}
 	}
@@ -553,7 +556,6 @@ public class VideoPlayActivity extends Activity implements OnTouchListener, OnGe
 		if(footerBar != null && videoView != null){
 			Log.d(TAG, "显示底部工具栏...");
 			footerBar.showAtLocation(videoView, Gravity.BOTTOM, 0, 0);
-			//footerBar.update(0, 0, width, 120);
 			footerBar.update();
 		}
 	}
@@ -759,7 +761,21 @@ public class VideoPlayActivity extends Activity implements OnTouchListener, OnGe
 					Log.e(TAG, "课程资源ID不存在!");
 					return null;
 				}
-				///TODO:优先加载下载到本地的数据
+				//检查视频是否被下载,优先加载下载到本地的数据
+				final DownloadDao downloadDao = new DownloadDao(playRecordDao);
+				if(downloadDao.hasDownload(lessonId)){
+					Log.d(TAG, "检查是否存在本地视频可以播放...");
+					final Download download = downloadDao.getDownload(lessonId);
+					if(download != null && download.getState() == DownloadState.FINISH.getValue()){
+						lessonName = download.getLessonName();
+						final File file = new File(download.getFilePath());
+						if(file.exists()){
+							///TODO:解密视频
+							Log.d(TAG, "播放本地视频:" + file.getAbsolutePath());
+							return Uri.parse(file.getAbsolutePath());
+						}
+					}
+				}
 				//加载课程资源。
 				final LessonDao lessonDao = new LessonDao(playRecordDao);
 				final Lesson lesson = lessonDao.getLesson(lessonId);
@@ -842,30 +858,5 @@ public class VideoPlayActivity extends Activity implements OnTouchListener, OnGe
 //			//player = new VitamioVideoPlayer(VideoPlayActivity.this, videoView, seekBar, tvCurrentTime, tvTotalTime, recordTime, videoLoadingLayout, result, username);
 //		};
 //	};
-//	//加载传递数据
-//	private Uri loadIntentData(){
-//		
-//		String url = intent.getStringExtra("url");
-//		if(!StringUtils.isEmpty(url)){
-//			if(url.indexOf(this.username) == -1 && url.indexOf(Constant.NGINX_URL) == -1){
-//				return Uri.parse(Constant.NGINX_URL + url);
-//			}
-//			if(url.indexOf(this.username) > -1){
-//				File file = new File(url);
-//				if(file.exists()){
-//					return Uri.fromFile(file);
-//				}
-//				Toast.makeText(this, "本地文件已经被删除", Toast.LENGTH_SHORT).show();
-//				//修改courseTab中的记录
-//				//new CourseDao(this).updateState(this.username, this.httpUrl, 0);
-//				this.finish();
-//				return null;
-//			}
-//		}
-//		if(!StringUtils.isEmpty(this.httpUrl)){
-//			return Uri.parse(this.httpUrl);
-//		}
-//		this.finish();
-//		return null;
-//	}
+
 }

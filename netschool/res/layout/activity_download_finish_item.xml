@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 课程资源下载完成数据行 -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/listtext_bj2"
+    android:gravity="center_horizontal"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp" >
+    
+    <!-- 下载的课程资源 -->
+    <TextView android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_centerVertical="true"
+        android:drawableLeft="@drawable/video"
+        android:drawableStart="@drawable/video"
+        android:drawablePadding="8dp"
+        android:ellipsize="marquee"
+        android:focusableInTouchMode="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:singleLine="true"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_small_size" />
+
+    <!-- 播放按钮 -->
+    <ImageView android:id="@+id/btnPlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:background="@color/none"
+        android:src="@drawable/palyico2" 
+        android:contentDescription="@string/download_finish_item_btnplay"/>
+    
+</RelativeLayout>

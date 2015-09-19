@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 考试Fragment 列表数据项 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" 
+    android:layout_height="match_parent"
+    android:paddingLeft="10dp"
+    android:paddingStart="10dp"
+    android:paddingRight="10dp"
+    android:paddingEnd="10dp"
+    android:gravity="fill_horizontal" 
+    android:background="@drawable/list_select"
+    android:orientation="vertical">
+    
+    <TextView android:id="@+id/title" 
+        android:layout_width="match_parent" 
+        android:layout_height="wrap_content" 
+        android:layout_marginTop="5dp"
+        android:background="#00000000"
+        android:gravity="center_vertical" 
+        android:drawableRight="@drawable/arrow_right"
+        android:drawableEnd="@drawable/arrow_right"
+        android:drawablePadding="2dp"
+       	android:singleLine="true" 
+        android:textSize="16sp" 
+        android:textColor="@color/black" />
+
+</LinearLayout>

@@ -31,7 +31,6 @@ public class AppContext extends Application {
 	private static String currentUserId;
 	//当前用户登录状态
 	private static LoginState loginState = LoginState.NONE;
-	
 	/**
 	 * 单线程池。
 	 */
@@ -40,7 +39,16 @@ public class AppContext extends Application {
 	 * 多线程池。
 	 */
 	public static final ExecutorService pools_fixed = Executors.newFixedThreadPool(10);
-	
+	/*
+	 * 重载应用创建。
+	 * @see android.app.Application#onCreate()
+	 */
+	@Override
+	public void onCreate() {
+		Log.d(TAG, "重载应用创建...");
+		super.onCreate();
+		 mContext = this;
+	}
 	//窗口管理器
 	private WindowManager windowManager;
 	//连接管理
@@ -51,7 +59,6 @@ public class AppContext extends Application {
 	private AudioManager audioManager;
 	//包信息
 	private PackageInfo packageInfo;
-	
 	/**
 	 * 获取窗体管理器。
 	 * @return 窗体管理器。
@@ -102,8 +109,6 @@ public class AppContext extends Application {
 		}
 		return this.packageInfo;
 	}
-		
-	
 	/**
 	 * 获取应用全局上下文。
 	 * @return 全局上下文对象。 
@@ -145,7 +150,7 @@ public class AppContext extends Application {
 	 * 获取当前用户ID。
 	 * @return 当前用户ID。
 	 */
-	public String getCurrentUserId() {
+	public static String getCurrentUserId() {
 		return currentUserId;
 	}
 	/**
@@ -154,7 +159,7 @@ public class AppContext extends Application {
 	 *	  当前用户ID。
 	 */
 	public synchronized void setCurrentUserId(String userId) {
-		if(StringUtils.equalsIgnoreCase(currentUserId, userId)){
+		if(!StringUtils.equalsIgnoreCase(currentUserId, userId)){
 			Log.d(TAG, "设置当前用户ID...["+ currentUserId+"]=>["+userId+"]");
 			currentUserId = userId;
 		}

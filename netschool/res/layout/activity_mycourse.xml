@@ -42,7 +42,7 @@
         android:id="@+id/LargeClasslistLayout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@id/EndBtnLayout"
+        android:layout_above="@+id/EndBtnLayout"
         android:layout_below="@id/TopTitleLayout"
         android:orientation="vertical" >
 
@@ -203,6 +203,5 @@
                 android:textSize="@dimen/text_small_size" />
         </LinearLayout>
     </LinearLayout>
-    <!-- <include layout="@layout/end_button3" /> -->
 
 </RelativeLayout>
