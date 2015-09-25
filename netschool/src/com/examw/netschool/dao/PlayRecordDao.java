@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.examw.netschool.app.Constant;
 import com.examw.netschool.model.PlayRecord;
 
 import android.content.Context;
@@ -48,6 +47,36 @@ public class PlayRecordDao extends BaseDao {
 			db.beginTransaction();
 			//删除数据
 			db.execSQL(delSql);
+			//设置事务成功
+			db.setTransactionSuccessful();
+		}catch (Exception e) {
+			Log.e(TAG, "删除播放记录异常:" + e.getMessage(), e);
+		}finally{
+			if(db != null){
+				//结束事务
+				db.endTransaction();
+				//关闭连接
+				db.close();
+			}
+		}
+	}
+	/**
+	 * 删除播放记录。
+	 * @param recordId
+	 */
+	public void delete(String recordId){
+		Log.d(TAG, "删除播放记录...");
+		if(StringUtils.isBlank(recordId)) return;
+		SQLiteDatabase db = null;
+		try {
+			final String delSql = "DELETE FROM  tbl_PlayRecords WHERE id = ? ";
+			Log.d(TAG, "delete-sql:" + delSql);
+			//初始化
+			db = this.dbHelper.getWritableDatabase();
+			//开启事务
+			db.beginTransaction();
+			//删除数据
+			db.execSQL(delSql, new Object[]{ recordId });
 			//设置事务成功
 			db.setTransactionSuccessful();
 		}catch (Exception e) {
@@ -151,25 +180,24 @@ public class PlayRecordDao extends BaseDao {
 	}
 	/**
 	 * 加载播放记录。
-	 * @param pageIndex
 	 * @return
 	 */
-	public List<PlayRecord> loadPlayRecords(Integer pageIndex){
-		Log.d(TAG, "加载播放记录..." + pageIndex);
+	public List<PlayRecord> loadPlayRecords(){
+		Log.d(TAG, "加载播放记录...");
 		final List<PlayRecord> records = new ArrayList<PlayRecord>();
 		SQLiteDatabase db = null;
 		try {
-			if(pageIndex == null) pageIndex = 0;
-			Integer start = (pageIndex - 1) * Constant.PAGE_SIZE;
+			//if(pageIndex == null) pageIndex = 0;
+			//Integer start = (pageIndex - 1) * Constant.PAGE_SIZE;
 			//sql
 			final String query = "SELECT a.id,a.lesson_id,b.name,a.playTime,a.createTime From tbl_PlayRecords a "
-					+ " INNER JOIN tbl_Lessones b ON b.id = a.lesson_id ORDER BY a.createTime DESC LIMIT ?,?";
+					+ " INNER JOIN tbl_Lessones b ON b.id = a.lesson_id ORDER BY a.createTime DESC";
 			//
 			Log.d(TAG, query);
 			//初始化
 			db = this.dbHelper.getReadableDatabase();
 			//查询数据
-			final Cursor cursor =  db.rawQuery(query, new String[]{ String.valueOf(start), String.valueOf(Constant.PAGE_SIZE) });
+			final Cursor cursor =  db.rawQuery(query, null);
 			//循环赋值
 			while(cursor.moveToNext()){
 				//初始化

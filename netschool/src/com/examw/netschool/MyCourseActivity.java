@@ -124,7 +124,7 @@ public class MyCourseActivity extends Activity implements OnClickListener {
 			case R.id.LearningRecord_layout_btn:{
 				Log.d(TAG, "播放记录点击处理...");
 				
-				final Intent intent = new Intent(this, PlayrecordActivity.class);
+				final Intent intent = new Intent(this, PlayRecordActivity.class);
 				intent.putExtra(Constant.CONST_USERID, this.userId);
 				intent.putExtra(Constant.CONST_USERNAME, this.userName);
 				this.startActivity(intent);

@@ -15,92 +15,55 @@
     <application android:name=".app.AppContext" android:allowBackup="true"
         android:icon="@drawable/app_logo" android:label="@string/app_name" android:theme="@style/AppTheme" >
         
-         <!-- 启动Activity -->
-         <activity android:name=".StartActivity" android:label="@string/app_name" android:screenOrientation="portrait" >
+        <!-- 启动Activity -->
+        <activity android:name=".StartActivity" android:label="@string/app_name" android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-         </activity>
+        </activity>
         
-         <!-- 引导页Activity -->
-         <activity android:name=".GuideActivity" android:screenOrientation="portrait" />
+        <!-- 引导页Activity -->
+        <activity android:name=".GuideActivity" android:screenOrientation="portrait" />
         
-         <!-- 学员登录Activity -->
-         <activity android:name=".LoginActivity" android:screenOrientation="portrait" 
+        <!-- 学员登录Activity -->
+        <activity android:name=".LoginActivity" android:screenOrientation="portrait" 
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         
-         <!-- 主界面Activity -->
-         <activity android:name=".MainActivity" android:screenOrientation="portrait" />
+        <!-- 主界面Activity -->
+        <activity android:name=".MainActivity" android:screenOrientation="portrait" />
         
-         <!-- 我的课程Activity -->
-         <activity android:name=".MyCourseActivity" android:screenOrientation="portrait" />
+        <!-- 我的课程Activity -->
+        <activity android:name=".MyCourseActivity" android:screenOrientation="portrait" />
         
-         <!-- 我的课程资源Activity -->
-         <activity android:name=".MyCourseLessonActivity" android:screenOrientation="portrait" />
+        <!-- 我的课程资源Activity -->
+        <activity android:name=".MyCourseLessonActivity" android:screenOrientation="portrait" />
          
-         <!-- 播放Activity-->
-         <activity android:name=".VideoPlayActivity" android:process=":vitamio"
+        <!-- 播放Activity-->
+        <activity android:name=".VideoPlayActivity" android:process=":vitamio"
              android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
              android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
              android:screenOrientation="landscape"/>
          
-         <!-- 下载Activity -->
-         <activity android:name=".DownloadActivity" android:screenOrientation="portrait" />
+        <!-- 下载Activity -->
+        <activity android:name=".DownloadActivity" android:screenOrientation="portrait" />
          
-         <!-- 免费体验 -->
-         <activity android:name=".FreeExperienceActivity" android:screenOrientation="portrait" />
+        <!-- 免费体验Activity -->
+        <activity android:name=".FreeExperienceActivity" android:screenOrientation="portrait" />
          
-        <!-- 你问我答 -->
+        <!-- 答疑主题Activity -->
+        <activity android:name=".AnswerActivity"  android:screenOrientation="portrait" />
+        <!-- 答疑明细Activity -->
+        <activity android:name=".AnswerDetailActivity" android:screenOrientation="portrait" />
+        <!-- 答疑提交Activity -->
+        <activity android:name=".AnswerSubmitActivity" android:screenOrientation="portrait" />
         
         <!-- 播放记录 -->
-        
-        <!-- 意见反馈 -->
+        <activity android:name=".PlayRecordActivity"  android:screenOrientation="portrait" />
          
-        
-        <!-- <activity android:name=".RegSuccessActivity" android:screenOrientation="portrait" /> -->
-        <!-- <activity android:name=".Class1Activity" android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
-        
-        <activity android:name=".Class2Activity" android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
-        
-        <activity android:name=".Class3Activity" android:screenOrientation="portrait" />
-        
-        <activity android:name=".ZuHeClassActivity"  android:screenOrientation="portrait" />
-        
-        <activity android:name=".ClassDetailActivity" android:screenOrientation="portrait" /> -->
-        
-       <!--  <activity android:name=".QuestionMainActivity" android:screenOrientation="portrait" /> -->
-        
-        <!-- <activity android:name=".AnswerMainActivity" android:screenOrientation="portrait" />
-        
-        <activity android:name=".AnswerAskActivity" android:screenOrientation="portrait" />
-        
-        <activity android:name=".AnswerInfoActivity" android:screenOrientation="portrait" />
-        
-        <activity android:name=".PlayrecordActivity"  android:screenOrientation="portrait" />
-        
-        <activity android:name=".SuggestionActivity" android:screenOrientation="portrait" />
-        
-        <activity android:name=".HelpActivity" android:screenOrientation="portrait" /> -->
-        
-        <!-- <activity android:name=".QuestionFromCourseActivity" android:screenOrientation="portrait" /> -->
-        <!-- <activity android:name=".QuestionPaperListActivity" android:screenOrientation="portrait" /> -->
-        <!-- <activity android:name=".QuestionDoExamActivity" android:screenOrientation="portrait" /> -->
-        <!--  <activity android:name=".QuestionDoExamActivity2" android:screenOrientation="portrait" /> -->
-        <!--  <activity android:name=".QuestionPaperInfoActivity" android:screenOrientation="portrait" /> -->
-        <!--  <activity android:name=".QuestionWriteNoteActivity" android:screenOrientation="portrait" /> -->
-        <!-- <activity android:name=".QuestionMyNotebookActivity" android:screenOrientation="portrait" /> -->
-        <!-- <activity android:name=".QuestionMyFavoriteActivity" android:screenOrientation="portrait" /> -->
-        <!-- <activity android:name=".QuestionMyErrorsActivity" android:screenOrientation="portrait" /> -->
-        <!-- <activity android:name=".QuestionRecordActivity" android:screenOrientation="portrait" /> -->
-        <!--  <activity android:name=".QuestionChooseActivity" android:screenOrientation="portrait" /> -->
-        <!-- <activity android:name=".QuestionCommonFirstActivity" android:screenOrientation="portrait" /> -->
-        <!-- <activity android:name=".SettingActivity" android:screenOrientation="portrait" />
-        <activity android:name=".AboutusActivity" android:screenOrientation="portrait" />
-        <activity android:name=".SearchActivity" android:screenOrientation="portrait" /> -->
-        
+        <!-- 意见反馈 -->
+        <activity android:name=".SuggestActivity" android:screenOrientation="portrait" />
+         
         <!-- vitamio初始化 -->
         <activity android:name="io.vov.vitamio.activity.InitActivity"
             android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
@@ -108,10 +71,8 @@
             android:theme="@android:style/Theme.NoTitleBar"
            	android:windowSoftInputMode="stateAlwaysHidden" />
 
+        <!-- 下载服务 -->
         <service android:name=".service.DownloadService" />
-
-        <!-- <meta-data android:name="UMENG_APPKEY" android:value="5200476c56240bc53b029689" /> -->
-        <!-- <meta-data android:name="UMENG_CHANNEL" android:value="youeclass.com" /> -->
+        
     </application>
-
 </manifest>

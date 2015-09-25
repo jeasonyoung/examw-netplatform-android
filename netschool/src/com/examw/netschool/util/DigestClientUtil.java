@@ -1,6 +1,7 @@
 package com.examw.netschool.util;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -25,6 +27,9 @@ import org.apache.http.util.EntityUtils;
 import android.util.Log;
 
 import com.examw.netschool.app.Constant;
+import com.examw.netschool.model.JSONCallback;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 /**
  * HTTP摘要认证客户端工具类
  * 
@@ -91,6 +96,42 @@ public final class DigestClientUtil {
 			return sendDigestRequest(postMethod);
 			
 		} catch (UnsupportedEncodingException e) {
+			Log.e(TAG, "POST异常:" + e.getMessage(), e);
+		}
+		return null;
+	}
+	/**
+	 * POST提交JSON对象。
+	 * @param url
+	 * 
+	 * @param json
+	 * @return
+	 */
+	public static JSONCallback<Object> sendDigestPOSTJSONRequest(String url, Object json){
+		Log.d(TAG, "POST:" + url);
+		if(StringUtils.isBlank(url) || json == null) return null;
+		try{
+			//初始化JSON对象
+			final Gson gson = new Gson();
+			//JSON序列化
+			final String json_data = gson.toJson(json);
+			//POST
+			final HttpPost postMethod = new HttpPost(url);
+			//
+			final StringEntity s = new StringEntity(json_data);
+			s.setContentEncoding("UTF-8");
+			s.setContentType("application/json");
+			//
+			postMethod.setEntity(s);
+			//提交数据
+			final String result = sendDigestRequest(postMethod);
+			//
+			if(StringUtils.isNotBlank(result)){
+				//类型
+				final Type type = new TypeToken<JSONCallback<Object>>(){}.getType();
+				return gson.fromJson(result, type);
+			}
+		}catch(Exception e){
 			Log.e(TAG, "POST异常:" + e.getMessage(), e);
 		}
 		return null;

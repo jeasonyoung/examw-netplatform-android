@@ -1,145 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 答疑 Activity -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical" >
-
-    <RelativeLayout
-        android:id="@+id/TopTitleLayout"
-        android:layout_width="fill_parent"
-        android:layout_height="50.0dip"
-        android:background="@drawable/topbj"
-        android:orientation="vertical" >
-
-        <ImageButton
-            android:id="@+id/returnbtn"
-            android:layout_width="50.0dip"
-            android:layout_height="30.0dip"
+    
+    <!-- top  -->
+    <RelativeLayout 
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/topbj">
+        
+        <!-- 返回 -->
+        <ImageButton android:id="@+id/btn_return"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="10.0dip"
             android:background="@color/none"
             android:scaleType="centerCrop"
-            android:src="@drawable/returnbtn1" />
-
+            android:src="@drawable/returnbtn1"
+            android:contentDescription="@string/btn_return_desc" />
+        
+        <!-- 标题 -->
         <TextView
-            android:id="@+id/TopTitle1"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:layout_centerVertical="true"
             android:background="@color/none"
             android:fadingEdge="vertical"
             android:gravity="center"
-            android:text="@string/answer_sheet"
+            android:text="@string/answer_title"
             android:textColor="@color/white"
             android:textSize="@dimen/title_huge_size" />
-
-        <ImageButton
-            android:id="@+id/refreshbtn"
+        
+        <!-- 刷新 -->
+        <ImageButton android:id="@+id/btn_refresh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10.0dip"
+            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:background="@color/none"
-            android:src="@drawable/refresh_img" />
+            android:src="@drawable/refresh_img"
+            android:contentDescription="@string/answer_refresh_desc" />
+        
     </RelativeLayout>
-
-    <FrameLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
-
-        <LinearLayout
-            android:id="@+id/progressLayout"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:gravity="center"
-            android:orientation="vertical" >
-
-            <ProgressBar
-                style="@android:style/Widget.ProgressBar.Large.Inverse"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/contextLayout"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical" >
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="3.0dip"
-                android:background="@drawable/down_layout_bg" >
-
-                <TextView
-                    android:id="@+id/answerInfos_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginBottom="10.0dip"
-                    android:layout_marginLeft="20.0dip"
-                    android:layout_marginRight="20.0dip"
-                    android:layout_marginTop="10.0dip"
-                    android:gravity="center"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_small_size" />
-
-                <Button
-                    android:id="@+id/ask_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10.0dip"
-                    android:background="@drawable/answerbtn_bg"
-                    android:text="@string/answer"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_medium_size"
-                    android:textStyle="bold" />
-            </RelativeLayout>
-            <!--
-            <com.kaoshida233.view.PullToRefreshView android:orientation="vertical" android:id="@+id/main_pull_refresh_view" android:background="@android:color/white" android:layout_width="fill_parent" android:layout_height="fill_parent">
-                <ListView android:id="@+id/answerList" android:fadingEdge="none" android:layout_width="fill_parent" android:layout_height="fill_parent" android:cacheColorHint="@color/none" android:divider="@color/white" /></com.kaoshida233.view.PullToRefreshView>
-            -->
-            <ListView
-                android:id="@+id/android:list"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:background="@color/white"
-                android:cacheColorHint="@color/none"
-                android:divider="@drawable/topic_driver"
-                android:dividerHeight="1.0dip"
-                android:fadingEdge="none" />
-
-            <RelativeLayout
-                android:id="@android:id/empty"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:visibility="gone" >
-
-                <TextView
-                    android:id="@+id/noneText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:layout_centerInParent="true"
-                    android:text="@string/nonedata"
-                    android:textSize="@dimen/title_huge_size" />
-
-                <ImageView
-                    android:id="@+id/noneDataImg"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/noneText"
-					android:layout_centerInParent="true"
-                    android:contentDescription="@string/nonedata"
-                    android:src="@drawable/nodata" />
-            </RelativeLayout>
-        </LinearLayout>
-    </FrameLayout>
+    
+    <!--  我要提问 -->
+    <RelativeLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:background="@drawable/down_layout_bg">
+        
+         <Button android:id="@+id/btn_answer" 
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content" 
+             android:layout_alignParentRight="true"
+             android:layout_alignParentEnd="true"
+             android:layout_marginRight="10dp"
+             android:layout_marginEnd="10dp"
+             android:layout_centerVertical="true"
+             android:background="@drawable/answerbtn_bg"
+             android:text="@string/btn_answer_title"
+             android:textColor="@color/black"
+             android:textSize="@dimen/text_medium_size"
+             android:textStyle="bold" />
+        
+    </RelativeLayout>
+    
+    <!-- 无数据时显示 -->
+    <LinearLayout android:id="@+id/nodataView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/none"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+        
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:drawableTop="@drawable/nodata"
+            android:drawablePadding="2dp"
+            android:text="@string/nodata"
+            android:textSize="30sp"/>
+    </LinearLayout>
+    
+    <!-- 数据列表 -->
+     <ListView android:id="@+id/list_answers"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:background="@color/white"
+         android:cacheColorHint="@color/none"
+         android:divider="@drawable/topic_driver"
+         android:dividerHeight="2dp"
+         android:fadingEdge="none" />
+     
 </LinearLayout>

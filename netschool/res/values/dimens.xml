@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- 顶部返回条高度 -->
+    <dimen name="top_banner_height">50.0dp</dimen>
+    <!-- 顶部返回按钮高度 -->
+    <dimen name="top_btn_return_height">30.0dp</dimen>
+    <!-- 顶部返回按钮左边间距 -->
+    <dimen name="top_btn_return_left">10.0dp</dimen>
+    
+    
     <dimen name="padding_small">8.0dip</dimen>
     <dimen name="padding_medium">8.0dip</dimen>
     <dimen name="padding_large">16.0dip</dimen>

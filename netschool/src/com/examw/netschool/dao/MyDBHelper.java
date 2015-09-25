@@ -39,7 +39,10 @@ public class MyDBHelper extends SQLiteOpenHelper {
 		db.execSQL("CREATE TABLE tbl_Downloads(lessonId TEXT PRIMARY KEY,filePath TEXT,fileSize INTEGER DEFAULT 0,state INTEGER DEFAULT 0);");
 		//5.下载进程
 		db.execSQL("CREATE TABLE tbl_Downing(lessonId TEXT,threadId INTEGER,startPos INTEGER DEFAULT 0,endPos INTEGER DEFAULT 0,completeSize INTEGER DEFAULT 0,CONSTRAINT pk_tbl_Downing PRIMARY KEY(lessonId,threadId));");
-		
+		//6.答疑主题
+		db.execSQL("CREATE TABLE tbl_AQTopic(id TEXT PRIMARY KEY,lessonId TEXT,title TEXT,content TEXT,lastTime TIMESTAMP DEFAULT (datetime('now', 'localtime')));");
+		//7.答疑明细
+		db.execSQL("CREATE TABLE tbl_AQDetail(id TEXT PRIMARY KEY,topicId TEXT,content TEXT,userId TEXT,userName TEXT,createTime TIMESTAMP DEFAULT (datetime('now', 'localtime')));");
 	}
 	/*
 	 * 重载升级数据库结构。
@@ -58,7 +61,10 @@ public class MyDBHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE  IF EXISTS tbl_Downloads;");
 		//5.下载进程
 		db.execSQL("DROP TABLE  IF EXISTS tbl_Downing;");
-	
+		//6.答疑主题
+		db.execSQL("DROP TABLE  IF EXISTS tbl_AQTopic;");
+		//7.答疑明细
+		db.execSQL("DROP TABLE  IF EXISTS tbl_AQDetail;");
 		//重新创建表结构
 		this.onCreate(db);
 	}

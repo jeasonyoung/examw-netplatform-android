@@ -129,4 +129,43 @@ public class MyCourseDao extends BaseDao {
 		}
 		return courses;
 	}
+	/**
+	 * 加载班级数据。
+	 * @return
+	 */
+	public List<MyCourse> loadCoursesByClass(){
+		Log.d(TAG, "加载全部的班级数据...");
+		final List<MyCourse> courses = new ArrayList<MyCourse>();
+		SQLiteDatabase db = null;
+		try {
+			//初始化
+			db = this.dbHelper.getReadableDatabase();
+			//查询数据
+			final Cursor cursor = db.rawQuery("SELECT DISTINCT id,name,type,orderNo FROM tbl_MyCourses WHERE type = ? ORDER BY orderNo", new String[]{  
+					MyCourse.TYPE_CLASS
+			});
+			while(cursor.moveToNext()){
+				final MyCourse course = new MyCourse();
+				//上级课程ID
+				course.setPid(null);
+				//课程ID
+				course.setId(StringUtils.trimToNull(cursor.getString(0)));
+				//课程名称
+				course.setName(cursor.getString(1));
+				//类型
+				course.setType(cursor.getString(2));
+				//排序
+				course.setOrderNo(Integer.valueOf(cursor.getInt(3)));
+				//添加到集合
+				courses.add(course);
+			}
+			cursor.close();
+		} catch (Exception e) {
+			Log.e(TAG, "加载数据异常:" + e.getMessage(), e);
+		} finally {
+			//关闭连接
+			if(db != null) db.close();
+		}
+		return courses;
+	}
 }

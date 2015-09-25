@@ -68,7 +68,7 @@ public class MainActivity extends Activity{
 	@Override
 	protected void onDestroy() {
 		//发广播,通知下载服务service结束所有的线程,同时结束自己
-        this.sendBroadcast(new Intent("commandFromActivity"));//发送广播  
+        //this.sendBroadcast(new Intent("commandFromActivity"));//发送广播  
 		//
         super.onDestroy();
 	}
@@ -158,8 +158,8 @@ public class MainActivity extends Activity{
 					MyCourseActivity.class,
 					FreeExperienceActivity.class,
 					//AnswerMainActivity.class,
-					PlayrecordActivity.class,
-					SuggestionActivity.class
+					PlayRecordActivity.class,
+					SuggestActivity.class
 				};
 			/**
 			 * 构造函数。

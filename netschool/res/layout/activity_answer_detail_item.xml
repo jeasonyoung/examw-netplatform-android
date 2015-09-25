@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 答疑明细数据行 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent"
+    android:orientation="vertical" >
+    
+    <!-- 内容 -->
+    <TextView android:id="@+id/answer_detail_content" 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
+        android:singleLine="false"
+        android:textColor="@color/black" 
+        android:textSize="@dimen/text_small_size" />
+   
+    <!-- 底部  -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+       	android:layout_height="match_parent"
+       	android:layout_marginTop="5dp">
+        
+        <!-- 用户姓名 -->
+        <TextView android:id="@+id/answer_detail_username"  
+            android:layout_width="match_parent" 
+            android:layout_height="wrap_content" 
+            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_toLeftOf="@+id/answer_detail_time"
+            android:layout_toStartOf="@+id/answer_detail_time"
+            android:textColor="@color/grey" 
+            android:textSize="@dimen/text_small_size" />
+        
+        <!-- 时间 -->
+        <TextView android:id="@+id/answer_detail_time"  
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content" 
+            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:textColor="@color/grey" 
+            android:textSize="@dimen/text_small_size" />
+        
+    </RelativeLayout>
+</LinearLayout>

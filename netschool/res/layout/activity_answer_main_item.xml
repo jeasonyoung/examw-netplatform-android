@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 数据项View -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:background="@drawable/childlist_select">
+    
+    <!-- 图标 -->
+     <ImageView android:id="@+id/item_left_icon"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentLeft="true"
+         android:layout_alignParentStart="true"
+         android:layout_marginLeft="5dp"
+         android:layout_marginStart="5dp"
+         android:src="@drawable/toppic1"
+         android:contentDescription="@string/answer_item_icon" />
+     
+     <!-- 内容 -->
+     <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_toRightOf="@id/item_left_icon"
+         android:layout_toEndOf="@id/item_left_icon"
+         android:layout_toLeftOf="@+id/item_right_icon"
+         android:layout_toStartOf="@+id/item_right_icon"
+         android:layout_marginLeft="5dp"
+         android:layout_marginStart="5dp"
+         android:layout_marginRight="5dp"
+         android:layout_marginEnd="5dp"
+         android:orientation="vertical">
+         
+         <!-- 标题 -->
+         <TextView android:id="@+id/item_answer_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:singleLine="false"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_medium_size" />
+         
+         <!-- 所属课程资源 -->
+         <TextView android:id="@+id/item_answer_lesson"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:singleLine="true"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/text_small_size" />
+         
+         <!-- 内容 -->
+         <TextView android:id="@+id/item_answer_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:singleLine="false"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/text_medium_size" />
+         
+         <!-- 时间 -->
+         <RelativeLayout 
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginRight="5dp"
+             android:layout_marginEnd="5dp">
+             
+             <TextView android:id="@+id/item_answer_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:paddingTop="5dp"
+                android:singleLine="true"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/text_small_size" />
+             
+         </RelativeLayout>         
+     </LinearLayout>
+     
+    <!-- 右箭头 -->
+    <ImageView android:id="@+id/item_right_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
+        android:src="@drawable/arrow_right"
+        android:contentDescription="@string/answer_item_icon" />
+
+</RelativeLayout>

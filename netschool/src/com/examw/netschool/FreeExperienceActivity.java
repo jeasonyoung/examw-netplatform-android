@@ -95,7 +95,7 @@ public class FreeExperienceActivity extends FragmentActivity implements OnClickL
 				break;
 			}
 			case R.id.btn_lesson_record:{//播放记录
-				 final Intent intent = new Intent(this, PlayrecordActivity.class);
+				 final Intent intent = new Intent(this, PlayRecordActivity.class);
 				 intent.putExtra(Constant.CONST_USERID, userId);
 				 intent.putExtra(Constant.CONST_USERNAME, userName);
 				 this.startActivity(intent);

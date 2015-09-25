@@ -3,6 +3,9 @@
     <string name="app_name">汇课网校</string>
     <string name="versions">版本号：V1.0</string>
     
+    <!-- 通用 -->
+    <string name="btn_return_desc">返回</string>
+    <string name="post_upload_msg">上传数据中. . .</string>
     
     <string name="download_nodata_desc">没有数据</string>
     <string name="download_finish_item_btnplay">播放</string>
@@ -29,6 +32,38 @@
     <string name="nodata">亲,木有数据!</string>
     
     
+    <!-- 播放记录 -->
+    <string name="play_record_title">播放记录</string>
+    <string name="delete_record_title">删除播放记录</string>
+    <string name="delete_record_msg">确认删除播放记录?</string>
+    <string name="delete_record_btn_cancel">取消</string>
+    <string name="delete_record_btn_submit">确认</string>
+    
+    <!-- 答疑主题 -->
+    <string name="answer_title">你问我答</string>
+    <string name="answer_refresh_desc">刷新</string>
+    <string name="btn_answer_title">我要提问</string>
+    <string name="answer_item_icon">主题</string>
+    <!-- 答疑明细 -->
+    <string name="answer_detail_title">我的提问</string>
+    <string name="answer_detail_callback_hint">输入回复</string>
+    <string name="btn_answer_detail_callback_title">回复</string>
+    <!-- 答疑提问 -->
+    <string name="answer_submit_title">我的疑问</string>
+    <string name="answer_submit_class">所属班级:</string>
+    <string name="answer_submit_lesson">课程资源:</string>
+	<string name="answer_submit_topic_title_desc"> 请输入标题:</string>
+    <string name="answer_submit_topic_content_desc"> 请输入内容</string>
+    <string name="btn_answer_submit">提交</string>
+    <string name="answer_submit_lesson_error">请选择课程!</string>
+    <string name="answer_submit_title_error">请输入疑问标题!</string>
+    <string name="answer_submit_content_error">请输入疑问内容!</string>
+    <!-- 意见反馈 -->
+     <string name="suggest_title">意见反馈</string>
+     <string name="suggest_student_name_title">学员名:</string>
+     <string name="suggest_content_hint">请留下您的宝贵意见和建议</string>
+     <string name="btn_suggest_submit_title">提交</string>
+     <string name="suggest_content_error">请输入您得宝贵意见何建议!</string>
     
     
     <string name="hello_world">Hello world!</string>

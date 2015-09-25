@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 播放记录项 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    android:background="@drawable/childlist_select"
+    android:orientation="vertical" >
+    
+    <!-- 标题 -->
+    <TextView android:id="@+id/record_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginRight="10dp" 
+        android:layout_marginEnd="10dp"
+        android:paddingTop="10dp"
+        android:singleLine="true"
+        android:textColor="@color/darkgray"
+        android:textSize="@dimen/text_medium_size" />
+    
+    <!-- 时间 -->
+    <RelativeLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp">
+        
+         <TextView android:id="@+id/record_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:singleLine="true"
+            android:textColor="@color/darkgray"
+            android:textSize="@dimen/text_small_size" />
+        
+    </RelativeLayout>
+</LinearLayout>

@@ -109,7 +109,7 @@ public class VideoPlayActivity extends Activity implements OnTouchListener, OnGe
 			//当前课程资源ID
 			this.lessonId = intent.getStringExtra(Constant.CONST_LESSON_ID);
 			//当前课程资源名称
-			this.lessonName = intent.getStringExtra(Constant.CONST_CLASS_NAME);
+			this.lessonName = intent.getStringExtra(Constant.CONST_LESSON_NAME);
 			//当前播放记录ID
 			this.recordId = intent.getStringExtra(Constant.CONST_LESSON_RECORD_ID);
 		}
@@ -744,6 +744,8 @@ public class VideoPlayActivity extends Activity implements OnTouchListener, OnGe
 				if(playRecordDao == null){
 					playRecordDao = new PlayRecordDao(VideoPlayActivity.this, userId);
 				}
+				//设置当前播放时间
+				currentPlayTimeBySecond = 0;
 				//如果存在播放记录
 				if(StringUtils.isNotBlank(recordId)){
 					Log.d(TAG, "根据播放记录["+recordId+"]加载数据....");
@@ -752,6 +754,8 @@ public class VideoPlayActivity extends Activity implements OnTouchListener, OnGe
 						Log.e(TAG, "播放记录["+recordId+"]不存在!");
 						return null;
 					}
+					//播放位置
+					currentPlayTimeBySecond = record.getPlayTime();
 					//设置课程ID
 					lessonId = record.getLessonId();
 					lessonName = record.getLessonName();
