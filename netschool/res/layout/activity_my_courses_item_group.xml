@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 我的课程－分组数据项View -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/my_courses_item_group_bg"
+    android:gravity="fill_vertical"
+    android:orientation="horizontal" > 
+    
+    <!-- 显示文本 -->
+    <TextView android:id="@+id/tv_my_course_item_group"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/my_course_item_group_height"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
+        android:gravity="center_vertical"
+        android:drawableRight="@drawable/arrow_down"
+        android:drawableEnd="@drawable/arrow_down"
+        android:drawablePadding="5dp"
+        android:singleLine="true"
+        android:textColor="@color/black"
+        android:textSize="@dimen/title_medium_size"
+        android:background="@color/transparent" />
+
+</LinearLayout>

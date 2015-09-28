@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 课程资源列表Activity 布局 -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:gravity="fill_vertical" >
+    
+   <!-- top banner -->
+   <include android:id="@+id/my_course_lesson_header" 
+       layout="@layout/activity_header" 
+       android:layout_width="match_parent"
+       android:layout_height="@dimen/top_banner_height"
+       android:layout_alignParentTop="true" />
+   
+   <!-- 中间显示View -->
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:layout_below="@id/my_course_lesson_header"
+       android:layout_above="@+id/my_course_lesson_footer">
+       
+       <!-- 无数据显示 -->
+       <include android:id="@+id/nodata_view" layout="@layout/activity_nodata"/>
+       
+       <!-- 数据列表 -->
+       <ListView android:id="@+id/list_course_lesson"
+           android:layout_width="match_parent" 
+           android:layout_height="match_parent" 
+           android:divider="@drawable/topic_driver" 
+           android:dividerHeight="1.0dp" 
+           android:cacheColorHint="@color/transparent"
+           android:fadingEdge="none" /> 
+       
+   </LinearLayout>
+   
+   <!-- 底部菜单 -->
+   <LinearLayout android:id="@+id/my_course_lesson_footer"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_alignParentBottom="true"
+       android:background="@color/footer_bg_color"
+       android:gravity="center"
+       android:orientation="horizontal"
+       android:weightSum="4">
+       
+       <!-- 在线课程 -->
+       <TextView android:id="@+id/btn_online"
+           android:layout_width="wrap_content"
+	       android:layout_height="wrap_content"
+	       android:paddingTop="5dp"
+	       android:paddingBottom="5dp"
+	       android:background="@drawable/footer_item_bg_highlight"
+	       android:drawableTop="@drawable/my_course_footer_online_icon"
+	       android:drawablePadding="2dp"
+	       android:gravity="center_horizontal"
+	       android:text="@string/my_course_lesson_footer_online"
+	       android:textColor="@color/white"
+	       android:textSize="@dimen/text_small_size"
+	       android:layout_weight="1" />
+       
+       <!-- 下载课程 -->
+       <TextView android:id="@+id/btn_download"
+           android:layout_width="wrap_content"
+	       android:layout_height="wrap_content"
+	       android:paddingTop="5dp"
+	       android:paddingBottom="5dp"
+	       android:background="@drawable/footer_item_bg_normal"
+	       android:drawableTop="@drawable/my_course_lesson_footer_download_icon"
+	       android:drawablePadding="2dp"
+	       android:gravity="center_horizontal"
+	       android:text="@string/my_course_lesson_footer_download"
+	       android:textColor="@color/white"
+	       android:textSize="@dimen/text_small_size"
+	       android:layout_weight="1" />
+       
+       <!-- 离线课程 -->
+       <TextView android:id="@+id/btn_offline"
+           android:layout_width="wrap_content"
+	       android:layout_height="wrap_content"
+	       android:paddingTop="5dp"
+	       android:paddingBottom="5dp"
+	       android:background="@drawable/footer_item_bg_normal"
+	       android:drawableTop="@drawable/my_course_lesson_footer_offline_icon"
+	       android:drawablePadding="2dp"
+	       android:gravity="center_horizontal"
+	       android:text="@string/my_course_lesson_footer_offline"
+	       android:textColor="@color/white"
+	       android:textSize="@dimen/text_small_size"
+	       android:layout_weight="1" />
+       
+       <!-- 播放记录 -->
+       <TextView android:id="@+id/btn_record" 
+           android:layout_width="wrap_content"
+	       android:layout_height="wrap_content"
+	       android:paddingTop="5dp"
+	       android:paddingBottom="5dp"
+	       android:background="@drawable/footer_item_bg_normal"
+	       android:drawableTop="@drawable/my_course_lesson_footer_record_icon"
+	       android:drawablePadding="2dp"
+	       android:gravity="center_horizontal"
+	       android:text="@string/my_course_lesson_footer_record"
+	       android:textColor="@color/white"
+	       android:textSize="@dimen/text_small_size"
+	       android:layout_weight="1" />
+       
+   </LinearLayout>
+   
+</RelativeLayout>

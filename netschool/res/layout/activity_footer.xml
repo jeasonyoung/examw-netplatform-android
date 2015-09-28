@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 底部菜单 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:background="@color/footer_bg_color"
+     android:gravity="center"
+     android:orientation="horizontal"
+     android:weightSum="3" >
+     
+     <!-- 课程中心 -->
+    <TextView android:id="@+id/btn_free_experience"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:background="@drawable/footer_item_bg_highlight"
+        android:drawableTop="@drawable/footer_item_experience_icon"
+        android:drawablePadding="2dp"
+        android:gravity="center_horizontal"
+        android:text="@string/btn_free_experience_title"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_small_size"
+        android:layout_weight="1" />
+    
+    <!-- 我的课程 -->
+    <TextView android:id="@+id/btn_my_course"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:background="@drawable/footer_item_bg_normal"
+        android:drawableTop="@drawable/footer_item_my_course_icon"
+        android:drawablePadding="2dp"
+        android:gravity="center_horizontal"
+        android:text="@string/btn_my_course_title"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_small_size"
+        android:layout_weight="1"/>
+    
+    <!-- 播放记录  -->
+    <TextView android:id="@+id/btn_play_record"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:background="@drawable/footer_item_bg_normal"
+        android:drawableTop="@drawable/footer_item_play_record_icon"
+        android:drawablePadding="2dp"
+        android:gravity="center_horizontal"
+        android:text="@string/btn_play_record_title"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_small_size"
+        android:layout_weight="1"/>
+    
+</LinearLayout>

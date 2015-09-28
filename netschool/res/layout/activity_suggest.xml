@@ -10,7 +10,7 @@
     <RelativeLayout 
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_banner_height"
-        android:background="@drawable/topbj">
+        android:background="@drawable/main_top_bg_img">
         
         <!-- 返回 -->
         <ImageButton android:id="@+id/btn_return"
@@ -23,7 +23,7 @@
             android:layout_centerVertical="true"
             android:background="@color/none"
             android:scaleType="centerCrop"
-            android:src="@drawable/returnbtn1"
+            android:src="@drawable/btn_return_bg_img"
             android:contentDescription="@string/btn_return_desc" />
         
         <!-- 标题 -->

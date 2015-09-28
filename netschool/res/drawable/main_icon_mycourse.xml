@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 主程序界面－我的课程 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true" android:drawable="@drawable/main_icon_mycourse_highlight" />
+    <item android:state_pressed="true" android:drawable="@drawable/main_icon_mycourse_highlight" />
+    <item android:drawable="@drawable/main_icon_mycourse_normal" />
+</selector>

@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 主程序界面布局 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/background"
-    android:gravity="fill_vertical"
-    tools:context=".MainActivity" >
+    android:gravity="fill_vertical">
 
-    <LinearLayout
-        android:id="@+id/MainTopLayout"
-        android:layout_width="fill_parent"
-        android:layout_height="50.0dip"
+    <!-- top -->
+    <LinearLayout android:id="@+id/main_top"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_banner_height"
         android:layout_alignParentTop="true"
-        android:background="@drawable/topbj"
+        android:background="@drawable/main_top_bg_img"
         android:gravity="center"
         android:orientation="vertical" >
 
+        <!-- logo图标 -->
         <ImageView
-            android:id="@+id/TopLogoImg"
             android:layout_width="wrap_content"
-            android:layout_height="40.0dip"
+            android:layout_height="@dimen/main_top_logo_height"
             android:layout_gravity="center"
-            android:src="@drawable/toplogo"
-            android:contentDescription="@string/MainActivity_lab" />
+            android:src="@drawable/main_top_logo"
+            android:contentDescription="@string/main_top_logo_desc" />
         
     </LinearLayout>
 
-    <GridView
-        android:id="@+id/gridview1"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:layout_below="@id/MainTopLayout"
-        android:layout_margin="20.0dip"
-        android:background="#00000000"
-        android:horizontalSpacing="30.0dip"
-        android:numColumns="3"
-        android:verticalSpacing="30.0dip" />
+    <!-- GridView -->
+    <GridView android:id="@+id/main_gridview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/main_top"
+        android:layout_margin="@dimen/main_gridview_margin"
+        android:padding="@dimen/main_gridview_padding"
+        android:background="@color/transparent"
+        android:horizontalSpacing="@dimen/main_gridview_horizontal_spacing"
+        android:verticalSpacing="@dimen/main_gridview_vertical_spacing"
+        android:numColumns="@integer/main_gridview_num_columns"/>
 
 </RelativeLayout>

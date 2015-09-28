@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 免费体验－套餐分组view 背景色 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true" android:drawable="@color/activity_free_experience_packages_group_bg_highlight" />
+    <item android:state_pressed="true" android:drawable="@color/activity_free_experience_packages_group_bg_highlight" />
+    <item android:drawable="@color/activity_free_experience_packages_group_bg_normal" />
+</selector>

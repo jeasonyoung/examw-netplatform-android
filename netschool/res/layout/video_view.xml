@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:src="@drawable/toplogo"
+            android:src="@drawable/main_top_logo"
             android:contentDescription="@string/nothing" />
 
         <LinearLayout

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 我的课程－底部按钮图标－离线线课程 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true" android:drawable="@drawable/my_course_footer_offline_icon_highlight" />
+    <item android:state_pressed="true" android:drawable="@drawable/my_course_footer_offline_icon_highlight" />
+    <item android:drawable="@drawable/my_course_footer_offline_icon_normal" />
+</selector>

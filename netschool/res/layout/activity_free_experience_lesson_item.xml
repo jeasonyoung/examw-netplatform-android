@@ -17,8 +17,8 @@
         android:paddingBottom="10dp"
         android:paddingTop="10dp"
         android:background="@drawable/childlist_select"
-        android:drawableLeft="@drawable/filetype_1"
-        android:drawableStart="@drawable/filetype_1"
+        android:drawableLeft="@drawable/my_course_lesson_item_left_icon"
+        android:drawableStart="@drawable/my_course_lesson_item_left_icon"
         android:drawablePadding="5dp"
         android:gravity="center_vertical"
         android:textSize="@dimen/text_medium_size" />

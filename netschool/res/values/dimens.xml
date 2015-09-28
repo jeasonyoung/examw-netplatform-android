@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    
     <!-- 顶部返回条高度 -->
     <dimen name="top_banner_height">50.0dp</dimen>
     <!-- 顶部返回按钮高度 -->
@@ -7,10 +8,44 @@
     <!-- 顶部返回按钮左边间距 -->
     <dimen name="top_btn_return_left">10.0dp</dimen>
     
+    <!-- 启动Activity -->
+    <dimen name="start_login_width">136.0dp</dimen><!-- 启动界面Login的宽度 -->
+    <dimen name="start_login_height">55.0dp</dimen><!-- 启动界面Login的高度 -->
+    <dimen name="start_login_top">28.0dp</dimen><!-- 启动界面Login的顶部间距 -->
+    <dimen name="start_login_left">28.0dp</dimen><!-- 启动界面Login的左边间距 -->
+    
+    <!-- 登录Activity -->
+    <dimen name="login_logo_top">70.0dp</dimen><!-- 登录界面login顶部间距 -->
+    <dimen name="login_input_top">20.0dp</dimen><!-- 登录输入框顶部间距 -->
+    <dimen name="login_input_left">20.0dp</dimen><!-- 登录输入框左边间距 -->
+    <dimen name="login_input_right">20.0dp</dimen><!-- 登录输入框右边间距 -->
+    <dimen name="login_input_height">80.0dp</dimen><!-- 登录输入框高度 -->
+    <dimen name="login_rememeber_top">15.0dp</dimen>
+    <dimen name="login_buttons_top">20.0dp</dimen>
+    <dimen name="login_buttons_height">50.0dp</dimen>
+    
+    <!-- 主界面Activity -->
+    <dimen name="main_top_logo_height">40.0dp</dimen>
+    <dimen name="main_gridview_margin">10.0dp</dimen>
+    <dimen name="main_gridview_padding">5.0dp</dimen>
+    <dimen name="main_gridview_horizontal_spacing">30.0dp</dimen>
+    <dimen name="main_gridview_vertical_spacing">30.0dp</dimen>
+    <dimen name="main_gridview_item_top">5.0dp</dimen>
+    
+    <!-- 我的课程 Activity -->
+    <dimen name="my_course_item_group_height">50.0dp</dimen>
+    
+    
+    
+    
+    
+    
+    
     
     <dimen name="padding_small">8.0dip</dimen>
-    <dimen name="padding_medium">8.0dip</dimen>
+    <dimen name="padding_medium">10.0dip</dimen>
     <dimen name="padding_large">16.0dip</dimen>
+    
     <dimen name="text_medium_size">16.0sp</dimen>
     <dimen name="text_small_size">14.0sp</dimen>
     <dimen name="text_little_size">12.0sp</dimen>

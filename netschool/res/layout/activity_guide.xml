@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 引导页布局 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/ashen"
-    android:gravity="center"
-    android:orientation="vertical" >
+    android:gravity="center">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/guidePage"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+    <!-- 引导页 -->
+    <android.support.v4.view.ViewPager android:id="@+id/guide_pages"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-    <ImageButton
-        android:id="@+id/starBtn"
+    <!-- 按钮处理 -->
+    <ImageButton android:id="@+id/btn_guide_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -20,9 +20,8 @@
         android:layout_alignParentEnd="true"
         android:background="@color/none"
         android:scaleType="centerInside"
-        android:src="@drawable/ty"
-        android:text="@string/startBtnlab"
+        android:src="@drawable/btn_guide_img"
         android:visibility="gone"
-        android:contentDescription="@string/startBtnlab" />
+        android:contentDescription="@string/btn_guide_start_desc" />
 
 </RelativeLayout>

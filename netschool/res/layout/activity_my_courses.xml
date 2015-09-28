@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 我的课程 -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ashen"
+    android:gravity="fill_vertical" >
+
+   <!-- top banner -->
+   <include android:id="@+id/my_course_header" 
+       layout="@layout/activity_header" 
+       android:layout_width="match_parent"
+       android:layout_height="@dimen/top_banner_height"
+       android:layout_alignParentTop="true" />
+   
+   <!-- 内容 -->
+   <LinearLayout 
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:layout_below="@id/my_course_header"
+       android:layout_above="@+id/my_course_footer"
+       android:background="@color/transparent">
+       
+       <!-- 无数据显示 -->
+       <include android:id="@+id/nodata_view" layout="@layout/activity_nodata"/>
+       
+       <!-- 数据列表 -->
+       <ExpandableListView android:id="@+id/list_courses"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:childDivider="@drawable/topic_driver"
+            android:divider="@drawable/topic_driver"
+            android:dividerHeight="1.0dip"
+            android:fadingEdge="none"
+            android:gravity="center"
+            android:listSelector="@color/transparent" />
+       
+   </LinearLayout>
+   
+   <!--  footer -->
+   <include android:id="@+id/my_course_footer"
+       layout="@layout/activity_footer"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_alignParentBottom="true"/>
+   
+</RelativeLayout>

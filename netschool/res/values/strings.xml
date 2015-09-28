@@ -1,9 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- 通用 -->
     <string name="app_name">汇课网校</string>
+    <string name="btn_return_bg_img_desc">返回图标</string>
+    
+    <!-- 启动Activity -->
+    <string name="start_logo_desc">logo图标</string>
+    <!-- 引导Activity -->
+    <string name="btn_guide_start_desc">开始体验</string>
+    <!-- 登录Activity -->
+    <string name="login_logo_desc">logo图标</string>
+    <string name="login_username_title">账号：</string>
+    <string name="login_username_valid_msg">账号不能为空!</string>
+    <string name="login_password_title">密码：</string>
+    <string name="login_password_valid_msg">密码不能为空!</string>
+    <string name="login_rememeber_title">记住密码</string>
+    <string name="btn_login_online_desc">在线登录</string>
+    <string name="btn_login_offline_desc">离线登录</string>
+    <string name="login_progress">登录中,请稍后. . .</string>
+    <string name="login_fail_net">网络不存在,请检查网络!</string>
+    <string name="login_fail_server">服务器无响应!</string>
+    <string name="login_fail_local_none">请在线登录用户!</string>
+    <string name="login_fail_local_pwd">密码错误!</string>
+    <!-- 主界面Activity -->
+    <string name="main_top_logo_desc">logo图标</string>
+    <string name="main_logout_title">注销</string>
+    <string name="main_logout_title_msg">是否注销用户</string>
+    <string name="btn_main_logout_submit">确定</string>
+    <string name="btn_main_logout_cancel">取消</string>
+    <string name="main_icon_mycourse">我的课程</string>
+    <string name="main_icon_free_experience">免费体验</string>
+    <string name="main_icon_answer">你问我答</string>
+    <string name="main_icon_play_record">播放记录</string>
+    <string name="main_icon_suggest">意见反馈</string>
+    <!-- footer -->
+    <string name="btn_free_experience_title">课程中心</string>
+    <string name="btn_my_course_title">我的课程</string>
+    <string name="btn_play_record_title">播放记录</string>
+    <!-- 我的课程 Activity -->
+    <string name="my_course_progress_msg">努力加载中,请稍候. . .</string>
+    <string name="my_course_footer_online_title">在线课程</string>
+    <string name="my_course_footer_offline_title">离线课程</string>
+    <!-- 我的课程资源Activity -->
+    <string name="my_course_lesson_footer_online">在线课程</string>
+    <string name="my_course_lesson_footer_download">下载课程</string>
+    <string name="my_course_lesson_footer_offline">离线课程</string>
+    <string name="my_course_lesson_footer_record">播放记录</string>
+    <string name="my_course_lesson_item_download_desc">下载按钮</string>
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
     <string name="versions">版本号：V1.0</string>
     
-    <!-- 通用 -->
+    
     <string name="btn_return_desc">返回</string>
     <string name="post_upload_msg">上传数据中. . .</string>
     
@@ -71,7 +128,7 @@
     <string name="startBtnlab">开始体验</string>
     <string name="start_nologo">网校logo</string>
     <!-- <string name="start_words_">学海无涯,大立教育与你同在</string> -->
-    <string name="start_words">学海无涯,汇课与你同在</string>
+    
     <string name="title_activity_login">用户登录</string>
     <string name="usernamelab">账 号:</string>
     <string name="passwordlab">密 码:</string>

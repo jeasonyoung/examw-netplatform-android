@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--  我的课程－数据项View -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/my_courses_item_child_bg"
+    android:layout_marginLeft="10.0dp"
+    android:layout_marginStart="10.0dp"
+    android:gravity="fill_vertical"
+    android:orientation="horizontal" >
+
+    <!-- 内容 -->
+    <TextView android:id="@+id/tv_my_course_item_child"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20.0dp"
+        android:layout_marginStart="20.0dp"
+        android:layout_marginRight="10.0dip"
+        android:layout_marginEnd="10.0dp"
+        android:padding="8.0dp"
+        android:gravity="center_vertical"
+        android:drawableRight="@drawable/arrow_right"
+        android:drawableEnd="@drawable/arrow_right"
+        android:drawablePadding="2.0dp"
+        android:singleLine="true"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_medium_size" 
+        android:background="@color/transparent"/>
+
+</LinearLayout>

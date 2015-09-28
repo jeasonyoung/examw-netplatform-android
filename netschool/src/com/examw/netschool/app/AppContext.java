@@ -31,6 +31,17 @@ public class AppContext extends Application {
 	private static String currentUserId;
 	//当前用户登录状态
 	private static LoginState loginState = LoginState.NONE;
+	
+	//窗口管理器
+	private WindowManager windowManager;
+	//连接管理
+	private ConnectivityManager connectivityManager;
+	//电话管理
+	private TelephonyManager telephonyManager;
+	//音频管理
+	private AudioManager audioManager;
+	//包信息
+	private PackageInfo packageInfo;
 	/**
 	 * 单线程池。
 	 */
@@ -49,16 +60,6 @@ public class AppContext extends Application {
 		super.onCreate();
 		 mContext = this;
 	}
-	//窗口管理器
-	private WindowManager windowManager;
-	//连接管理
-	private ConnectivityManager connectivityManager;
-	//电话管理
-	private TelephonyManager telephonyManager;
-	//音频管理
-	private AudioManager audioManager;
-	//包信息
-	private PackageInfo packageInfo;
 	/**
 	 * 获取窗体管理器。
 	 * @return 窗体管理器。

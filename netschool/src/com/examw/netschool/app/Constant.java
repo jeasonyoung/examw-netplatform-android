@@ -6,12 +6,22 @@ package com.examw.netschool.app;
  * @since 2015年9月2日
  */
 public final class Constant {
+	/**
+	 * 用户ID/用户姓名。
+	 */
 	public static final String CONST_USERID = "user_id", CONST_USERNAME = "user_name";
+	/**
+	 * 班级ID/班级名称。
+	 */
 	public static final String CONST_CLASS_ID = "class_id", CONST_CLASS_NAME = "class_name";
+	/**
+	 * 课程资源ID/课程资源名称。
+	 */
 	public static final String CONST_LESSON_ID = "lesson_id", CONST_LESSON_NAME = "lesson_name";
+	/**
+	 * 播放记录ID。
+	 */
 	public static final String CONST_LESSON_RECORD_ID = "lesson_record_id";
-	
-	public static final int PAGE_SIZE = 15;
 	
 	/**
 	 *  Handler消息Message的What类型为文本消息。
@@ -30,7 +40,7 @@ public final class Constant {
 	 * HOST API ROOT URL。
 	 */
 	public static final String DOMAIN_URL = "http://demo.examw.com/examw-netplatform";
-	//"http://www.youeclass.com/";
+	
 	/**
 	 * API 身份验证用户名。
 	 */
@@ -49,12 +59,18 @@ public final class Constant {
 	 * 导航文件配置。
 	 */
 	public static final String PREFERENCES_CONFIG_GUIDEFILE = "guidefile";
-	public static final String PREFERENCES_CONFIG_GUIDEFILE_ISFIRST = "isfirst";
+	/**
+	 * 导航文件配置-是否是第一次。
+	 */
+	public static final String PREFERENCES_CONFIG_GUIDEFILE_ISFIRST = "isfirst_";
 	
 	/**
 	 * 用户密码存储配置。
 	 */
 	public static final String PREFERENCES_CONFIG_USERPWD = "userpwd";
+	/**
+	 * 用户密码存储配置-用户ID。
+	 */
 	public static final String PREFERENCES_CONFIG_USERPWD_USERID = "id_";
 	
 	/**
@@ -63,14 +79,15 @@ public final class Constant {
 	public static final String PREFERENCES_CONFIG_SHARE_USER = "share_username";
 	
 	/**
-	 * 当前用户
+	 * 当前用户。
 	 */
 	public static final String PREFERENCES_CONFIG_CURRENT_USER = "current_user";
+	/**
+	 * 当前用户-用户ID。
+	 */
 	public static final String PREFERENCES_CONFIG_CURRENT_USER_ID = "current_user_id";
+	/**
+	 * 当前用户-用户姓名。
+	 */
 	public static final String PREFERENCES_CONFIG_CURRENT_USER_NAME = "current_user_name";
-
-	
-	
-//	public static final String MEDIA_DOMAIN_URL = "v.dalischool.com";
-//	public static final String NGINX_URL = "http://v.dalischool.com:8091/";
 }

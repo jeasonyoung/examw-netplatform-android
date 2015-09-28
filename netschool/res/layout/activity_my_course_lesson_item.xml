@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 课程资源数据项布局 -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/my_course_lesson_item_bg"
+    android:gravity="fill_vertical"
+    android:orientation="horizontal" >
+
+    <!-- 课程资源名称 -->
+    <TextView android:id="@+id/txt_lesson"
+        style="@style/activity_my_course_lesson_item_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_toLeftOf="@+id/tv_state"
+        android:layout_toStartOf="@id/tv_state"
+        android:background="@color/transparent"
+        android:drawableLeft="@drawable/my_course_lesson_item_left_icon"
+        android:drawableStart="@drawable/my_course_lesson_item_left_icon"
+        android:drawablePadding="8.0dip"
+        android:gravity="center_vertical"
+        android:paddingBottom="10.0dip"
+        android:paddingTop="10.0dip"
+        android:textSize="@dimen/text_medium_size" />
+
+    <!-- 下载状态 -->
+    <TextView android:id="@+id/tv_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/btn_download"
+        android:layout_toStartOf="@id/btn_download"
+        android:gravity="center_vertical"
+        android:background="@color/transparent"
+        android:textSize="@dimen/text_small_size" />
+
+    <!-- 下载按钮 -->
+    <ImageButton android:id="@+id/btn_download"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@color/transparent"
+        android:contentDescription="@string/my_course_lesson_item_download_desc"
+        android:gravity="center_vertical"
+        android:scaleType="centerInside"
+        android:src="@drawable/my_course_lesson_item_download_img" />
+
+</RelativeLayout>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--  登录记住密码 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 选中 -->
+    <item android:state_checked="true" android:drawable="@drawable/checkbox_rememeber_check" />
+    <!-- 未选中 -->
+    <item android:state_checked="false" android:drawable="@drawable/checkbox_rememeber_uncheck" />
+</selector>
