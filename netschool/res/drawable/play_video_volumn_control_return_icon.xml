@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 播放器－音频控制栏－返回栏 图标 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true" android:drawable="@drawable/play_video_volumn_control_return_icon_highlight" />
+    <item android:state_focused="true" android:drawable="@drawable/play_video_volumn_control_return_icon_highlight" />
+    <item android:state_focused="false" android:drawable="@drawable/play_video_volumn_control_return_icon_normal" />
+    <item android:drawable="@drawable/play_video_volumn_control_return_icon_normal" />
+</selector>

@@ -76,7 +76,7 @@ public class DownloadByFragmentDowning extends Fragment  {
 		//加载视图
 		final View view = inflater.inflate(R.layout.activity_download_downing, container, false);
 		//没有数据
-		this.nodataView = (LinearLayout)view.findViewById(R.id.download_downing_nodata);
+		this.nodataView = (LinearLayout)view.findViewById(R.id.nodata_view);
 		this.nodataView.setVisibility(View.VISIBLE);
 		//列表
 		final ListView listView = (ListView)view.findViewById(R.id.download_listview_downing);
@@ -110,8 +110,8 @@ public class DownloadByFragmentDowning extends Fragment  {
 				if(download != null){
 					//取消下载二次确认
 					new AlertDialog.Builder(getActivity()).setIcon(android.R.drawable.ic_dialog_alert)
-					.setTitle(R.string.cancel_download_title).setMessage(R.string.cancel_download_msg)
-					.setNegativeButton(R.string.cancel_download_btn_cancel, new DialogInterface.OnClickListener(){
+					.setTitle(R.string.download_group_downing_cancel_title).setMessage(R.string.download_group_downing_cancel_msg)
+					.setNegativeButton(R.string.download_group_downing_cancel_btn_cancel, new DialogInterface.OnClickListener(){
 						/*
 						 * 取消退出。
 						 * @see android.content.DialogInterface.OnClickListener#onClick(android.content.DialogInterface, int)
@@ -122,7 +122,7 @@ public class DownloadByFragmentDowning extends Fragment  {
 							dialog.dismiss();
 						}
 					})
-					.setPositiveButton(R.string.cancel_download_btn_submit, new DialogInterface.OnClickListener(){
+					.setPositiveButton(R.string.download_group_downing_cancel_btn_submit, new DialogInterface.OnClickListener(){
 						/*
 						 * 确定取消下载。
 						 * @see android.content.DialogInterface.OnClickListener#onClick(android.content.DialogInterface, int)
@@ -280,15 +280,15 @@ public class DownloadByFragmentDowning extends Fragment  {
 		 */
 		public ViewHolder(View convertView){
 			//标题
-			this.tvTitle = (TextView)convertView.findViewById(R.id.title);
+			this.tvTitle = (TextView)convertView.findViewById(R.id.tv_title);
 			//进度条
 			this.progressBar = (ProgressBar)convertView.findViewById(R.id.progress);
 			//消息
-			this.tvMsg = (TextView)convertView.findViewById(R.id.msg);
+			this.tvMsg = (TextView)convertView.findViewById(R.id.tv_msg);
 			//百分比
-			this.tvPercent = (TextView)convertView.findViewById(R.id.percent);
+			this.tvPercent = (TextView)convertView.findViewById(R.id.tv_percent);
 			//按钮
-			this.btnPause = (Button)convertView.findViewById(R.id.btnPause);
+			this.btnPause = (Button)convertView.findViewById(R.id.btn_pause);
 			this.btnPause.setOnClickListener(this);
 		}
 		/**
@@ -325,9 +325,9 @@ public class DownloadByFragmentDowning extends Fragment  {
 					break;
 				}
 				case FAIL:{//连接失败
-					final Drawable top = getActivity().getResources().getDrawable(R.drawable.retry);
+					final Drawable top = getActivity().getResources().getDrawable(R.drawable.download_group_downing_item_retry);
 					this.btnPause.setCompoundDrawables(null, top, null, null);
-					this.btnPause.setText(R.string.dowing_btn_start);
+					this.btnPause.setText(R.string.download_group_downing_item_btn_start);
 					this.btnPause.setVisibility(View.VISIBLE);
 					this.btnPause.setEnabled(true);
 					break;
@@ -337,17 +337,17 @@ public class DownloadByFragmentDowning extends Fragment  {
 					break;
 				}
 				case PAUSE:{//暂停
-					final Drawable top = getActivity().getResources().getDrawable(R.drawable.continuedown);
+					final Drawable top = getActivity().getResources().getDrawable(R.drawable.download_group_downing_item_btn_continue_icon);
 					this.btnPause.setCompoundDrawables(null, top, null, null);
-					this.btnPause.setText(R.string.dowing_btn_pause);
+					this.btnPause.setText(R.string.download_group_downing_item_btn_pause);
 					this.btnPause.setVisibility(View.VISIBLE);
 					this.btnPause.setEnabled(true);
 					break;
 				}
 				case DOWNING:{//下载中
-					final Drawable top = getActivity().getResources().getDrawable(R.drawable.pausedown);
+					final Drawable top = getActivity().getResources().getDrawable(R.drawable.download_group_downing_item_btn_pause_icon);
 					this.btnPause.setCompoundDrawables(null, top, null, null);
-					this.btnPause.setText(R.string.dowing_btn_start);
+					this.btnPause.setText(R.string.download_group_downing_item_btn_start);
 					this.btnPause.setVisibility(View.VISIBLE);
 					this.btnPause.setEnabled(true);
 					break;

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 播放器－视频控制栏－暂停按钮背景 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true" android:drawable="@drawable/play_video_video_control_pause_bg_highlight" />
+    <item android:state_focused="true" android:drawable="@drawable/play_video_video_control_pause_bg_highlight" />
+</selector>

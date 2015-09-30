@@ -355,6 +355,10 @@ public class MyCourseLessonActivity extends Activity {
 				
 			}
 		}
+		/*
+		 *点击事件处理
+		 * @see android.view.View.OnClickListener#onClick(android.view.View)
+		 */
 		@Override
 		public void onClick(View v) {
 			Log.d(TAG, "下载点击事件处理...." + v);

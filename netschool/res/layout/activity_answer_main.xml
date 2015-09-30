@@ -21,10 +21,10 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:background="@color/none"
+            android:background="@color/transparent"
             android:scaleType="centerCrop"
             android:src="@drawable/btn_return_bg_img"
-            android:contentDescription="@string/btn_return_desc" />
+            android:contentDescription="@string/btn_return_bg_img_desc" />
         
         <!-- 标题 -->
         <TextView
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_centerVertical="true"
-            android:background="@color/none"
+            android:background="@color/transparent"
             android:fadingEdge="vertical"
             android:gravity="center"
             android:text="@string/answer_title"
@@ -48,7 +48,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:layout_marginEnd="10dp"
-            android:background="@color/none"
+            android:background="@color/transparent"
             android:src="@drawable/refresh_img"
             android:contentDescription="@string/answer_refresh_desc" />
         
@@ -60,7 +60,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:background="@drawable/down_layout_bg">
+        android:background="@drawable/answer_main_bg">
         
          <Button android:id="@+id/btn_answer" 
              android:layout_width="wrap_content"
@@ -70,7 +70,7 @@
              android:layout_marginRight="10dp"
              android:layout_marginEnd="10dp"
              android:layout_centerVertical="true"
-             android:background="@drawable/answerbtn_bg"
+             android:background="@drawable/btn_answer_bg_icon"
              android:text="@string/btn_answer_title"
              android:textColor="@color/black"
              android:textSize="@dimen/text_medium_size"
@@ -79,30 +79,14 @@
     </RelativeLayout>
     
     <!-- 无数据时显示 -->
-    <LinearLayout android:id="@+id/nodataView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/none"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
-        
-        <TextView 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:drawableTop="@drawable/nodata"
-            android:drawablePadding="2dp"
-            android:text="@string/nodata"
-            android:textSize="30sp"/>
-    </LinearLayout>
+    <include android:id="@+id/nodata_view" layout="@layout/activity_nodata"/>
     
     <!-- 数据列表 -->
      <ListView android:id="@+id/list_answers"
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
          android:background="@color/white"
-         android:cacheColorHint="@color/none"
+         android:cacheColorHint="@color/transparent"
          android:divider="@drawable/topic_driver"
          android:dividerHeight="2dp"
          android:fadingEdge="none" />

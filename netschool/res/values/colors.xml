@@ -6,65 +6,68 @@
     <color name="white">#ffffffff</color>
     <color name="red">#ffff0000</color>
     <color name="green">#ff15a230</color>
+    <color name="blue">#ff2182bd</color>
     <color name="grey">#ffc0c7c7</color>
+    <color name="darkgray">#ff363f46</color>
     <!-- top banner background color -->
     <color name="main_top_bgcolor">#ff242a3a</color>
     <!-- footer banner color -->
     <color name="footer_bg_color">#ff363f46</color>
     
-    <!-- 我的课程 -->
-    <color name="activity_my_courses_item_group_bg_normal">#ffe0f0f8</color>
-    <color name="activity_my_courses_item_group_bg_highlight">#ffe7e7e7</color>
-    <color name="activity_my_courses_item_child_bg_highlight">#ffe7e7e7</color>
+    <!-- 引导页 -->
+    <color name="guide_bg_color">#fff6f6f6</color>
     
+    <!-- 登录 -->
+    <color name="login_text_color">#ff767676</color>
+    
+    <!-- 主界面 -->
+    <color name="main_bg_color">#ffe0f0f8</color>
+    
+    <!-- 我的课程 -->
+    <color name="my_courses_bg_color">#fff6f6f6</color>
+    <color name="my_courses_item_group_bg_normal">#ffe0f0f8</color>
+    <color name="my_courses_item_group_bg_highlight">#ffe7e7e7</color>
+    <color name="my_courses_item_child_bg_highlight">#ffe7e7e7</color>
     
     <!-- 免费体验 考试分类背景色 -->
-    <color name="activity_free_experience_category_item_bg_normal">#ffe0f0f8</color>
-    <color name="activity_free_experience_category_item_bg_highlight">#ffe7e7e7</color>
+    <color name="free_experience_category_item_bg_normal">#ffe0f0f8</color>
+    <color name="free_experience_category_item_bg_highlight">#ffe7e7e7</color>
     <!-- 免费体验 考试背景色 -->
-    <color name="activity_free_experience_exams_item_bg_normal">#ffe0f0f8</color>
-    <color name="activity_free_experience_exams_item_bg_highlight">#ffe7e7e7</color>
+    <color name="free_experience_exams_item_bg_normal">#ffe0f0f8</color>
+    <color name="free_experience_exams_item_bg_highlight">#ffe7e7e7</color>
+    <!-- 免费体验 课程资源 -->
+    <color name="free_experience_lesson_item_bg_normal">#ffffffff</color>
+    <color name="free_experience_lesson_item_bg_highlight">#ffe7e7e7</color>
     <!-- 免费体验 套餐分组背景色  -->
-    <color name="activity_free_experience_packages_group_bg_normal">#ffe0f0f8</color>
-    <color name="activity_free_experience_packages_group_bg_highlight">#ffe7e7e7</color>
-     
+    <color name="free_experience_packages_group_bg_normal">#ffe0f0f8</color>
+    <color name="free_experience_packages_group_bg_highlight">#ffe7e7e7</color>
+    <!-- 免费体验 套餐分组子菜单背景色  -->
+    <color name="free_experience_packages_child_bg_normal">#ffffffff</color>
+    <color name="free_experience_packages_child_bg_highlight">#ffe7e7e7</color>
     <!-- 我的课程－课程资源 -->
     <color name="activity_my_course_lesson_item_bg_normal">#ffffffff</color>
     <color name="activity_my_course_lesson_item_bg_highlight">#ffe7e7e7</color>
     
+    <!-- 播放器 -->
+    <color name="play_video_volumn_control_bg">#ff033045</color>
+    <color name="play_video_video_control_bg">#ff033045</color>
     
+    <!-- 下载 -->
+    <color name="download_bg_color">#ffe7e7e7</color> 
+    <color name="download_group_bg_highlight_color">#fff6f6f6</color>
+    <color name="download_group_downing_item_highlight">#ffe7e7e7</color>
     
+    <!--  播放记录-->
+    <color name="play_record_bg_color">#fff6f6f6</color>
+    <color name="play_record_item_bg_normal">#ffffffff</color>
+    <color name="play_record_item_bg_highlight">#ffe7e7e7</color>
     
-    
-    
-    
-    <color name="oogrey">#0fc0c7c7</color>
-    
-    <color name="ashen">#fff6f6f6</color>
-    <color name="pink">#ffF4DADA</color>
-    
-    <color name="none">#00000000</color>
-    <color name="textblue">#ff767676</color>
-    <color name="blue">#ff2182bd</color>
-    <color name="darkgray">#ff363f46</color>
-    <color name="Slightlywhite">#fffdfdfd</color>
-    <color name="ashen2">#ffe7e7e7</color>
-    <color name="list_item_bg">#ff97a3a1</color>
-    <color name="control_bg">#ff033045</color>
-    <color name="SlightlyBule">#ffd5eefa</color>
-    <color name="background_pressed">#ffff9999</color>
-    <color name="background">#ffe0f0f8</color>
-    <color name="Yellow">#ffe6e680</color>
-    <color name="Camblue">#ffc2edf8</color>
-    <color name="yellow">#ffffffdd</color>
-    <color name="lightgrey">#ffe7e7e7</color>
-    <color name="lightbule">#ff50b2f3</color>
-    <color name="lightbule2">#ffddf2ff</color>
-    <color name="lightgrey2">#ffa9b5bd</color>
-    <color name="lightyellew">#fff95a03</color>
-    <color name="localbule">#ff1d87c1</color>
-    
-   
-    <color name="darkyellew">#fffa5c17</color>
+    <!-- 你问我答－数据项背景色 -->
+    <color name="answer_main_item_bg_normal">#ffffffff</color>
+    <color name="answer_main_item_bg_highlight">#ffe7e7e7</color>
+    <color name="answer_detail_bg_color">#fff6f6f6</color>
+    <color name="answer_detail_bottom_bg_color">#ffe7e7e7</color>
+    <!-- 建议 -->
+    <color name="suggest_bg_color">#fff6f6f6</color>
     
 </resources>

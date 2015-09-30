@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 下载activity－下载中数据行背景 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true" android:drawable="@color/download_group_downing_item_highlight" />
+    <item android:state_selected="true" android:drawable="@color/download_group_downing_item_highlight" />
+    <item android:drawable="@drawable/download_group_downing_item_normal" />
+</selector>

@@ -3,7 +3,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/list_select_bg"
+    android:background="@drawable/download_downing_item_bg"
     android:descendantFocusability="blocksDescendants"
     android:gravity="fill_vertical" >
 
@@ -17,7 +17,7 @@
         android:layout_marginStart="10dp"
         android:layout_centerVertical="true"
         android:src="@drawable/video"
-        android:contentDescription="@string/downing_icon" />
+        android:contentDescription="@string/download_group_downing_icon_desc" />
     
     <!-- 中间课程资源名称 -->
     <LinearLayout
@@ -27,13 +27,13 @@
         android:layout_marginStart="5dp"
         android:layout_toRightOf="@id/video_icon"
         android:layout_toEndOf="@id/video_icon"
-        android:layout_toLeftOf="@+id/btnPause"
-        android:layout_toStartOf="@+id/btnPause"
+        android:layout_toLeftOf="@+id/btn_pause"
+        android:layout_toStartOf="@id/btn_pause"
         android:layout_centerVertical="true"
         android:orientation="vertical" >
         
         <!-- 课程资源名称 -->
-        <TextView android:id="@+id/title" 
+        <TextView android:id="@+id/tv_title" 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
@@ -60,7 +60,7 @@
              android:layout_marginStart="10dp">
              
              <!-- 消息 -->
-             <TextView android:id="@+id/msg" 
+             <TextView android:id="@+id/tv_msg" 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -71,7 +71,7 @@
                 android:textSize="@dimen/text_little_size"/>
              
              <!-- 进度百分比 -->
-             <TextView android:id="@+id/percent"
+             <TextView android:id="@+id/tv_percent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
@@ -84,7 +84,7 @@
     </LinearLayout>
     
     <!-- 暂停按钮 -->
-    <Button android:id="@+id/btnPause"
+    <Button android:id="@+id/btn_pause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -93,8 +93,8 @@
         android:layout_marginEnd="10dp"
         android:layout_centerVertical="true"
         android:background="@color/transparent"
-        android:drawableTop="@drawable/pausedown"
+        android:drawableTop="@drawable/download_group_downing_item_btn_pause_icon"
         android:drawablePadding="2dp"
-        android:text="@string/dowing_btn_pause"/>
+        android:text="@string/download_group_downing_item_btn_pause_icon_desc"/>
     
 </RelativeLayout>

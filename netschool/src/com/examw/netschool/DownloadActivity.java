@@ -2,6 +2,7 @@ package com.examw.netschool;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.examw.netschool.app.AppContext;
 import com.examw.netschool.app.Constant;
 import com.examw.netschool.dao.DownloadDao;
 import com.examw.netschool.dao.LessonDao;
@@ -14,7 +15,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.TextView;
 /**
  * 下载Activity。
  * @author jeasonyoung
@@ -50,7 +51,7 @@ public class DownloadActivity extends FragmentActivity implements OnCheckedChang
 		//绑定文件下载服务
 		this.getApplicationContext().bindService(new Intent(this, DownloadService.class), this, Context.BIND_AUTO_CREATE);
 		
-		//设置内容XML 
+		//设置布局文件 
 		this.setContentView(R.layout.activity_download);
 		
 		//加载传递数据
@@ -61,8 +62,9 @@ public class DownloadActivity extends FragmentActivity implements OnCheckedChang
 			//课程资源ID
 			this.lessonId = intent.getStringExtra(Constant.CONST_LESSON_ID);
 		}
+		
 		//返回按钮
-		final View btnBack = this.findViewById(R.id.btnReturn);
+		final View btnBack = this.findViewById(R.id.btn_return);
 		btnBack.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -70,11 +72,17 @@ public class DownloadActivity extends FragmentActivity implements OnCheckedChang
 				finish();
 			}
 		});
+		//顶部标题
+		final TextView tvTitle = (TextView)this.findViewById(R.id.top_title);
+		if(tvTitle != null){
+			tvTitle.setText(R.string.download_top_title);
+		}
+		
 		//分组选项
-		final RadioGroup radioGroup = (RadioGroup)this.findViewById(R.id.downRadioGroup);
+		final RadioGroup radioGroup = (RadioGroup)this.findViewById(R.id.down_radio_group);
 		radioGroup.setOnCheckedChangeListener(this);
 		//ViewPager
-		this.viewPager = (ViewPager)this.findViewById(R.id.downloadPagers);
+		this.viewPager = (ViewPager)this.findViewById(R.id.download_pagers);
 		//设置数据适配器
 		this.viewPager.setAdapter(this.mAdapter);
 	}
@@ -86,7 +94,42 @@ public class DownloadActivity extends FragmentActivity implements OnCheckedChang
 	protected void onStart() {
 		Log.d(TAG, "重载启动...");
 		//异步加载数据
-		new AsyncLoadData().execute((Void)null);
+		AppContext.pools_fixed.execute(new Runnable() {
+			@Override
+			public void run() {
+				try{
+					Log.d(TAG, "异步线程处理数据...");
+					if(StringUtils.isBlank(lessonId)) return;
+					//惰性加载数据操作
+					if(dao == null){
+						Log.d(TAG, "惰性加载数据操作...");
+						dao = new DownloadDao(getApplicationContext(), userId);
+					}
+					//检查是否存在
+					if(dao.hasDownload(lessonId)){
+						Log.d(TAG, "课程资源["+lessonId+"]已在下载中...");
+						return;
+					}
+					//查询课程信息
+					final LessonDao lessonDao = new LessonDao(dao);
+					final Lesson lesson = lessonDao.getLesson(lessonId);
+					if(lesson == null){
+						Log.d(TAG, "课程["+lessonId+"]不存在!");
+						return;
+					}
+					//添加到下载
+					final Download download = new Download(lesson);
+					dao.add(download); 
+					//启动下载
+					if(downloadService != null){
+						Log.d(TAG, "启动下载后台服务...");
+						downloadService.addDownload(download);
+					}
+				}catch(Exception e){
+					Log.e(TAG, "异步线程异常:" + e.getMessage(), e);
+				}
+			}
+		});
 		//
 		super.onStart();
 	}
@@ -98,12 +141,12 @@ public class DownloadActivity extends FragmentActivity implements OnCheckedChang
 	public void onCheckedChanged(RadioGroup group, int checkedId) {
 		Log.d(TAG, "选项卡事件处理..." + checkedId);
 		switch(checkedId){
-			case R.id.btnDowning:{//下载中
+			case R.id.btn_downing:{//下载中
 				Log.d(TAG, "下载中...");
 				this.viewPager.setCurrentItem(0);
 				break;
 			}
-			case R.id.btnDownFinish:{//下载完成
+			case R.id.btn_finish:{//下载完成
 				Log.d(TAG, "下载完成...");
 				this.viewPager.setCurrentItem(1);
 				break;
@@ -159,51 +202,4 @@ public class DownloadActivity extends FragmentActivity implements OnCheckedChang
 			return result;
 		}
 	};
-	//异步加载数据。
-	private class AsyncLoadData extends AsyncTask<Void, Void, Void>{
-		/*
-		 * 后台线程处理数据。
-		 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
-		 */
-		@Override
-		protected Void doInBackground(Void... params) {
-			try{
-				Log.d(TAG, "异步线程处理数据...");
-				if(StringUtils.isBlank(lessonId)) return null;
-				//惰性加载数据操作
-				if(dao == null){
-					Log.d(TAG, "惰性加载数据操作");
-					dao = new DownloadDao(getApplicationContext(), userId);
-				}
-				//检查是否存在
-				if(dao.hasDownload(lessonId)){
-					Log.d(TAG, "课程资源["+lessonId+"]已在下载中...");
-					return null;
-				}
-				//查询课程信息
-				final LessonDao lessonDao = new LessonDao(dao);
-				final Lesson lesson = lessonDao.getLesson(lessonId);
-				if(lesson == null){
-					Log.d(TAG, "课程["+lessonId+"]不存在!");
-					return null;
-				}
-				//添加到下载
-				final Download download = new Download(lesson);
-				dao.add(download); 
-				//启动下载
-				if(downloadService != null){
-					Log.d(TAG, "启动下载后台服务...");
-					downloadService.addDownload(download);
-				}
-			}catch(Exception e){
-				Log.e(TAG, "异步线程异常:" + e.getMessage(), e);
-			}
-			return null;
-		}
-		
-		@Override
-		protected void onPostExecute(Void result) {
-			super.onPostExecute(result);
-		}
-	}
 }

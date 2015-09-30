@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 免费体验－搜索框 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true" android:drawable="@drawable/free_experience_search_text_highlight" />
+    <item android:drawable="@drawable/free_experience_search_text_normal" />
+</selector>

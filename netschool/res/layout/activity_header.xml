@@ -14,7 +14,7 @@
            android:layout_centerVertical="true"
            android:layout_marginLeft="@dimen/top_btn_return_left"
            android:layout_marginStart="@dimen/top_btn_return_left"
-           android:background="@color/none"
+           android:background="@color/transparent"
            android:scaleType="centerCrop"
            android:src="@drawable/btn_return_bg_img" 
            android:contentDescription="@string/btn_return_bg_img_desc"/>
@@ -27,7 +27,6 @@
             android:layout_centerVertical="true"
             android:fadingEdge="vertical"
             android:gravity="center"
-            android:text="@string/btn_lesson_center_title"
             android:ellipsize="marquee"
             android:textColor="@color/white"
             android:textSize="@dimen/title_huge_size" 

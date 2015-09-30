@@ -72,7 +72,7 @@ public class FreeExperienceFragmentByPackages extends Fragment {
 		//加载View布局文件
 		final View view = inflater.inflate(R.layout.activity_free_experience_packages, container, false);
 		//无数据View
-		this.nodataView = view.findViewById(R.id.nodataView);
+		this.nodataView = view.findViewById(R.id.nodata_view);
 		//列表View
 		final ExpandableListView listView = (ExpandableListView)view.findViewById(R.id.list_packages);
 		listView.setGroupIndicator(null);

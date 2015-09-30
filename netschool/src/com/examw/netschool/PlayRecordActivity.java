@@ -62,10 +62,14 @@ public class PlayRecordActivity extends Activity implements OnClickListener, OnI
 		final Intent intent = this.getIntent();
 		this.userId = intent.getStringExtra(Constant.CONST_USERID);
 		//返回按钮
-		final View btnView = this.findViewById(R.id.btn_return);
-		btnView.setOnClickListener(this);
+		final View btnReturn = this.findViewById(R.id.btn_return);
+		btnReturn.setOnClickListener(this);
+		//设置标题
+		final TextView tvTopView = (TextView)this.findViewById(R.id.top_title);
+		tvTopView.setText(R.string.play_record_title);
+		
 		//无数据View
-		this.nodataView = (LinearLayout)this.findViewById(R.id.nodataView);
+		this.nodataView = (LinearLayout)this.findViewById(R.id.nodata_view);
 		//列表数据
 		final ListView listView = (ListView)this.findViewById(R.id.list_play_records);
 		//设置数据适配器

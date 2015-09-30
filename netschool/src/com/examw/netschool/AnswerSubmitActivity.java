@@ -29,6 +29,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -79,6 +80,10 @@ public class AnswerSubmitActivity extends Activity implements OnClickListener {
 		//返回按钮处理
 		final View btnBack = this.findViewById(R.id.btn_return);
 		btnBack.setOnClickListener(this);
+		//标题
+		final TextView tvTopTitle = (TextView)this.findViewById(R.id.top_title);
+		tvTopTitle.setText(R.string.answer_submit_title);
+		
 		//所属班级
 		final Spinner classSpinner = (Spinner)this.findViewById(R.id.ddl_class);
 		//设置数据适配器
@@ -223,7 +228,7 @@ public class AnswerSubmitActivity extends Activity implements OnClickListener {
 		final AppContext appContext = (AppContext)this.getApplicationContext();
 		//初始化等待动画
 		if(this.progressDialog == null){
-			this.progressDialog = ProgressDialog.show(this, null, this.getResources().getText(R.string.post_upload_msg), true, true);
+			this.progressDialog = ProgressDialog.show(this, null, this.getResources().getText(R.string.answer_post_upload_msg), true, true);
 			this.progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		}
 		//启动等待动画

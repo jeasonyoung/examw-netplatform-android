@@ -90,7 +90,7 @@ public class AnswerActivity extends Activity implements OnClickListener,OnItemCl
 		btnAnswer.setOnClickListener(this);
 		
 		//无数据View
-		this.nodataView = (LinearLayout)this.findViewById(R.id.nodataView);
+		this.nodataView = (LinearLayout)this.findViewById(R.id.nodata_view);
 		
 		//列表数据View
 		final ListView listView = (ListView)this.findViewById(R.id.list_answers);

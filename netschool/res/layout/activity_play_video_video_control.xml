@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 播放器－视频控制栏 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/play_video_video_control_left"
+    android:paddingStart="@dimen/play_video_video_control_left"
+    android:paddingRight="@dimen/play_video_video_control_right"
+    android:paddingEnd="@dimen/play_video_video_control_right"
+    android:paddingBottom="@dimen/play_video_video_control_bottom"
+    android:background="@color/play_video_video_control_bg"
+    android:gravity="center_vertical"
+    android:orientation="vertical" > 
+    
+    <!-- 播放控制 -->
+    <RelativeLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"> 
+        
+        <!-- 回退按钮 -->
+        <ImageButton android:id="@+id/btn_previous" 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/play_video_video_control_previous_icon"
+            android:background="@drawable/play_video_video_control_previous_icon_bg"
+            android:contentDescription="@string/play_video_video_control_previous_icon_desc" />
+        
+        <!-- 播放按钮 -->
+        <ImageButton android:id="@+id/btn_play" 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/play_video_video_control_pause_icon" 
+            android:background="@drawable/play_video_video_control_pause_bg"
+            android:contentDescription="@string/play_video_video_control_pause_icon_desc"/> 
+            
+        <!--快进按钮 -->
+        <ImageButton android:id="@+id/btn_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/play_video_video_control_next_icon"
+            android:background="@drawable/play_video_video_control_next_bg"
+            android:contentDescription="@string/play_video_video_control_next_icon_desc" />
+    
+    </RelativeLayout>
+
+    <!-- 进度条 -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"> 
+
+        <!-- 播放时间 -->
+        <TextView android:id="@+id/tv_play_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:text="@string/play_video_video_control_play_time"
+            android:textColor="@color/white" />
+
+        <!--  进度条 -->
+        <SeekBar android:id="@+id/seek_bar_progress"
+            style="@style/progress_bar_video"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/tv_play_time"
+            android:layout_toEndOf="@id/tv_play_time"
+            android:layout_toLeftOf="@+id/tv_total_time"
+            android:layout_toStartOf="@id/tv_total_time"
+            android:layout_centerVertical="true"
+            android:thumb="@android:drawable/presence_invisible"
+            android:thumbOffset="0dp" />
+
+        <!-- 总时间 -->
+        <TextView android:id="@+id/tv_total_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:text="@string/play_video_video_control_total_time"
+            android:textColor="@color/white" />
+        
+    </RelativeLayout>
+
+</LinearLayout>

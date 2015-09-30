@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 你问我答－数据项背景色 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true" android:drawable="@color/answer_main_item_bg_highlight" />
+    <item android:state_pressed="true" android:drawable="@color/answer_main_item_bg_highlight" />
+    <item android:state_selected="true" android:drawable="@color/answer_main_item_bg_highlight" />
+    <item android:drawable="@color/answer_main_item_bg_normal" />
+</selector>

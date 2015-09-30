@@ -35,21 +35,33 @@
     <!-- 我的课程 Activity -->
     <dimen name="my_course_item_group_height">50.0dp</dimen>
     
+    <!-- 播放器 Activity -->
+    <dimen name="play_video_volumn_control_height">40.0dp</dimen>
+    <dimen name="play_video_volumn_control_top">5.0dp</dimen>
+    <dimen name="play_video_volumn_control_return_left">10.0dp</dimen>
+    <dimen name="play_video_volumn_control_title_left">10.0dp</dimen>
+    <dimen name="play_video_volumn_control_vol_left">5.0dp</dimen>
+    <dimen name="play_video_volumn_control_vol_right">5.0dp</dimen>
+    <dimen name="play_video_volumn_control_vol_icon_width">60.0dp</dimen>
+    <dimen name="play_video_video_control_left">30.0dp</dimen>
+    <dimen name="play_video_video_control_right">30.0dp</dimen>
+    <dimen name="play_video_video_control_bottom">2.0dp</dimen>
     
+    <!-- 免费体验 Activity -->
+    <dimen name="free_experience_search_text_height">40.0dp</dimen>
+    <dimen name="free_experience_search_text_top">5.0dp</dimen>
+    <dimen name="free_experience_search_text_left">10.0dp</dimen>
+    <dimen name="free_experience_search_text_right">10.0dp</dimen>
+    <dimen name="free_experience_search_btn_width">40.0dp</dimen>
+    <dimen name="free_experience_search_btn_height">40.0dp</dimen>
+    <dimen name="free_experience_packages_group_height">50.0dp</dimen>
     
-    
-    
-    
-    
-    
-    <dimen name="padding_small">8.0dip</dimen>
-    <dimen name="padding_medium">10.0dip</dimen>
-    <dimen name="padding_large">16.0dip</dimen>
-    
+    <!-- 字体通用 -->
     <dimen name="text_medium_size">16.0sp</dimen>
     <dimen name="text_small_size">14.0sp</dimen>
     <dimen name="text_little_size">12.0sp</dimen>
     <dimen name="text_large_size">18.0sp</dimen>
+    
     <dimen name="title_medium_size">20.0sp</dimen>
     <dimen name="title_small_size">18.0sp</dimen>
     <dimen name="title_large_size">22.0sp</dimen>

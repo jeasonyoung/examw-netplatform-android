@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_marginTop="5dp"
     android:layout_marginBottom="5dp"
-    android:background="@drawable/childlist_select"
+    android:background="@drawable/play_record_item_bg"
     android:orientation="vertical" >
     
     <!-- 标题 -->

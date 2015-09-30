@@ -2,8 +2,8 @@
 <!-- 套餐/班级子View -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/childlist_select"
+    android:layout_height="wrap_content"
+    android:background="@drawable/free_experience_packages_child_bg"
     android:layout_marginLeft="10dp"
     android:layout_marginStart="10dp"
     android:orientation="vertical" >
@@ -19,7 +19,7 @@
         android:drawableEnd="@drawable/arrow_right"
         android:drawablePadding="2dp"
         android:padding="8dp"
-        android:background="#00000000"
+        android:background="@color/transparent"
         android:gravity="center_vertical"
         android:singleLine="true"
         android:textColor="@color/black"

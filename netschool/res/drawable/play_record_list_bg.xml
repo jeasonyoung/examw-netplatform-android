@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 播放记录－数据列表背景 -->
+<shape android:shape="rectangle" xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient android:startColor="#fff3f3f3" android:endColor="#fff6f6f6" android:angle="270.0" android:centerX="0.5" android:centerY="0.5" />
+    <corners android:radius="8.0dip" />
+    <stroke android:width="2.0dip" android:color="#ffcbcbcb" />
+    <padding android:left="2.0dip" android:top="2.0dip" android:right="2.0dip" android:bottom="2.0dip" />
+</shape>

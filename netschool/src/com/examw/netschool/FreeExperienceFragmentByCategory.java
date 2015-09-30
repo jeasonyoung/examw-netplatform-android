@@ -64,9 +64,9 @@ public class FreeExperienceFragmentByCategory extends Fragment implements OnItem
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		 Log.d(TAG, "重载初始化...");
 		 //加载布局文件
-		 final View  view = inflater.inflate(R.layout.activity_free_experience_category, container, false);
+		 final View view = inflater.inflate(R.layout.activity_free_experience_category, container, false);
 		 //无数据View
-		 this.nodataView = view.findViewById(R.id.nodataView);
+		 this.nodataView = view.findViewById(R.id.nodata_view);
 		 //数据列表
 		 final ListView listCategory = (ListView)view.findViewById(R.id.list_category);
 		 listCategory.setOnItemClickListener(this);
@@ -100,7 +100,7 @@ public class FreeExperienceFragmentByCategory extends Fragment implements OnItem
 			getActivity().getSupportFragmentManager()
 				.beginTransaction()
 				.addToBackStack(null)
-				.replace(R.id.fragment_container, new FreeExperienceFragmentByExams(userId, data.getId(),this.search))
+				.replace(R.id.fragment_container, new FreeExperienceFragmentByExams(userId, data.getId(), this.search))
 				.commit();
 		}
 	}

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 /**
  * 免费体验Activity。
@@ -43,16 +44,20 @@ public class FreeExperienceActivity extends FragmentActivity implements OnClickL
 		//返回按钮
 		final View btnReturn = this.findViewById(R.id.btn_return);
 		btnReturn.setOnClickListener(this);
+		//标题
+		final TextView tvTopTitle = (TextView)this.findViewById(R.id.top_title);
+		tvTopTitle.setText(R.string.free_experience_title);
+		
 		//搜索
 		this.search = new Search(this);
 		//课程中心
-		final View btnCenter = this.findViewById(R.id.btn_lesson_center);
+		final View btnCenter = this.findViewById(R.id.btn_free_experience);
 		btnCenter.setOnClickListener(this);
 		//我的课程
-		final View btnMy = this.findViewById(R.id.btn_lesson_my);
+		final View btnMy = this.findViewById(R.id.btn_my_course);
 		btnMy.setOnClickListener(this);
 		//播放记录
-		final View btnRecord = this.findViewById(R.id.btn_lesson_record);
+		final View btnRecord = this.findViewById(R.id.btn_play_record);
 		btnRecord.setOnClickListener(this);
 	}
 	/*
@@ -81,20 +86,20 @@ public class FreeExperienceActivity extends FragmentActivity implements OnClickL
 				this.finish();
 				break;
 			}
-			case R.id.btn_lesson_center:{//课程中心
+			case R.id.btn_free_experience:{//课程中心
 				this.getSupportFragmentManager().beginTransaction()
 				.add(R.id.fragment_container, new FreeExperienceFragmentByCategory(this.userId, this.search))
 				.commit();
 				break;
 			}
-			case R.id.btn_lesson_my:{//我的课程
+			case R.id.btn_my_course:{//我的课程
 				 final Intent intent = new Intent(this, MyCourseActivity.class);
 				 intent.putExtra(Constant.CONST_USERID, userId);
 				 intent.putExtra(Constant.CONST_USERNAME, userName);
 				 this.startActivity(intent);
 				break;
 			}
-			case R.id.btn_lesson_record:{//播放记录
+			case R.id.btn_play_record:{//播放记录
 				 final Intent intent = new Intent(this, PlayRecordActivity.class);
 				 intent.putExtra(Constant.CONST_USERID, userId);
 				 intent.putExtra(Constant.CONST_USERNAME, userName);
@@ -113,9 +118,9 @@ public class FreeExperienceActivity extends FragmentActivity implements OnClickL
 		 */
 		public Search(Activity view){
 			//搜索文本框
-			this.etSearch = (EditText)view.findViewById(R.id.searchKey);
+			this.etSearch = (EditText)view.findViewById(R.id.search_key);
 			//搜素按钮
-			this.btnSearch = (ImageButton)view.findViewById(R.id.btnSearch);
+			this.btnSearch = (ImageButton)view.findViewById(R.id.btn_search);
 		}
 		/**
 		 * 获取搜索关键字。

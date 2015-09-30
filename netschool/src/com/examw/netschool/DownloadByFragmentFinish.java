@@ -62,7 +62,7 @@ public class DownloadByFragmentFinish extends Fragment {
 		//加载列表布局文件
 		final View view = inflater.inflate(R.layout.activity_download_finish, container, false);
 		//没有数据
-		this.nodataView = (LinearLayout)view.findViewById(R.id.download_finish_nodata);
+		this.nodataView = (LinearLayout)view.findViewById(R.id.nodata_view);
 		this.nodataView.setVisibility(View.VISIBLE);
 		//列表
 		final ListView listView = (ListView)view.findViewById(R.id.download_listview_downing);
@@ -98,8 +98,8 @@ public class DownloadByFragmentFinish extends Fragment {
 				if(download != null){
 					//取消下载二次确认
 					new AlertDialog.Builder(getActivity()).setIcon(android.R.drawable.ic_dialog_alert)
-					.setTitle(R.string.delete_download_title).setMessage(R.string.delete_download_msg)
-					.setNegativeButton(R.string.delete_download_btn_cancel, new DialogInterface.OnClickListener(){
+					.setTitle(R.string.download_group_finish_delete_title).setMessage(R.string.download_group_finish_delete_msg)
+					.setNegativeButton(R.string.download_group_finish_delete_btn_cancel, new DialogInterface.OnClickListener(){
 						/*
 						 * 取消退出。
 						 * @see android.content.DialogInterface.OnClickListener#onClick(android.content.DialogInterface, int)
@@ -110,7 +110,7 @@ public class DownloadByFragmentFinish extends Fragment {
 							dialog.dismiss();
 						}
 					})
-					.setPositiveButton(R.string.cancel_download_btn_submit, new DialogInterface.OnClickListener(){
+					.setPositiveButton(R.string.download_group_finish_delete_btn_submit, new DialogInterface.OnClickListener(){
 						/*
 						 * 确定取消下载。
 						 * @see android.content.DialogInterface.OnClickListener#onClick(android.content.DialogInterface, int)
@@ -260,9 +260,9 @@ public class DownloadByFragmentFinish extends Fragment {
 		public ViewHolder(View convertView){
 			Log.d(TAG, "初始化...");
 			//加载标题
-			this.tvTitle = (TextView)convertView.findViewById(R.id.title);
+			this.tvTitle = (TextView)convertView.findViewById(R.id.tv_title);
 			//播放按钮
-			this.btnPlay = convertView.findViewById(R.id.btnPlay);
+			this.btnPlay = convertView.findViewById(R.id.btn_play);
 			this.btnPlay.setOnClickListener(this);
 		}
 		/**

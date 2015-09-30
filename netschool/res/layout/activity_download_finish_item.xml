@@ -2,14 +2,14 @@
 <!-- 课程资源下载完成数据行 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/listtext_bj2"
+    android:layout_height="wrap_content"
+    android:background="@drawable/download_finish_item_bg"
     android:gravity="center_horizontal"
     android:paddingBottom="10dp"
     android:paddingTop="10dp" >
     
     <!-- 下载的课程资源 -->
-    <TextView android:id="@+id/title"
+    <TextView android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
@@ -26,7 +26,7 @@
         android:textSize="@dimen/text_small_size" />
 
     <!-- 播放按钮 -->
-    <ImageView android:id="@+id/btnPlay"
+    <ImageView android:id="@+id/btn_play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="10dp"
@@ -34,8 +34,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:background="@color/none"
-        android:src="@drawable/palyico2" 
-        android:contentDescription="@string/download_finish_item_btnplay"/>
+        android:background="@color/transparent"
+        android:src="@drawable/download_group_finish_item_play_icon" 
+        android:contentDescription="@string/download_group_finish_item_play_icon_desc"/>
     
 </RelativeLayout>

@@ -50,6 +50,9 @@ public class SuggestActivity extends Activity implements OnClickListener{
 		//返回按钮
 		final View btnReturn = this.findViewById(R.id.btn_return);
 		btnReturn.setOnClickListener(this);
+		//设置标题
+		final TextView tvTopTitle = (TextView)this.findViewById(R.id.top_title);
+		tvTopTitle.setText(R.string.suggest_title);
 		//学员名称
 		final TextView txtStudentName = (TextView)this.findViewById(R.id.txt_suggest_student_name);
 		txtStudentName.setText(userName);
@@ -91,7 +94,7 @@ public class SuggestActivity extends Activity implements OnClickListener{
 		}
 		//初始化等待动画
 		if(this.progressDialog == null){
-			this.progressDialog = ProgressDialog.show(this, null, this.getResources().getText(R.string.post_upload_msg), true, true);
+			this.progressDialog = ProgressDialog.show(this, null, this.getResources().getText(R.string.suggest_post_upload_msg), true, true);
 			this.progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		}
 		//启动等待动画

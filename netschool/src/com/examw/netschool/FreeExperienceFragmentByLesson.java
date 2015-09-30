@@ -71,7 +71,7 @@ public class FreeExperienceFragmentByLesson extends Fragment implements OnItemCl
 		Log.d(TAG, "加载布局...");
 		final View view = inflater.inflate(R.layout.activity_free_experience_lesson, container, false);
 		//无数据View
-		this.nodataView = view.findViewById(R.id.nodataView);
+		this.nodataView = view.findViewById(R.id.nodata_view);
 		//数据列表
 		final ListView listView = (ListView)view.findViewById(R.id.list_lesson);
 		listView.setAdapter(this.adapter);

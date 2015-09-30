@@ -3,69 +3,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ashen"
+    android:background="@color/play_record_bg_color"
     android:orientation="vertical" >
     
     <!-- top -->
-    <RelativeLayout 
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/main_top_bg_img">
-        
-        <!-- 返回按钮 -->
-        <ImageButton android:id="@+id/btn_return"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
-                android:background="@color/none"
-                android:scaleType="centerCrop"
-                android:src="@drawable/btn_return_bg_img" 
-                android:contentDescription="@string/btn_return_desc"/>
-        
-        <!-- 标题 -->
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_centerVertical="true"
-                android:background="#00000000"
-                android:fadingEdge="vertical"
-                android:gravity="center"
-                android:text="@string/play_record_title"
-                android:textColor="@color/white"
-                android:textSize="@dimen/title_huge_size" />
-        
-    </RelativeLayout>
+    <include layout="@layout/activity_header"/>
     
     <!-- 无数据时显示 -->
-    <LinearLayout android:id="@+id/nodataView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/none"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
-        
-        <TextView 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:drawableTop="@drawable/nodata"
-            android:drawablePadding="2dp"
-            android:text="@string/nodata"
-            android:textSize="30sp"/>
-    </LinearLayout>
+    <include android:id="@+id/nodata_view" layout="@layout/activity_nodata"/>
 	    
     <!-- 播放记录列表 -->
     <ListView android:id="@+id/list_play_records"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="5dp"
-        android:background="@drawable/set_layout_bj"
+        android:background="@drawable/play_record_list_bg"
         android:divider="@drawable/topic_driver"
         android:dividerHeight="1dp"
         android:fadingEdge="none"

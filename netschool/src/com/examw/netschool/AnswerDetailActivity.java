@@ -78,7 +78,10 @@ public class AnswerDetailActivity extends Activity implements OnClickListener {
 		final View btnBack = this.findViewById(R.id.btn_return);
 		btnBack.setOnClickListener(this);
 		//答疑主题标题
-		final TextView tvTopicTitle = (TextView)this.findViewById(R.id.answer_topic_title);
+		final TextView tvTopicTitle = (TextView)this.findViewById(R.id.top_title);
+		//设置默认标题
+		tvTopicTitle.setText(R.string.answer_detail_title);
+		//
 		if(intent != null)tvTopicTitle.setText(intent.getStringExtra(AnswerActivity.CONST_TOPIC_TITLE));
 		//答疑主题内容
 		final TextView tvTopicContent = (TextView)this.findViewById(R.id.answer_topic_content);

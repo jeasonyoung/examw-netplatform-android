@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:orientation="horizontal" android:background="@drawable/list_item_state_bg" android:padding="10.0dip" android:layout_width="fill_parent" android:layout_height="fill_parent"
-  xmlns:android="http://schemas.android.com/apk/res/android">
-    <ImageView android:id="@+id/exerciseImg" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/exercise_exam_img" android:scaleType="centerInside" android:layout_alignParentLeft="true" android:layout_centerVertical="true" />
-    <TextView android:textSize="@dimen/text_medium_size" android:textColor="@color/black" android:id="@+id/classNameTextView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="5.0dip" android:layout_toLeftOf="@id/arrowright" android:layout_toRightOf="@id/exerciseImg" android:layout_centerVertical="true" />
-    <ImageView android:id="@+id/arrowright" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="10.0dip" android:src="@drawable/arrow_right" android:scaleType="centerInside" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
-</RelativeLayout>

@@ -37,6 +37,8 @@
     <string name="btn_free_experience_title">课程中心</string>
     <string name="btn_my_course_title">我的课程</string>
     <string name="btn_play_record_title">播放记录</string>
+    <!-- nodata -->
+    <string name="activity_nodata_text">亲,木有数据!</string>
     <!-- 我的课程 Activity -->
     <string name="my_course_progress_msg">努力加载中,请稍候. . .</string>
     <string name="my_course_footer_online_title">在线课程</string>
@@ -47,66 +49,56 @@
     <string name="my_course_lesson_footer_offline">离线课程</string>
     <string name="my_course_lesson_footer_record">播放记录</string>
     <string name="my_course_lesson_item_download_desc">下载按钮</string>
+    <!-- 播放器Activity -->
+    <string name="video_loading_view_logo_icon_desc">logo</string>
+    <string name="video_loading_view_msg">即将播放</string>
+    <string name="play_video_volumn_control_vol_icon_desc">音量图标</string>
+    <string name="play_video_volumn_control_vol_title">0%</string>
+    <string name="play_video_volumn_control_return_desc">返回</string>
+    <string name="play_video_video_control_play_time">00:00</string>
+    <string name="play_video_video_control_total_time">00:00</string>
+    <string name="play_video_video_control_previous_icon_desc">后退</string>
+    <string name="play_video_video_control_pause_icon_desc">播放</string>
+    <string name="play_video_video_control_next_icon_desc">前进</string>
+    <!-- 下载Activity -->
+    <string name="download_top_title">课程下载</string>
+    <string name="download_group_downing_title">正在下载</string>
+    <string name="download_group_downing_icon_desc">video</string>
+    <string name="download_group_downing_cancel_title">取消下载</string>
+    <string name="download_group_downing_cancel_msg">确认取消下载?</string>
+    <string name="download_group_downing_cancel_btn_cancel">取消</string>
+    <string name="download_group_downing_cancel_btn_submit">确认</string>
+    <string name="download_group_downing_item_btn_pause">暂停</string>
+    <string name="download_group_downing_item_btn_pause_icon_desc">下载</string>
+    <string name="download_group_downing_item_btn_start">下载</string>
+    <string name="download_group_downing_item_btn_start_icon_desc">暂停</string>
+    <string name="download_group_finish_title">完成下载</string>
+    <string name="download_group_finish_item_play_icon_desc">播放</string>
+    <string name="download_group_finish_delete_title">删除下载课程资源</string>
+    <string name="download_group_finish_delete_msg">确认删除?</string>
+    <string name="download_group_finish_delete_btn_cancel">取消</string>
+    <string name="download_group_finish_delete_btn_submit">确认</string>
     
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    <string name="versions">版本号：V1.0</string>
-    
-    
-    <string name="btn_return_desc">返回</string>
-    <string name="post_upload_msg">上传数据中. . .</string>
-    
-    <string name="download_nodata_desc">没有数据</string>
-    <string name="download_finish_item_btnplay">播放</string>
-    
-    <string name="cancel_download_title">取消下载</string>
-    <string name="cancel_download_msg">确认取消下载?</string>
-    <string name="cancel_download_btn_cancel">取消</string>
-    <string name="cancel_download_btn_submit">确认</string>
-    
-    <string name="downing_icon">下载课程</string>
-    <string name="dowing_btn_pause">暂停</string>
-    <string name="dowing_btn_start">下载</string>
-    
-     <string name="delete_download_title">删除下载课程资源</string>
-    <string name="delete_download_msg">确认删除?</string>
-    <string name="delete_download_btn_cancel">取消</string>
-    <string name="delete_download_btn_submit">确认</string>
-    
-    <string name="btn_lesson_center_title">课程中心</string>
-    <string name="btn_lesson_center_my">我的课程</string>
-    <string name="btn_lesson_center_record">播放记录</string>
-    <string name="btn_lesson_center_return">返回</string>
-    
-    <string name="nodata">亲,木有数据!</string>
-    
-    
-    <!-- 播放记录 -->
+    <!-- 免费体验Activity -->
+    <string name="free_experience_title">课程中心</string>
+    <string name="free_experience_search_btn_desc">搜索</string>
+     <!-- 播放记录 -->
     <string name="play_record_title">播放记录</string>
     <string name="delete_record_title">删除播放记录</string>
     <string name="delete_record_msg">确认删除播放记录?</string>
     <string name="delete_record_btn_cancel">取消</string>
     <string name="delete_record_btn_submit">确认</string>
-    
     <!-- 答疑主题 -->
     <string name="answer_title">你问我答</string>
     <string name="answer_refresh_desc">刷新</string>
     <string name="btn_answer_title">我要提问</string>
-    <string name="answer_item_icon">主题</string>
+    <string name="answer_item_icon_desc">主题</string>
     <!-- 答疑明细 -->
     <string name="answer_detail_title">我的提问</string>
     <string name="answer_detail_callback_hint">输入回复</string>
     <string name="btn_answer_detail_callback_title">回复</string>
     <!-- 答疑提问 -->
-    <string name="answer_submit_title">我的疑问</string>
+    <string name="answer_submit_title">我的提问</string>
     <string name="answer_submit_class">所属班级:</string>
     <string name="answer_submit_lesson">课程资源:</string>
 	<string name="answer_submit_topic_title_desc"> 请输入标题:</string>
@@ -115,251 +107,13 @@
     <string name="answer_submit_lesson_error">请选择课程!</string>
     <string name="answer_submit_title_error">请输入疑问标题!</string>
     <string name="answer_submit_content_error">请输入疑问内容!</string>
+    <string name="answer_post_upload_msg">上传数据中. . .</string>
     <!-- 意见反馈 -->
      <string name="suggest_title">意见反馈</string>
      <string name="suggest_student_name_title">学员名:</string>
      <string name="suggest_content_hint">请留下您的宝贵意见和建议</string>
      <string name="btn_suggest_submit_title">提交</string>
+     <string name="suggest_post_upload_msg">上传数据中. . .</string>
      <string name="suggest_content_error">请输入您得宝贵意见何建议!</string>
-    
-    
-    <string name="hello_world">Hello world!</string>
-    <string name="menu_settings">Settings</string>
-    <string name="startBtnlab">开始体验</string>
-    <string name="start_nologo">网校logo</string>
-    <!-- <string name="start_words_">学海无涯,大立教育与你同在</string> -->
-    
-    <string name="title_activity_login">用户登录</string>
-    <string name="usernamelab">账 号:</string>
-    <string name="passwordlab">密 码:</string>
-    <string name="rememberpwd">记住密码</string>
-    <string name="findPwd">找回密码</string>
-    <string name="findPwdUrl">http://wx.daliedu.cn/user/findpwd.jsp</string>
-    <string name="login1btn">在线登录</string>
-    <string name="login2btn">本地登录</string>
-    <string name="mycourse">我的课程</string>
-    <string name="answer_sheet">你问我答</string>
-    <string name="question_bank">我的习题</string>
-    <string name="experience_center">免费体验</string>
-    <string name="MainActivity_lab">主页面</string>
-    <string name="menusetting">设置</string>
-    <string name="menuhelp">帮助</string>
-    <string name="menuabout">关于</string>
-    <string name="menuabouttitle">关于我们</string>
-    <string name="menuclose">注销</string>
-    <string name="CourseCenter">课程中心</string>
-    <string name="CourseDown">我的课程</string>
-    <string name="LearningRecord">播放记录</string>
-    <string name="seach">搜索</string>
-    <string name="empty">NoData</string>
-    <string name="NewBtn">新版</string>
-    <string name="OldBtn">旧版</string>
-    <string name="filetype1">视频</string>
-    <string name="playBtn">播放</string>
-    <string name="DownloadBtn">下载</string>
-    <string name="nonedata">亲,木有数据!</string>
-    <string name="DownloadtoBtn">下载课程</string>
-    <string name="DownloadLab">课程下载</string>
-    <string name="LookonlineBtn">在线课程</string>
-    <string name="MyfileDownBtn">离线课程</string>
-    <string name="NewVersionBtn">新版课程</string>
-    <string name="OldVersionBtn">旧版课程</string>
-    <string name="setDownStr">下载设置</string>
-    <string name="setPlayStr">播放设置</string>
-    <string name="setToleadStr">文件导入激活</string>
-    <string name="setUpdateStr">检测更新</string>
-    <string name="checkUpdateRightNow">立即检测更新</string>
-    <string name="check">检测</string>
-    <string name="setUpdateTime">设置检测更新周期</string>
-    <string name="setAboutStr">关于</string>
-    <string name="aboutus">关于我们</string>
-    <string name="setClearListStr">缓存处理</string>
-    <string name="setDown_spaceavailable">当前可用空间</string>
-    <string name="setDown_IsUser3G">是否使用2G/3G下载</string>
-    <string name="setPlay_IsUser3G">是否使用2G/3G播放</string>
-    <string name="setDown_path">在线下载保存路径:</string>
-    <string name="setClearStr">清除图片缓存</string>
-    <string name="setDown_filetype">以哪种效果下载</string>
-    <string name="setPlay_filetype">以哪种效果播放</string>
-    <string name="setlead_filepath">导入文件保存路径:</string>
-    <string name="setlead_Iscoverfile">导入时是否覆盖相同文件</string>
-    <string name="aboutText1">关于优异网校手机版</string>
-    <string name="aboutText2">优异网校Android版,是优异网校开发的针对Android系统的客户端应用。手机版课件学习,暂不提供学习过程中的答题、互动等环节,提供完整的课件收听。</string>
-    <string name="aboutText3">优异网校是目前国内优秀的网络教育平台之一,网校成立至今,一直着重打造网校质量及口碑,积极加强师资队伍建设,完善学员服务的渠道,致力于做学员最满意的品牌网校。</string>
-    <string name="aboutText4">优异网校开发及拥有的课件范围涉及学历类、建筑工程类等大类考试的在线网络培训。</string>
-    <string name="aboutText5">优异网校官方网站：　\nhttp://www.youeclass.com/</string>
-    <string name="aboutText1_">关于大立教育手机版</string>
-    <string name="aboutText2_">大立教育Android版,是优异网校开发的针对Android系统的客户端应用。手机版课件学习,暂不提供学习过程中的答题、互动等环节,提供完整的课件收听。</string>
-    <string name="aboutText3_">大立教育是目前国内优秀的网络教育平台之一,网校成立至今,一直着重打造网校质量及口碑,积极加强师资队伍建设,完善学员服务的渠道,致力于做学员最满意的品牌网校。</string>
-    <string name="aboutText4_">大立教育开发及拥有的课件范围涉及学历类、建筑工程类等大类考试的在线网络培训。</string>
-    <string name="aboutText5_">大立教育官方网站：　\nhttp://www.daliedu.cn/</string>
-<!--     <string name="aboutText6">新浪官方微博：　?inviteCode=1615702000</string>
-    <string name="aboutText7">腾讯官方微博：　http://t.qq.com/dozedu888/</string> -->
-    <string name="setHelpStr">帮助中心</string>
-    <string name="read_only">MB</string>
-    <string name="Downfilepath">/mnt/sdcard/eschool/</string>
-    <string name="Leadfilepath">/mnt/sdcard/233/leadfile/</string>
-    <string name="SavePicPath">/233/savepic/</string>
-    <string name="SavePicPath1">/mnt/sdcard/233/savepic/</string>
-    <string name="Dialogbtn">确定修改</string>
-    <string name="title_activity_main">233</string>
-    <string name="volumn">音量</string>
-    <string name="volumn_size">0%</string>
-    <string name="play_previous">上一节</string>
-    <string name="play">播放</string>
-    <string name="play_next">下一节</string>
-    <string name="play_list">播放列表</string>
-    <string name="cancel">取消</string>
-    <string name="back">返回</string>
-    <string name="playTime">00:00</string>
-    <string name="totalTime">00:00</string>
-    <string name="DowningLab">正在下载</string>
-    <string name="continueDown">继续</string>
-    <string name="waitDown">等待</string>
-    <string name="retry">重试</string>
-    <string name="pauseDown">暂停</string>
-    <string name="DownType1">已暂停</string>
-    <string name="DownType2">下载中</string>
-    <string name="DownType3">等待中</string>
-    <string name="DownfinishLab">完成下载</string>
-    <string name="nothing">敬请期待</string>
-    <string name="continuelab">继续播放>>></string>
-    <string name="delfiletotal">文件删除</string>
-    <string name="delbtnstr">删除</string>
-    <string name="clearbtnstr">清空</string>
-    <string name="helpTitleStr1">操作注意</string>
-    <string name="helpTitleStr2">如何在我的课程中观看视频与下载视频</string>
-    <string name="helpTitleStr3">一些快捷操作</string>
-    <string name="helpTitleStr4">温馨提示</string>
-    <string name="helpTitleStr5">文件删除</string>
-    <string name="helpChildStr1">"1、用户登录: 栏目必须先在线登录后才可以本地登录
- 2、我的课程栏目：只有当你有再网站上购买了课程 在我的课程栏里才有课程列表 如果没有购买课程 则列表为空
- 3、免费体验栏目：必须在在线登录状态下才能使用 无论是否购买课程 都可以进入里面观看免费视频"</string>
-    <string name="helpChildStr2">"1、观看视频：进入我的课程 通过课程名找到要看的视频，点击即可观看
- 2、下载视频：点击课程列表右边的下载按钮，点击你要下的课程就可以 将视频进入下载列表下载，下载完成的视频会自动跳到已完成界面 点击离线课程可进入 已完成课程"</string>
-    <string name="helpChildStr3">"1、视频播放自动记录播放位置,下一次接着播放
- 2、视频播放器点击屏幕切换视频控制的显示和隐藏"
- 	</string>
-    <string name="helpChildStr4">"1、为了使在线视频播放更流畅 在线加载的时间可能比较长 请耐心等待"</string>
-    <string name="helpChildStr5">可以在下载界面的列表条目上长按,即可弹出删除选项,点击可以删除</string>
-    <string name="loadingStr">即将播放</string>
-    <string name="downingnum">"正下载数"</string>
-    <string name="loadingnum">"等待下载数"</string>
-    <string name="finishnum">"完成下载数"</string>
-    <string name="nolearn">免费体验中 不支持播放记录功能!</string>
-    <string name="answer">我要提问</string>
-    <string name="answerStr">我要提问</string>
-    <string name="myAnswerStr">我的提问</string>
-    <string name="refresh">刷 新</string>
-    <string name="refreshQuick">立即刷新</string>
-    <string name="answertexthint">请在这里输入要提的问题</string>
-    <string name="addcontenthint">请在这里输入要补充的内容</string>
-    <string name="selectBjStr">选择分类：</string>
-    <string name="submitStr">提交</string>
-    <string name="submitStr1">提 交</string>
-    <string name="submitStr2">确 认 提 交</string>
-    <string name="myquestion">我的提问</string>
-    <string name="alldiscuss">所有评论：</string>
-    <string name="noBestAnswerStr">暂时没有最佳答案!</string>
-    <string name="bestAnswerStr">最佳答案</string>
-    <string name="otherAnswerStr">其它答案</string>
-    <string name="pinglun">评论</string>
-    <string name="questTitleStr">提问:</string>
-    <string name="addcontentStr">补充问题</string>
-    <string name="updateStr">修改</string>
-    <string name="contentAdd">问题补充</string>
-    <string name="tishiStr">当问题超过50字，点击此处补充问题</string>
-    <string name="noAnswerStr">未回答</string>
-    <string name="isAnswerStr">已回答</string>
-    <string name="answerSubmitStr">回答</string>
-    <string name="myAnswerStr2">我的回答</string>
-    <string name="updateAnswer">修改回答</string>
-    <string name="pull_to_refresh_pull_label">下拉刷新</string>
-    <string name="pull_to_refresh_release_label">松开后刷新</string>
-    <string name="pull_to_refresh_refreshing_label">刷新…</string>
-    <string name="pull_to_refresh_footer_release_label">松开后加载</string>
-    <string name="pull_to_refresh_footer_pull_label">上拉加载更多</string>
-    <string name="pull_to_refresh_footer_refreshing_label">加载中…</string>
-    <string name="pull_to_refresh_tap_label">点击刷新</string>
-    <string name="cameraPic">拍照</string>
-    <string name="LocalfilePic">本地图片</string>
-    <string name="downnodataStr">还没有下载视频，记得用WI-FI</string>
-    <string name="reviewHint">输入评论</string>
-    <string name="SubloadStr">提交中…</string>
-    <string name="ImgViewStr">图片浏览</string>
-    <string name="UploadingStr">图片加载中…</string>
-    <string name="question_bankStr">题库</string>
-    <string name="errorQuesitionStr">错题集</string>
-    <string name="doProblem_recordStr">做题记录</string>
-    <string name="my_favoriteStr">我的收藏</string>
-    <string name="my_notebookStr">我的笔记</string>
-    <string name="simulated_examsStr">模拟考场</string>
-    <string name="homeworkStr">课后练习</string>
-    <string name="moduleStr">章节练习</string>
-    <string name="loadingStr2">加载中…</string>
-    <string name="nodataTextStr">数据加载出错，请刷新</string>
-    <string name="exam_selectStr">选题</string>
-    <string name="exam_notebookStr">随题笔记</string>
-    <string name="exam_notebookHintStr">写入你的笔记</string>
-    <string name="exam_othernotebookStr">他人笔记</string>
-    <string name="exam_myAnswerStr">我的回答：</string>
-    <string name="exam_sysAnswerStr">正确答案：</string>
-    <string name="exam_analysisStr">答案解析</string>
-    <string name="exam_myAnswerLabStr">本题答案:</string>
-    <string name="question_directoryStr2">做题情况</string>
-    <string name="question_directoryStr">题目列表</string>
-    <string name="question_directoryTitleStr">答题目录</string>
-    <string name="exam_exitBtnStr">退出考试</string>
-    <string name="exam_exitSubmitBtnStr">提交试卷</string>
-    <string name="exam_exitCancelStr">取消</string>
-    <string name="notebookSizeStr">已输入0/1000</string>
-    <string name="question_directory_btn1Str">查看题目</string>
-    <string name="question_directory_btn2Str">再做一次</string>
-    <string name="question_doAgain">重做</string>
-    <string name="question_notebook">查看题目</string>
-    <string name="suggestionStr">意见反馈</string>
-    <string name="suggestionHintStr">请留下您的宝贵意见和建议</string>
-    <string name="nickNameStr">学员名：</string>
-    <string name="commonNickname">网校学员</string>
-    <string name="nodata2Str">该版课程暂无课后练习!</string>
-    <string name="reg_userNameStr">会员名：</string>
-    <string name="reg_userPwd1Str">密码：</string>
-    <string name="reg_userPwd2Str">确认密码：</string>
-    <string name="reg_userEmailStr">邮箱：</string>
-    <string name="reg_userEmailHintStr">邮箱地址 </string>
-    <string name="reg_userPhoneStr">手机号：</string>
-    <string name="reg_userPhoneHintStr">手机号码 </string>
-    <string name="reg_userQQ">QQ号码 </string>
-    <string name="reg_validataCodeStr">验证码：</string>
-    <string name="reg_readCheakStr">已认真阅读</string>
-    <string name="reg_treatyStr">《网校服务协议》</string>
-    <string name="reg_subStr">注 册</string>
-    <string name="reg_userNameHintStr">4－18位</string>
-    <string name="reg_userPwdHintStr">6－20位</string>
-    <string name="reg_successStr">注册成功!</string>
-    <string name="reg_selectStr">选择学习科目:</string>
-    <string name="reg_loadingStr">科目数据加载中…</string>
-    <string name="reg_yourname">您的用户名是：</string>
-    <string name="reg_gotoLogin">去登陆</string>
-    <string name="reg_startStr">开 始 体 验</string>
-    <string name="reg_errorStr">获取数据失败</string>
-    <string name="reg_errorBtnStr">重新获取</string>
-    <string name="scoreTitleStr">练习科目</string>
-    <string name="scoreContentStr">练习结果</string>
-    <string name="dialogLookBtnStr">看答案</string>
-    <string name="dialogExitBtnStr">退出</string>
-    <string name="noCourseData">您没有购买课程</string>
-    
-    <!-- Exception -->
-    <string name="network_not_connected">网络连接失败，请检查网络设置</string>
-    <string name="xml_parser_failed">数据解析异常</string>
-    <string name="io_exception_error">文件流异常</string>
-    <string name="http_status_code_error">网络异常，错误码：%d</string>
-    <string name="http_exception_error">网络异常，请求超时</string>
-    <string name="socket_exception_error">网络异常，读取数据超时</string>
-    <string name="app_run_code_error">应用程序运行时异常</string>
-    <string name="json_parser_failed">数据解析异常</string>
-    
-     <item name="tag_first" type="id"></item>
-        <item name="tag_second" type="id"></item>
+     
 </resources>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--播放器- 音频控制栏 -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/play_video_volumn_control_height"
+    android:paddingTop="@dimen/play_video_volumn_control_top"
+    android:background="@color/play_video_volumn_control_bg">
+    
+    <!-- 返回按钮 -->
+    <ImageButton android:id="@+id/btn_return"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/play_video_volumn_control_return_left"
+            android:layout_marginStart="@dimen/play_video_volumn_control_return_left"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/play_video_volumn_control_return_icon"
+            android:contentDescription="@string/play_video_volumn_control_return_desc" />
+    
+    <!-- 标题 -->
+     <TextView android:id="@+id/txt_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/play_video_volumn_control_title_left"
+            android:layout_marginStart="@dimen/play_video_volumn_control_title_left"
+            android:layout_toLeftOf="@+id/vol_control"
+            android:layout_toStartOf="@id/vol_control"
+            android:layout_toRightOf="@id/btn_return"
+            android:layout_toEndOf="@id/btn_return"
+            android:layout_centerVertical="true"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="center"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textColor="@color/white" />
+
+    <!-- 音量控制布局 -->
+    <LinearLayout android:id="@+id/vol_control"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/play_video_volumn_control_vol_left"
+        android:layout_marginStart="@dimen/play_video_volumn_control_vol_left"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/play_video_volumn_control_vol_right"
+        android:layout_marginEnd="@dimen/play_video_volumn_control_vol_right"
+        android:orientation="horizontal" >
+
+        <!-- 音量按钮 -->
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@color/transparent"
+            android:contentDescription="@string/play_video_volumn_control_vol_icon_desc"
+            android:src="@drawable/play_video_volumn_control_vol_icon" />
+
+        <!-- 音量进度 -->
+        <SeekBar android:id="@+id/seek_bar_vol"
+            style="@style/progress_bar_vol"
+            android:layout_width="@dimen/play_video_volumn_control_vol_icon_width"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:thumb="@android:drawable/presence_invisible"
+            android:thumbOffset="0dp" />
+
+        <!-- 音量值 -->
+        <TextView android:id="@+id/tv_vol_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:text="@string/play_video_volumn_control_vol_title"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+</RelativeLayout>

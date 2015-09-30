@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 下载activity－下载中数据行背景-normal -->
+<shape android:shape="rectangle" xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient android:startColor="@color/transparent" android:endColor="@color/transparent" android:angle="270.0" android:centerX="0.5" android:centerY="0.5" android:centerColor="@color/transparent" />
+    <stroke android:width="1.0dip" android:color="#ff1879b5" />
+</shape>

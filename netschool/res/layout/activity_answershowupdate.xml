@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:orientation="vertical" android:background="@drawable/childlist_select" android:layout_width="fill_parent" android:layout_height="fill_parent"
-  xmlns:android="http://schemas.android.com/apk/res/android">
-    <TextView android:textSize="@dimen/title_medium_size" android:textStyle="bold" android:textColor="@color/black" android:gravity="center" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="20.0dip" android:layout_marginBottom="20.0dip" android:text="@string/updateAnswer" />
-    <TextView android:textSize="@dimen/text_small_size" android:textColor="@color/black" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginLeft="10.0dip" android:text="@string/myAnswerStr2" />
-    <EditText android:textSize="@dimen/text_small_size" android:textColor="@color/black" android:id="@+id/myAnswerContentEText" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_margin="10.0dip" android:maxLines="10" android:lines="5" />
-    <Button android:textColor="@color/black" android:id="@+id/updateMyAnswerContentBtn" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_margin="10.0dip" android:text="@string/Dialogbtn" />
-</LinearLayout>

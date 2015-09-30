@@ -3,43 +3,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/reg_bg"
+    android:background="@drawable/answer_submit_bg"
     android:orientation="vertical" >
     
     <!-- top  -->
-    <RelativeLayout 
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/main_top_bg_img">
-        
-        <!-- 返回 -->
-        <ImageButton android:id="@+id/btn_return"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:background="@color/none"
-            android:scaleType="centerCrop"
-            android:src="@drawable/btn_return_bg_img"
-            android:contentDescription="@string/btn_return_desc" />
-        
-        <!-- 标题 -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_centerVertical="true"
-            android:background="@color/none"
-            android:fadingEdge="vertical"
-            android:gravity="center"
-            android:text="@string/answer_submit_title"
-            android:textColor="@color/white"
-            android:textSize="@dimen/title_huge_size" />
-        
-    </RelativeLayout>
+    <include layout="@layout/activity_header"/>
     
     <!-- 输入 -->
     <TableLayout
@@ -94,7 +62,7 @@
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
                 android:layout_weight="1.0"
-                android:background="@drawable/whitetext_bg"
+                android:background="@drawable/edit_text_bg"
                 android:hint="@string/answer_submit_topic_title_desc"
                 android:inputType="textMultiLine"
                 android:singleLine="true"
@@ -122,7 +90,7 @@
                 android:layout_height="match_parent"
                 android:layout_above="@+id/btn_submit"
                 android:singleLine="false"             
-                android:background="@drawable/whitetext_bg"
+                android:background="@drawable/edit_text_bg"
                 android:hint="@string/answer_submit_topic_content_desc"
                 android:inputType="textMultiLine"
                 android:gravity="top"
@@ -135,7 +103,7 @@
             android:layout_marginTop="5dp"
             android:layout_alignParentBottom="true"
             android:layout_centerInParent="true"
-            android:background="@drawable/submit_suggestion_btn1_bg"
+            android:background="@drawable/submit_suggestion_btn_bg"
             android:text="@string/btn_answer_submit"
             android:textColor="@color/white"
             android:textSize="@dimen/text_large_size" />

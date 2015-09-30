@@ -70,7 +70,7 @@ public class FreeExperienceFragmentByExams extends Fragment implements OnItemCli
 		Log.d(TAG, "加载布局文件...");
 		final View view = inflater.inflate(R.layout.activity_free_experience_exams, container, false);
 		//无数据View
-		 this.nodataView = view.findViewById(R.id.nodataView);
+		 this.nodataView = view.findViewById(R.id.nodata_view);
 		 //数据列表
 		 final ListView listExam = (ListView)view.findViewById(R.id.list_exam);
 		 listExam.setAdapter(this.adapter);

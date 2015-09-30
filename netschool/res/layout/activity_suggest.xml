@@ -3,43 +3,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ashen"
+    android:background="@color/suggest_bg_color"
     android:orientation="vertical" >
     
    <!-- top  -->
-    <RelativeLayout 
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/top_banner_height"
-        android:background="@drawable/main_top_bg_img">
-        
-        <!-- 返回 -->
-        <ImageButton android:id="@+id/btn_return"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/top_btn_return_height"
-            android:layout_marginLeft="@dimen/top_btn_return_left"
-            android:layout_marginStart="@dimen/top_btn_return_left"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:background="@color/none"
-            android:scaleType="centerCrop"
-            android:src="@drawable/btn_return_bg_img"
-            android:contentDescription="@string/btn_return_desc" />
-        
-        <!-- 标题 -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_centerVertical="true"
-            android:background="@color/none"
-            android:fadingEdge="vertical"
-            android:gravity="center"
-            android:text="@string/suggest_title"
-            android:textColor="@color/white"
-            android:textSize="@dimen/title_huge_size" />
-        
-    </RelativeLayout>
+   <include layout="@layout/activity_header"/>
     
     <!-- 内容 -->
     <RelativeLayout 
@@ -73,8 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/blue"
-                android:textSize="@dimen/text_medium_size" 
-                android:text="@string/commonNickname" />
+                android:textSize="@dimen/text_medium_size" />
         </LinearLayout>
         
         <!-- 输入框 -->
@@ -84,7 +51,7 @@
             android:layout_marginTop="10dp"
             android:layout_below="@id/suggest_username"
             android:layout_above="@+id/btn_suggest_submit"
-            android:background="@drawable/whitetext_bg1"
+            android:background="@drawable/edit_text_bg_normal"
             android:gravity="top"
             android:hint="@string/suggest_content_hint"
             android:maxLines="8"
@@ -98,7 +65,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_alignParentBottom="true"
-            android:background="@drawable/submit_suggestion_btn1_bg"
+            android:background="@drawable/submit_suggestion_btn_bg"
             android:text="@string/btn_suggest_submit_title"
             android:textColor="@color/white"
             android:textSize="@dimen/text_large_size" />
