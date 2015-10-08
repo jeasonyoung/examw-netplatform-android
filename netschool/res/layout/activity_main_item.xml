@@ -11,8 +11,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/main_gridview_item_top"
+        android:gravity="center"
         android:singleLine="true"
         android:drawablePadding="2dp"
-        android:textColor="@color/black" />
+        android:textColor="@color/black"/>
 
 </LinearLayout>

@@ -20,6 +20,7 @@ import android.util.Log;
  */
 public class LessonDao extends BaseDao {
 	private static final String TAG = "LessonDao";
+	private SQLiteDatabase db;
 	/**
 	 * 构造函数。
 	 * @param context
@@ -43,24 +44,25 @@ public class LessonDao extends BaseDao {
 	 */
 	public void deleteByClass(String classId){
 		Log.d(TAG, "删除班级ID["+classId+"]下的课程资源数据...");
-		SQLiteDatabase db = null;
-		try {
-			//初始化
-			db = this.dbHelper.getWritableDatabase();
-			//开启事务
-			db.beginTransaction();
-			//删除数据
-			db.execSQL("DELETE FROM  tbl_Lessones WHERE class_id = ?", new Object[]{ StringUtils.trimToEmpty(classId) });
-			//设置事务成功
-			db.setTransactionSuccessful();
-		}catch (Exception e) {
-			Log.e(TAG, "删除班级ID["+classId+"]下的课程资源数据异常:" + e.getMessage(), e);
-		}finally{
-			if(db != null){
-				//结束事务
-				db.endTransaction();
-				//关闭连接
-				db.close();
+		synchronized(dbHelper){
+			try {
+				//初始化
+				db = dbHelper.getWritableDatabase();
+				//开启事务
+				db.beginTransaction();
+				//删除数据
+				db.execSQL("DELETE FROM  tbl_Lessones WHERE class_id = ?", new Object[]{ StringUtils.trimToEmpty(classId) });
+				//设置事务成功
+				db.setTransactionSuccessful();
+			}catch (Exception e) {
+				Log.e(TAG, "删除班级ID["+classId+"]下的课程资源数据异常:" + e.getMessage(), e);
+			}finally{
+				if(db != null){
+					//结束事务
+					db.endTransaction();
+					//关闭连接
+					db.close();
+				}
 			}
 		}
 	}
@@ -72,31 +74,32 @@ public class LessonDao extends BaseDao {
 	public void add(String classId, Lesson[] lessons){
 		Log.d(TAG, "新增班级ID["+classId+"]下的课程资源数据集合...");
 		if(StringUtils.isBlank(classId) || lessons == null || lessons.length == 0) return;
-		SQLiteDatabase db = null;
-		try {
-			//初始化
-			db = this.dbHelper.getWritableDatabase();
-			//开启事务
-			db.beginTransaction();
-			//新增数据
-			for(Lesson lesson : lessons){
-				if(lesson == null || StringUtils.isBlank(lesson.getId())) continue;
-				db.execSQL("INSERT INTO tbl_Lessones(id,class_id,name,videoUrl,highVideoUrl,superVideoUrl,time,orderNo) values (?,?,?,?,?,?,?,?)", new Object[]{
-						StringUtils.trimToEmpty(lesson.getId()), StringUtils.trimToEmpty(classId), StringUtils.trimToEmpty(lesson.getName()),
-						StringUtils.trimToEmpty(lesson.getVideoUrl()), StringUtils.trimToEmpty(lesson.getHighVideoUrl()), StringUtils.trimToEmpty(lesson.getSuperVideoUrl()),
-						lesson.getTime(), lesson.getOrderNo()
-				});
-			}
-			//设置事务成功
-			db.setTransactionSuccessful();
-		}catch (Exception e) {
-			Log.e(TAG, "新增班级ID["+classId+"]下的课程资源数据集合异常:" + e.getMessage(), e);
-		}finally{
-			if(db != null){
-				//结束事务
-				db.endTransaction();
-				//关闭连接
-				db.close();
+		synchronized(dbHelper){
+			try {
+				//初始化
+				db = dbHelper.getWritableDatabase();
+				//开启事务
+				db.beginTransaction();
+				//新增数据
+				for(Lesson lesson : lessons){
+					if(lesson == null || StringUtils.isBlank(lesson.getId())) continue;
+					db.execSQL("INSERT INTO tbl_Lessones(id,class_id,name,videoUrl,highVideoUrl,superVideoUrl,time,orderNo) values (?,?,?,?,?,?,?,?)", new Object[]{
+							StringUtils.trimToEmpty(lesson.getId()), StringUtils.trimToEmpty(classId), StringUtils.trimToEmpty(lesson.getName()),
+							StringUtils.trimToEmpty(lesson.getVideoUrl()), StringUtils.trimToEmpty(lesson.getHighVideoUrl()), StringUtils.trimToEmpty(lesson.getSuperVideoUrl()),
+							lesson.getTime(), lesson.getOrderNo()
+					});
+				}
+				//设置事务成功
+				db.setTransactionSuccessful();
+			}catch (Exception e) {
+				Log.e(TAG, "新增班级ID["+classId+"]下的课程资源数据集合异常:" + e.getMessage(), e);
+			}finally{
+				if(db != null){
+					//结束事务
+					db.endTransaction();
+					//关闭连接
+					db.close();
+				}
 			}
 		}
 	}
@@ -109,13 +112,12 @@ public class LessonDao extends BaseDao {
 		Log.d(TAG, "加载班级["+classId+"]下的课程资源数据...");
 		final List<Lesson> lessons = new ArrayList<Lesson>();
 		if(StringUtils.isBlank(classId)) return lessons;
-		SQLiteDatabase db = null;
 		try {
 			//创建sql
 			final String query = "SELECT id,name,videoUrl,highVideoUrl,superVideoUrl,time,orderNo FROM tbl_Lessones WHERE class_id = ? ORDER BY orderNo";
 			Log.d(TAG, "sql:" + query);
 			//初始化
-			db = this.dbHelper.getReadableDatabase();
+			db = dbHelper.getReadableDatabase();
 			//查询数据
 			final Cursor cursor = db.rawQuery(query, new String[]{ StringUtils.trimToEmpty(classId) });
 			while(cursor.moveToNext()){
@@ -154,15 +156,14 @@ public class LessonDao extends BaseDao {
 	 */
 	public Lesson getLesson(String lessonId){
 		Log.d(TAG, "加载课程资源["+lessonId+"]....");
-		if(StringUtils.isBlank(lessonId)) return null;
 		Lesson lesson = null;
-		SQLiteDatabase db = null;
+		if(StringUtils.isBlank(lessonId)) return lesson;
 		try {
 			//创建sql
 			final String query = "SELECT id,name,videoUrl,highVideoUrl,superVideoUrl,time,orderNo FROM tbl_Lessones WHERE id = ? ";
 			Log.d(TAG, "sql:" + query);
 			//初始化
-			db = this.dbHelper.getReadableDatabase();
+			db = dbHelper.getReadableDatabase();
 			//查询数据
 			final Cursor cursor = db.rawQuery(query, new String[]{ StringUtils.trimToEmpty(lessonId) });
 			while(cursor.moveToNext()){

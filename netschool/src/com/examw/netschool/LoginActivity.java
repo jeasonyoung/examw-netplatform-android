@@ -59,6 +59,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	
 	private final List<String> usernames;
 	private ArrayAdapter<String> adapter;
+	private String userName, userPassword;
 	/**
 	 * 构造函数。
 	 */
@@ -231,17 +232,17 @@ public class LoginActivity extends Activity implements OnClickListener {
 		}
 	}
 	// 检查输入框的内容
-	private boolean checkInput(String username, String password) {
+	private boolean checkInput() {
 		Log.d(TAG, "检查登录输入框的内容...");
 		//用户名
-		username = this.txtUsername.getText().toString();
-		if(StringUtils.isBlank(username)){
+		this.userName = this.txtUsername.getText().toString();
+		if(StringUtils.isBlank(this.userName)){
 			Toast.makeText(this, this.getResources().getText(R.string.login_username_valid_msg), Toast.LENGTH_SHORT).show();
 			return false;
 		}
 		//密码
-		password = this.txtPassword.getText().toString();
-		if(StringUtils.isBlank(password)){
+		this.userPassword = this.txtPassword.getText().toString();
+		if(StringUtils.isBlank(this.userPassword)){
 			Toast.makeText(this, this.getResources().getText(R.string.login_password_valid_msg), Toast.LENGTH_SHORT).show();
 			return false;
 		}
@@ -260,9 +261,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 		}
 		//实现等待
 		this.progressDialog.show();
-		//定义用户名/密码
-		String userName = null, password = null;
-		if(!this.checkInput(userName, password)){
+		//检查用户名/密码
+		if(!this.checkInput()){
 			this.progressDialog.dismiss();
 			return;
 		}
@@ -342,7 +342,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 					gotoMain(_userId, _username);
 				}
 			}
-		}.execute(userName, password);
+		}.execute(this.userName, this.userPassword);
 	}
 	//本地登录
 	private void offlineLogin(){
@@ -357,9 +357,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 		}
 		//实现等待
 		this.progressDialog.show();
-		//定义用户名/密码
-		String userName = null, password = null;
-		if(!this.checkInput(userName, password)){
+		//检查用户名/密码
+		if(!this.checkInput()){
 			this.progressDialog.dismiss();
 			return;
 		}
@@ -425,7 +424,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 					gotoMain(_userId, _username);
 				}
 			}
-		}.execute(userName, password);
+		}.execute(this.userName, this.userPassword);
 	}
 	//记住用户/密码
  	private void rememberUserPassword(final String userName, final String password){

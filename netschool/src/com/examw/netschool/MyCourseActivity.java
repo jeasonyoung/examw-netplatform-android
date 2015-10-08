@@ -87,6 +87,11 @@ public class MyCourseActivity extends Activity {
 				finish();
 			}
 		});
+		//设置标题
+		final TextView tvTopTitle = (TextView)this.findViewById(R.id.top_title);
+		if(tvTopTitle != null){
+			tvTopTitle.setText(R.string.my_course_title);
+		}
 		//无数据View
 		this.nodataView = (LinearLayout)this.findViewById(R.id.nodata_view);
 		//数据列表
@@ -105,6 +110,7 @@ public class MyCourseActivity extends Activity {
 		//设置图片
 		final Drawable topOnlineIcon = this.getResources().getDrawable(R.drawable.my_course_footer_online_icon);
 		if(topOnlineIcon != null){
+			topOnlineIcon.setBounds(0, 0, topOnlineIcon.getMinimumWidth(), topOnlineIcon.getMinimumHeight());
 			btnOnline.setCompoundDrawables(null, topOnlineIcon, null, null);
 		}
 		//设置文字
@@ -115,6 +121,7 @@ public class MyCourseActivity extends Activity {
 		//设置图片
 		final Drawable topOfflineIcon = this.getResources().getDrawable(R.drawable.my_course_footer_offline_icon);
 		if(topOfflineIcon != null){
+			topOfflineIcon.setBounds(0, 0, topOfflineIcon.getMinimumWidth(), topOfflineIcon.getMinimumHeight());
 			btnOffline.setCompoundDrawables(null, topOfflineIcon, null, null);
 		}
 		//设置文字
@@ -299,7 +306,7 @@ public class MyCourseActivity extends Activity {
 					courses.addAll(result);
 				}
 				//是否显示有无数据
-				nodataView.setVisibility(courses.size() == 0 ? View.GONE : View.VISIBLE);
+				nodataView.setVisibility(courses.size() > 0 ? View.GONE : View.VISIBLE);
 				//通知数据适配器更新数据
 				adapter.notifyDataSetChanged();
 			}

@@ -40,6 +40,7 @@
     <!-- nodata -->
     <string name="activity_nodata_text">亲,木有数据!</string>
     <!-- 我的课程 Activity -->
+    <string name="my_course_title">我的课程</string>
     <string name="my_course_progress_msg">努力加载中,请稍候. . .</string>
     <string name="my_course_footer_online_title">在线课程</string>
     <string name="my_course_footer_offline_title">离线课程</string>

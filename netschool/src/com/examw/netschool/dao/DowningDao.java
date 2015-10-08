@@ -20,8 +20,11 @@ import android.util.Log;
  */
 public class DowningDao extends BaseDao {
 	private static final String TAG = "DowningDao";
-	/*
+	private SQLiteDatabase db;
+	/**
 	 * 构造函数。
+	 * @param context
+	 * @param userId
 	 */
 	public DowningDao(Context context, String userId) {
 		super(context, userId);
@@ -44,12 +47,11 @@ public class DowningDao extends BaseDao {
 		Log.d(TAG, "是否存在课程资源下载..." + lessonId);
 		boolean result = false;
 		if(StringUtils.isBlank(lessonId)) return result;
-		SQLiteDatabase db = null;
 		try{
 			final String query = "SELECT COUNT(0) FROM tbl_Downing WHERE lessonId = ? ";
 			Log.d(TAG, "sql:" + query);
 			//初始化
-			db = this.dbHelper.getReadableDatabase();
+			db = dbHelper.getReadableDatabase();
 			//查询数据
 			final Cursor cursor = db.rawQuery(query, new String[]{ StringUtils.trimToEmpty(lessonId) });
 			while(cursor.moveToNext()){
@@ -74,7 +76,6 @@ public class DowningDao extends BaseDao {
 		Log.d(TAG, "加载课程资源["+lessonId+"]数据下载进程...");
 		if(StringUtils.isBlank(lessonId)) return null;
 		final List<Downing> list = new ArrayList<Downing>();
-		SQLiteDatabase db = null;
 		try{
 			final String query = "SELECT threadId,startPos,endPos,completeSize FROM tbl_Downing WHERE lessonId = ? ";
 			Log.d(TAG, "sql:" + query);
@@ -110,31 +111,37 @@ public class DowningDao extends BaseDao {
 	 * 新增下载线程数据。
 	 * @return
 	 */
-	public synchronized boolean add(Downing data){
+	public boolean add(Downing data){
 		boolean result = false;
 		if(data == null) return result;
 		Log.d(TAG, "创建课程资源["+data.getLessonId()+"]下载线程["+data.getThreadId()+"]数据...");
 		if(StringUtils.isBlank(data.getLessonId()) || data.getThreadId() < 0) return result;
-		SQLiteDatabase db = null;
-		try{
-			//初始化
-			db = this.dbHelper.getWritableDatabase();
-			//开始事务
-			db.beginTransaction();
-			//插入数据
-			this.insert(db, data);
-			//提交事务
-			db.setTransactionSuccessful();
-			result = true;
-		}catch(Exception e){
-			Log.e(TAG, "发生异常:" + e.getMessage(), e);
-		}finally{
-			if(db != null) db.close();
+		synchronized (dbHelper) {
+			try{
+				//初始化
+				db = dbHelper.getWritableDatabase();
+				//开始事务
+				db.beginTransaction();
+				//插入数据
+				this.insert(db, data);
+				//提交事务
+				db.setTransactionSuccessful();
+				result = true;
+			}catch(Exception e){
+				Log.e(TAG, "发生异常:" + e.getMessage(), e);
+			}finally{
+				if(db != null){
+					//结束事务
+					db.endTransaction();
+					//关闭连接
+					db.close();
+				}
+			}
 		}
 		return result;
 	}
 	//插入数据
-	private void insert(final SQLiteDatabase db, Downing downing){
+	private synchronized void insert(final SQLiteDatabase db, Downing downing){
 		if(db == null || downing == null) return;
 		Log.d(TAG, "插入课程资源["+downing.getLessonId()+"]下载线程["+downing.getThreadId()+"]数据...");
 		if(StringUtils.isBlank(downing.getLessonId()) || downing.getThreadId() < 0) return;
@@ -147,25 +154,32 @@ public class DowningDao extends BaseDao {
 	 * 新增下载线程数据集合。
 	 * @param list
 	 */
-	public synchronized void add(List<Downing> list){
+	public void add(List<Downing> list){
+		Log.d(TAG, "批量添加下载数据集合...");
 		if(list == null || list.size() == 0) return;
-		SQLiteDatabase db = null;
-		try{
-			//初始化
-			db = this.dbHelper.getWritableDatabase();
-			//开始事务
-			db.beginTransaction();
-			//新增数据
-			for(Downing downing : list){
-				if(downing == null) continue;
-				this.insert(db, downing);
+		synchronized(dbHelper){
+			try{
+				//初始化
+				db = dbHelper.getWritableDatabase();
+				//开始事务
+				db.beginTransaction();
+				//新增数据
+				for(Downing downing : list){
+					if(downing == null) continue;
+					this.insert(db, downing);
+				}
+				//提交事务
+				db.setTransactionSuccessful();
+			}catch(Exception e){
+				Log.e(TAG, "发生异常:" + e.getMessage(), e);
+			}finally{
+				if(db != null){
+					//结束事务
+					db.endTransaction();
+					//关闭连接
+					db.close();
+				}
 			}
-			//提交事务
-			db.setTransactionSuccessful();
-		}catch(Exception e){
-			Log.e(TAG, "发生异常:" + e.getMessage(), e);
-		}finally{
-			if(db != null) db.close();
 		}
 	}
 	/**
@@ -173,28 +187,34 @@ public class DowningDao extends BaseDao {
 	 * @param data
 	 * @return
 	 */
-	public synchronized boolean update(Downing data){
+	public boolean update(Downing data){
 		boolean result = false;
 		if(data == null) return result;
 		Log.d(TAG, "更新课程资源["+data.getLessonId()+"]下载线程["+data.getThreadId()+"]数据...");
-		if(StringUtils.isBlank(data.getLessonId()) || data.getThreadId() < 0) return result;
-		SQLiteDatabase db = null;
-		try{
-			//初始化
-			db = this.dbHelper.getWritableDatabase();
-			//开始事务
-			db.beginTransaction();
-			//新增数据
-			db.execSQL("UPDATE tbl_Downing SET startPos = ?,endPos = ?,completeSize = ? WHERE lessonId = ? AND threadId = ?", new Object[]{
-				data.getStartPos(), data.getEndPos(), data.getCompleteSize(),data.getLessonId(),data.getThreadId()
-			});
-			//提交事务
-			db.setTransactionSuccessful();
-			result = true;
-		}catch(Exception e){
-			Log.e(TAG, "发生异常:" + e.getMessage(), e);
-		}finally{
-			if(db != null) db.close();
+		if(StringUtils.isBlank(data.getLessonId()) || data.getThreadId() < 0) return result; 
+		synchronized(dbHelper){
+			try{
+				//初始化
+				db = dbHelper.getWritableDatabase();
+				//开始事务
+				db.beginTransaction();
+				//新增数据
+				db.execSQL("UPDATE tbl_Downing SET startPos = ?,endPos = ?,completeSize = ? WHERE lessonId = ? AND threadId = ?", new Object[]{
+					data.getStartPos(), data.getEndPos(), data.getCompleteSize(),data.getLessonId(),data.getThreadId()
+				});
+				//提交事务
+				db.setTransactionSuccessful();
+				result = true;
+			}catch(Exception e){
+				Log.e(TAG, "发生异常:" + e.getMessage(), e);
+			}finally{
+				if(db != null){
+					//结束事务
+					db.endTransaction();
+					//关闭连接
+					db.close();
+				}
+			}
 		}
 		return result;
 	}
@@ -202,25 +222,31 @@ public class DowningDao extends BaseDao {
 	 * 删除数据。
 	 * @param lessonId
 	 */
-	public synchronized void deleteByLesson(String lessonId){
+	public void deleteByLesson(String lessonId){
 		Log.d(TAG, "更新课程资源["+lessonId+"]下载线程数据...");
 		if(StringUtils.isBlank(lessonId)) return;
-		SQLiteDatabase db = null;
-		try{
-			//初始化
-			db = this.dbHelper.getWritableDatabase();
-			//开始事务
-			db.beginTransaction();
-			//新增数据
-			db.execSQL("DELETE FROM tbl_Downing WHERE lessonId = ? ", new Object[]{
-				StringUtils.trimToEmpty(lessonId)
-			});
-			//提交事务
-			db.setTransactionSuccessful();
-		}catch(Exception e){
-			Log.e(TAG, "发生异常:" + e.getMessage(), e);
-		}finally{
-			if(db != null) db.close();
+		synchronized(dbHelper){
+			try{
+				//初始化
+				db = dbHelper.getWritableDatabase();
+				//开始事务
+				db.beginTransaction();
+				//新增数据
+				db.execSQL("DELETE FROM tbl_Downing WHERE lessonId = ? ", new Object[]{
+					StringUtils.trimToEmpty(lessonId)
+				});
+				//提交事务
+				db.setTransactionSuccessful();
+			}catch(Exception e){
+				Log.e(TAG, "发生异常:" + e.getMessage(), e);
+			}finally{
+				if(db != null){
+					//结束事务
+					db.endTransaction();
+					//关闭连接
+					db.close();
+				}
+			}
 		}
 	}
 }

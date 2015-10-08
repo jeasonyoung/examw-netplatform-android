@@ -83,12 +83,12 @@ public class GuideActivity extends Activity {
 	};
 	//点击事件处理
 	private OnClickListener onClickListener = new OnClickListener() {
-		//初始化
-		final AppContext appContext = (AppContext)getApplicationContext();
 		
 		@Override
 		public void onClick(View v) {
 			Log.d(TAG, "点击事件处理..." + v);
+			//初始化
+			final AppContext appContext = (AppContext)getApplicationContext();
 			//获取版本 
 			final int versionCode = appContext.getVersionCode();
 			if(versionCode > 0){

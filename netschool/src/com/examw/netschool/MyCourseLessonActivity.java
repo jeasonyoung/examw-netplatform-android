@@ -226,7 +226,7 @@ public class MyCourseLessonActivity extends Activity {
 					lessons.addAll(result);
 				}
 				//是否显示有无数据
-				nodataView.setVisibility(lessons.size() == 0 ? View.GONE : View.VISIBLE);
+				nodataView.setVisibility(lessons.size() > 0 ? View.GONE : View.VISIBLE);
 				//通知数据适配器更新数据
 				adapter.notifyDataSetChanged();
 			}

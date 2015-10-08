@@ -95,9 +95,8 @@ public final class MultiThreadDownload {
 		if(downings != null && downings.size() > 0){//继续下载
 			Log.d(TAG, "继续下载...");
 			//检查下载文件是否存在
-			final File file = new File(this.download.getFilePath());
-			if(!file.exists()){
-				Log.d(TAG, "已下载的文件不存在..." + this.download.getFilePath());
+			if(download.getFilePath() == null || !(new File(download.getFilePath()).exists())){
+				Log.d(TAG, "已下载的文件不存在..." + download.getFilePath());
 				//删除下载线程记录
 				this.downingDao.deleteByLesson(this.lesson.getId());
 				//新增现在
@@ -114,7 +113,7 @@ public final class MultiThreadDownload {
 	private void initStart() throws Exception{
 		Log.d(TAG, "初始化开始下载...");
 		//获取下载文件大小
-		final HttpHead httpHead = new HttpHead(this.lesson.getPriorityUrl());
+		HttpHead httpHead = new HttpHead(this.lesson.getPriorityUrl());
 		HttpResponse response = this.httpClient.execute(httpHead);
 		int status = 0;
 		if((status = response.getStatusLine().getStatusCode()) != NET_STATE_SUCCESS){
@@ -141,6 +140,7 @@ public final class MultiThreadDownload {
 		this.download.setFilePath(new File(root, fileName).getAbsolutePath());
 		//是否支持多线程分段下载
 		boolean acceptRangs = false;
+		httpHead = new HttpHead(this.lesson.getPriorityUrl());
 		httpHead.addHeader("Range", "bytes=0-" + (this.download.getFileSize() - 1));
 		response = this.httpClient.execute(httpHead);
 		if((status = response.getStatusLine().getStatusCode()) == NET_STATE_RANGE){
@@ -169,49 +169,13 @@ public final class MultiThreadDownload {
 			//添加到集合
 			downings.add(data);
 		}
-		//异步线程添加下载线程数据库
-		this.asyncAddDowningToDb(downings);
+		//添加下载线程数据库
+		if(downingDao != null) downingDao.add(downings);
 		//启动下载
 		this.start(downings);
 	}
-	//异步线程添加下载线程到数据库
-	private void asyncAddDowningToDb(final List<Downing> downings){
-		Log.d(TAG, "准备异步线程添加下载线程到数据库...");
-		if(downings == null || downings.size() == 0) return;
-		this.threadPools.execute(new Runnable() {
-			@Override
-			public void run() {
-				try{
-					Log.d(TAG, "异步线程添加下载线程到数据库...");
-					if(downingDao != null){
-						downingDao.add(downings);
-					}
-				}catch(Exception e){
-					Log.e(TAG, "异步线程添加下载线程异常:" + e.getMessage(), e);
-				}
-			}
-		});
-	}
-	//异步更新下载线程到数据库
-	private void asyncUpdateDowningToDb(final Downing downing){
-		Log.d(TAG, "准备异步更新下载线程数据...");
-		if(downing == null) return;
-		this.threadPools.execute(new Runnable() {
-			@Override
-			public void run() {
-				try{
-					Log.d(TAG, "异步更新下载线程数据...");
-					if(downingDao != null){
-						downingDao.update(downing);
-					}
-				}catch(Exception e){
-					Log.e(TAG, "异步更新下载线程数据异常:" + e.getMessage(), e);
-				}
-			}
-		});
-	}
 	//创建文件下载目录。
- 	private synchronized static final File createDownloadSaveFileDir(String userId, long fileSize) throws Exception{
+ 	private static final File createDownloadSaveFileDir(String userId, long fileSize) throws Exception{
 		Log.d(TAG, "创建下载目录.");
 		File root = Environment.getExternalStorageDirectory();
 		if(root == null || !root.exists()){//如果SD卡不存在，则检查内部存储
@@ -248,7 +212,7 @@ public final class MultiThreadDownload {
 		if(this.stop) return;
 		//检查下载保存文件是否存在
 		final File saveFile = new File(this.download.getFilePath());
-		if(saveFile.isFile() && !saveFile.exists()){
+		if(!saveFile.exists()){
 			Log.d(TAG, "创建保存文件..." + saveFile.getAbsolutePath());
 			final RandomAccessFile accessFile = new RandomAccessFile(saveFile, "rwd");
 			accessFile.setLength(this.download.getFileSize());
@@ -281,8 +245,8 @@ public final class MultiThreadDownload {
 						total += downing.getCompleteSize();
 						//停止线程
 						if(this.stop)task.setStop(true);
-						//异步更新下载线程到数据
-						this.asyncUpdateDowningToDb(downing);
+						//更新下载线程到数据
+						if(downingDao != null) downingDao.update(downing);
 					}catch(Exception e){
 						Log.e(TAG, "轮询线程["+task+"]异常:" + e.getMessage(), e);
 					}finally{
@@ -303,8 +267,8 @@ public final class MultiThreadDownload {
 			}catch(Exception e){
 				Log.e(TAG, "循环等待下载时异常:" + e.getMessage(), e);
 			}finally{
-				//休眠1秒
-				Thread.sleep(1000);
+				//休眠0.8秒
+				Thread.sleep(800);
 			}
 		}
 	}
@@ -312,7 +276,7 @@ public final class MultiThreadDownload {
 	private void asyncUpdateDownload(final Download download){
 		Log.d(TAG, "准备异步线程更新下载数据...");
 		if(download == null) return;
-		this.threadPools.execute(new Runnable() {
+		AppContext.pools_single.execute(new Runnable() {
 			@Override
 			public void run() {
 				try{
@@ -401,8 +365,9 @@ public final class MultiThreadDownload {
 				httpGet.addHeader("Range", "bytes=" + startPos + "-" + this.task.getEndPos());
 				//执行请求
 				final HttpResponse response = this.httpClient.execute(httpGet);
-				int status = 0;
-				if((status = response.getStatusLine().getStatusCode()) != NET_STATE_SUCCESS){
+				//获取状态
+				final int status = response.getStatusLine().getStatusCode();
+				if(status != NET_STATE_SUCCESS && status != NET_STATE_RANGE){
 					Log.d(TAG, "["+this.task+"]网络请求返回状态:" + status);
 					return;
 				}
@@ -459,6 +424,6 @@ public final class MultiThreadDownload {
 		 * @param download
 		 * @param per
 		 */
-		public void onProgress(final Download download, int per);
+		void onProgress(final Download download, int per);
 	}
 }

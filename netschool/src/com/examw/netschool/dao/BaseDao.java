@@ -19,7 +19,7 @@ public class BaseDao {
 	 */
 	public BaseDao(Context context, String userId){
 		Log.d(TAG, "构造函数...");
-		this.dbHelper = new MyDBHelper(context, userId);
+		this.dbHelper =  MyDBHelper.getInstance(context, userId);
 	}
 	/**
 	 * 构造函数。

@@ -20,6 +20,7 @@ import android.util.Log;
  */
 public class DownloadDao extends BaseDao {
 	private static final String TAG = "DownloadDao";
+	private SQLiteDatabase db;
 	/**
 	 * 构造函数。
 	 * @param context
@@ -46,12 +47,11 @@ public class DownloadDao extends BaseDao {
 		Log.d(TAG, "是否存在下载课程资源["+lessonId+"]...");
 		boolean result = false;
 		if(StringUtils.isBlank(lessonId)) return result;
-		SQLiteDatabase db = null;
 		try{
 			final String query = "SELECT COUNT(0) FROM tbl_Downloads WHERE lessonId = ? ";
 			Log.d(TAG, "sql:" + query);
 			//初始化
-			db = this.dbHelper.getReadableDatabase();
+			db = dbHelper.getReadableDatabase();
 			//查询数据
 			final Cursor cursor = db.rawQuery(query, new String[]{ StringUtils.trimToEmpty(lessonId) });
 			while(cursor.moveToNext()){
@@ -75,14 +75,13 @@ public class DownloadDao extends BaseDao {
 		Log.d(TAG, "加载下载状态["+ state+"]数据...");
 		if(state == null) return null;
 		final List<Download> list = new ArrayList<Download>();
-		SQLiteDatabase db = null;
 		try{
 			final String query = "SELECT a.lessonId,b.name,a.filePath,a.fileSize,a.state FROM tbl_Downloads a "
 					+ " INNER JOIN tbl_Lessones b ON b.id = a.lessonId "
 					+ " WHERE a.state = ? ";
 			Log.d(TAG, "sql:" + query);
 			//初始化
-			db = this.dbHelper.getReadableDatabase();
+			db = dbHelper.getReadableDatabase();
 			//查询数据
 			final Cursor cursor = db.rawQuery(query, new String[]{ String.valueOf(state.getValue()) });
 			while(cursor.moveToNext()){
@@ -105,16 +104,15 @@ public class DownloadDao extends BaseDao {
 	public List<DownloadComplete> loadDownings(){
 		Log.d(TAG, " 加载正在的下载数据...");
 		final List<DownloadComplete> list = new ArrayList<DownloadComplete>();
-		SQLiteDatabase db = null;
 		try{
-			final String query = "SELECT a.lessonId,b.name,a.filePath,a.fileSize,a.state,SUM(completeSize) completeSize FROM tbl_Downloads a "
+			final String query = "SELECT a.lessonId,b.name,a.filePath,a.fileSize,a.state,IFNULL(SUM(completeSize),0) completeSize FROM tbl_Downloads a "
 					+ " INNER JOIN tbl_Lessones b ON b.id = a.lessonId "
 					+ " LEFT OUTER JOIN tbl_Downing c ON c.lessonId = a.lessonId "
 					+ " WHERE a.state <> ? "
 					+ " GROUP BY a.lessonId,b.name,a.filePath,a.fileSize,a.state";
 			Log.d(TAG, "sql:" + query);
 			//初始化
-			db = this.dbHelper.getReadableDatabase();
+			db = dbHelper.getReadableDatabase();
 			//查询数据
 			final Cursor cursor = db.rawQuery(query, new String[]{ String.valueOf(DownloadState.FINISH.getValue()) });
 			while(cursor.moveToNext()){
@@ -158,14 +156,14 @@ public class DownloadDao extends BaseDao {
 	public Download getDownload(String lessonId){
 		Log.d(TAG, "加载课程资源["+lessonId+"]下载数据...");
 		Download data = null;
-		SQLiteDatabase db = null;
+		if(StringUtils.isBlank(lessonId)) return data;
 		try{
 			final String query = "SELECT a.lessonId,b.name,a.filePath,a.fileSize,a.state FROM tbl_Downloads a "
 					+ " INNER JOIN tbl_Lessones b ON b.id = a.lessonId "
 					+ " WHERE a.lessonId = ? ";
 			Log.d(TAG, "sql:" + query);
 			//初始化
-			db = this.dbHelper.getReadableDatabase();
+			db = dbHelper.getReadableDatabase();
 			//查询数据
 			final Cursor cursor = db.rawQuery(query, new String[]{ lessonId });
 			while(cursor.moveToNext()){
@@ -192,23 +190,29 @@ public class DownloadDao extends BaseDao {
 		if(data == null) return result;
 		Log.d(TAG, "创建课程资源["+data.getLessonId()+"]下载数据...");
 		if(StringUtils.isBlank(data.getLessonId())) return result;
-		SQLiteDatabase db = null;
-		try{
-			//初始化
-			db = this.dbHelper.getWritableDatabase();
-			//开始事务
-			db.beginTransaction();
-			//新增数据
-			db.execSQL("INSERT INTO tbl_Downloads(lessonId,filePath,fileSize,state) VALUES(?,?,?,?,?)", new Object[]{
-				data.getLessonId(),data.getFilePath(),data.getFileSize(), data.getState()	
-			});
-			//提交事务
-			db.setTransactionSuccessful();
-			result = true;
-		}catch(Exception e){
-			Log.e(TAG, "发生异常:" + e.getMessage(), e);
-		}finally{
-			if(db != null) db.close();
+		synchronized(dbHelper){
+			try{
+				//初始化
+				db = dbHelper.getWritableDatabase();
+				//开始事务
+				db.beginTransaction();
+				//新增数据
+				db.execSQL("INSERT INTO tbl_Downloads(lessonId,filePath,fileSize,state) VALUES(?,?,?,?)", new Object[]{
+					data.getLessonId(),data.getFilePath(),data.getFileSize(), data.getState()	
+				});
+				//提交事务
+				db.setTransactionSuccessful();
+				result = true;
+			}catch(Exception e){
+				Log.e(TAG, "发生异常:" + e.getMessage(), e);
+			}finally{
+				if(db != null){
+					//结束事务
+					db.endTransaction();
+					//关闭连接
+					db.close();
+				}
+			}
 		}
 		return result;
 	}
@@ -222,23 +226,29 @@ public class DownloadDao extends BaseDao {
 		if(data == null) return result;
 		Log.d(TAG, "更新课程资源["+data.getLessonId()+"]下载数据...");
 		if(StringUtils.isBlank(data.getLessonId())) return result;
-		SQLiteDatabase db = null;
-		try{
-			//初始化
-			db = this.dbHelper.getWritableDatabase();
-			//开始事务
-			db.beginTransaction();
-			//新增数据
-			db.execSQL("UPDATE tbl_Downloads SET filePath = ?,fileSize = ?,state = ? WHERE lessonId = ?", new Object[]{
-				data.getFilePath(), data.getFileSize(), data.getState(),data.getLessonId()
-			});
-			//提交事务
-			db.setTransactionSuccessful();
-			result = true;
-		}catch(Exception e){
-			Log.e(TAG, "发生异常:" + e.getMessage(), e);
-		}finally{
-			if(db != null) db.close();
+		synchronized(dbHelper){
+			try{
+				//初始化
+				db = dbHelper.getWritableDatabase();
+				//开始事务
+				db.beginTransaction();
+				//新增数据
+				db.execSQL("UPDATE tbl_Downloads SET filePath = ?,fileSize = ?,state = ? WHERE lessonId = ?", new Object[]{
+					data.getFilePath(), data.getFileSize(), data.getState(),data.getLessonId()
+				});
+				//提交事务
+				db.setTransactionSuccessful();
+				result = true;
+			}catch(Exception e){
+				Log.e(TAG, "发生异常:" + e.getMessage(), e);
+			}finally{
+				if(db != null){
+					//结束事务
+					db.endTransaction();
+					//关闭连接
+					db.close();
+				}
+			}
 		}
 		return result;
 	}
@@ -250,20 +260,26 @@ public class DownloadDao extends BaseDao {
 	public void update(String lessonId, DownloadState state){
 		Log.d(TAG, "更新课程资["+lessonId+"]源状态");
 		if(StringUtils.isBlank(lessonId) || state == null) return;
-		SQLiteDatabase db = null;
-		try{
-			//初始化
-			db = this.dbHelper.getWritableDatabase();
-			//开始事务
-			db.beginTransaction();
-			//新增数据
-			db.execSQL("UPDATE tbl_Downloads SET state = ? WHERE lessonId = ?", new Object[]{ state.getValue(), lessonId });
-			//提交事务
-			db.setTransactionSuccessful();
-		}catch(Exception e){
-			Log.e(TAG, "发生异常:" + e.getMessage(), e);
-		}finally{
-			if(db != null) db.close();
+		synchronized(dbHelper){
+			try{
+				//初始化
+				db = dbHelper.getWritableDatabase();
+				//开始事务
+				db.beginTransaction();
+				//新增数据
+				db.execSQL("UPDATE tbl_Downloads SET state = ? WHERE lessonId = ?", new Object[]{ state.getValue(), lessonId });
+				//提交事务
+				db.setTransactionSuccessful();
+			}catch(Exception e){
+				Log.e(TAG, "发生异常:" + e.getMessage(), e);
+			}finally{
+				if(db != null){
+					//结束事务
+					db.endTransaction();
+					//关闭连接
+					db.close();
+				}
+			}
 		}
 	}
 	/**
@@ -273,20 +289,26 @@ public class DownloadDao extends BaseDao {
 	public void delete(String lessonId){
 		Log.d(TAG, "删除数据..." + lessonId);
 		if(StringUtils.isBlank(lessonId)) return;
-		SQLiteDatabase db = null;
-		try{
-			//初始化
-			db = this.dbHelper.getWritableDatabase();
-			//开始事务
-			db.beginTransaction();
-			//新增数据
-			db.execSQL("DELETE FROM tbl_Downloads WHERE lessonId = ?", new Object[]{ lessonId });
-			//提交事务
-			db.setTransactionSuccessful();
-		}catch(Exception e){
-			Log.e(TAG, "发生异常:" + e.getMessage(), e);
-		}finally{
-			if(db != null) db.close();
+		synchronized(dbHelper){
+			try{
+				//初始化
+				db = dbHelper.getWritableDatabase();
+				//开始事务
+				db.beginTransaction();
+				//新增数据
+				db.execSQL("DELETE FROM tbl_Downloads WHERE lessonId = ?", new Object[]{ lessonId });
+				//提交事务
+				db.setTransactionSuccessful();
+			}catch(Exception e){
+				Log.e(TAG, "发生异常:" + e.getMessage(), e);
+			}finally{
+				if(db != null){
+					//结束事务
+					db.endTransaction();
+					//关闭连接
+					db.close();
+				}
+			}
 		}
 	}
 }

@@ -2,21 +2,15 @@ package com.examw.netschool;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.examw.netschool.app.AppContext;
 import com.examw.netschool.app.Constant;
 import com.examw.netschool.dao.DownloadDao;
 import com.examw.netschool.dao.LessonDao;
 import com.examw.netschool.model.Download;
 import com.examw.netschool.model.Lesson;
-import com.examw.netschool.service.DownloadService;
-import com.examw.netschool.service.IDownloadService;
 
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -32,12 +26,10 @@ import android.widget.TextView;
  * @author jeasonyoung
  *
  */
-public class DownloadActivity extends FragmentActivity implements OnCheckedChangeListener, ServiceConnection{
+public class DownloadActivity extends FragmentActivity implements OnCheckedChangeListener {
 	private static final String TAG = "DownloadActivity";
 	private String userId,lessonId;
 	private ViewPager viewPager;
-	private IDownloadService downloadService;
-	
 	private DownloadDao dao;
 	/*
 	 * 重载创建
@@ -46,11 +38,6 @@ public class DownloadActivity extends FragmentActivity implements OnCheckedChang
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "重载创建....");
-		super.onCreate(savedInstanceState);
-		
-		//绑定文件下载服务
-		this.getApplicationContext().bindService(new Intent(this, DownloadService.class), this, Context.BIND_AUTO_CREATE);
-		
 		//设置布局文件 
 		this.setContentView(R.layout.activity_download);
 		
@@ -85,6 +72,8 @@ public class DownloadActivity extends FragmentActivity implements OnCheckedChang
 		this.viewPager = (ViewPager)this.findViewById(R.id.download_pagers);
 		//设置数据适配器
 		this.viewPager.setAdapter(this.mAdapter);
+		//
+		super.onCreate(savedInstanceState);
 	}
 	/*
 	 * 重载启动。
@@ -94,42 +83,44 @@ public class DownloadActivity extends FragmentActivity implements OnCheckedChang
 	protected void onStart() {
 		Log.d(TAG, "重载启动...");
 		//异步加载数据
-		AppContext.pools_fixed.execute(new Runnable() {
+		new AsyncTask<Void, Void, Void>() {
+			/*
+			 * 后台线程处理。
+			 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
+			 */
 			@Override
-			public void run() {
+			protected Void doInBackground(Void... params) {
 				try{
-					Log.d(TAG, "异步线程处理数据...");
-					if(StringUtils.isBlank(lessonId)) return;
+					Log.d(TAG, "后台线程加载下载数据...");
+					//检查课程资源ID
+					if(StringUtils.isBlank(lessonId)) return null;
 					//惰性加载数据操作
 					if(dao == null){
 						Log.d(TAG, "惰性加载数据操作...");
 						dao = new DownloadDao(getApplicationContext(), userId);
 					}
 					//检查是否存在
-					if(dao.hasDownload(lessonId)){
-						Log.d(TAG, "课程资源["+lessonId+"]已在下载中...");
-						return;
-					}
-					//查询课程信息
-					final LessonDao lessonDao = new LessonDao(dao);
-					final Lesson lesson = lessonDao.getLesson(lessonId);
-					if(lesson == null){
-						Log.d(TAG, "课程["+lessonId+"]不存在!");
-						return;
-					}
-					//添加到下载
-					final Download download = new Download(lesson);
-					dao.add(download); 
-					//启动下载
-					if(downloadService != null){
-						Log.d(TAG, "启动下载后台服务...");
-						downloadService.addDownload(download);
+					if(!dao.hasDownload(lessonId)){
+						//查询课程信息
+						final Lesson lesson = new LessonDao(dao).getLesson(lessonId);
+						//添加到下载
+						dao.add(new Download(lesson)); 
 					}
 				}catch(Exception e){
-					Log.e(TAG, "异步线程异常:" + e.getMessage(), e);
+					Log.e(TAG, "后台线程加载下载数据异常:" + e.getMessage(), e);
 				}
+				return null;
 			}
-		});
+			/*
+			 * 前端主线程更新数据。
+			 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+			 */
+			@Override
+			protected void onPostExecute(Void result) {
+				 Log.d(TAG, "前端主线程更新数据...");
+				 mAdapter.notifyDataSetChanged();
+			}
+		}.execute((Void)null);
 		//
 		super.onStart();
 	}
@@ -153,23 +144,6 @@ public class DownloadActivity extends FragmentActivity implements OnCheckedChang
 			}
 		}
 	}
-	/*
-	 * 连接下载服务。
-	 * @see android.content.ServiceConnection#onServiceConnected(android.content.ComponentName, android.os.IBinder)
-	 */
-	@Override
-	public void onServiceConnected(ComponentName name, IBinder service) {
-		Log.d(TAG, "连接下载服务["+name+"]..." + service);
-		this.downloadService = (IDownloadService)service;
-	}
-	/*
-	 * 断开下载服务。
-	 * @see android.content.ServiceConnection#onServiceDisconnected(android.content.ComponentName)
-	 */
-	@Override
-	public void onServiceDisconnected(ComponentName name) {
-		Log.d(TAG, "断开下载服务...");
-	}
 	//数据适配器。
 	private FragmentPagerAdapter mAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
 		/*
@@ -191,7 +165,7 @@ public class DownloadActivity extends FragmentActivity implements OnCheckedChang
 			Fragment result = null;
 			switch(pos){
 				 case 0:{//下载中
-					 result = new DownloadByFragmentDowning(userId, downloadService);
+					 result = new DownloadByFragmentDowning(userId);
 					 break;
 				 }
 				 case 1:{//下载完成

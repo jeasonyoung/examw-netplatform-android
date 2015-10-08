@@ -12,14 +12,20 @@ import com.examw.netschool.dao.DownloadDao;
 import com.examw.netschool.model.Download;
 import com.examw.netschool.model.Download.DownloadState;
 import com.examw.netschool.model.DownloadComplete;
+import com.examw.netschool.service.DownloadService;
 import com.examw.netschool.service.IDownloadService;
 
 import android.app.AlertDialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -43,28 +49,27 @@ import android.widget.Toast;
  * @author jeasonyoung
  * @since 2015年9月11日
  */
-public class DownloadByFragmentDowning extends Fragment  {
+public class DownloadByFragmentDowning extends Fragment implements ServiceConnection  {
 	private static final String TAG = "DownloadByFragmentDowning";
 	private LinearLayout nodataView;
-	private final String userId;
-	private final IDownloadService downloadService;
-	
-	private DownloadDao downloadDao;
+	private IDownloadService downloadService;
+	private final DownloadDao downloadDao;
 	private final List<DownloadComplete> dataSource;
 	private final DowningAdapter adapter;
 	/**
 	 * 构造函数。
 	 * @param userId
-	 * @param lessonId
-	 * @param downloadService
 	 */
-	public DownloadByFragmentDowning(String userId,IDownloadService downloadService){
+	public DownloadByFragmentDowning(String userId){
 		Log.d(TAG, "初始化...");
-		this.userId = userId;
-		this.downloadService = downloadService;
+		//绑定文件下载服务
+		final Context context = AppContext.getContext();
+		if(context != null){
+			context.bindService(new Intent(context, DownloadService.class), this, Context.BIND_AUTO_CREATE);	
+		}
+		this.downloadDao = new DownloadDao(AppContext.getContext(), userId);
 		this.dataSource = new ArrayList<DownloadComplete>();
 		this.adapter = new DowningAdapter(this.dataSource);
-		this.downloadService.setHandler(new DowningUIHandler(this.adapter));
 	}
 	/*
 	 * 重载创建视图。
@@ -78,6 +83,7 @@ public class DownloadByFragmentDowning extends Fragment  {
 		//没有数据
 		this.nodataView = (LinearLayout)view.findViewById(R.id.nodata_view);
 		this.nodataView.setVisibility(View.VISIBLE);
+		
 		//列表
 		final ListView listView = (ListView)view.findViewById(R.id.download_listview_downing);
 		//长按弹出取消下载的PopupWindow
@@ -135,13 +141,8 @@ public class DownloadByFragmentDowning extends Fragment  {
 								Log.d(TAG, "取消后台服务下载["+download+"]...");
 								downloadService.cancelDownload(download.getLessonId());
 							}
-							//惰性加载数据
-							if(downloadDao == null){
-								Log.d(TAG, "惰性加载数据...");
-								downloadDao = new DownloadDao(getActivity(), userId);
-							}
 							//从数据库中删除
-							downloadDao.delete(download.getLessonId());
+							if(downloadDao != null) downloadDao.delete(download.getLessonId());
 							//重新刷新数据
 							new AsyncLoadData().execute((Void)null);
 						}
@@ -152,6 +153,28 @@ public class DownloadByFragmentDowning extends Fragment  {
 			return false;
 		}
 	};
+	/*
+	 * 下载服务联结。
+	 * @see android.content.ServiceConnection#onServiceConnected(android.content.ComponentName, android.os.IBinder)
+	 */
+	@Override
+	public void onServiceConnected(ComponentName name, IBinder service) {
+		Log.d(TAG, "下载服务联结..." + name);
+		this.downloadService = (IDownloadService)service;
+		if(this.downloadService != null){
+			Log.d(TAG, "设置下载服务消息关联...");
+			this.downloadService.setHandler(new DowningUIHandler(this.adapter));
+		}
+	}
+	/*
+	 * 下载服务连接断开。
+	 * @see android.content.ServiceConnection#onServiceDisconnected(android.content.ComponentName)
+	 */
+	@Override
+	public void onServiceDisconnected(ComponentName name) {
+		Log.d(TAG, "下载服务断开..." + name);
+		this.downloadService = null;
+	}
 	//异步加载数据。
 	private class AsyncLoadData extends AsyncTask<Void, Void, List<DownloadComplete>>{
 		/*
@@ -162,10 +185,6 @@ public class DownloadByFragmentDowning extends Fragment  {
 		protected List<DownloadComplete> doInBackground(Void... params) {
 			try{
 				Log.d(TAG, "异步加载列表数据...");
-				//惰性加载数据操作
-				if(downloadDao == null){
-					downloadDao = new DownloadDao(getActivity(), userId);
-				}
 				//返回未下载完成的数据
 				return downloadDao.loadDownings();
 			}catch(Exception e){
@@ -186,12 +205,9 @@ public class DownloadByFragmentDowning extends Fragment  {
 			if(result != null && result.size() > 0){
 				//填充数据
 				dataSource.addAll(result);
-				//隐藏无数据View
-				nodataView.setVisibility(View.GONE);
-			}else{
-				//显示无数据View
-				nodataView.setVisibility(View.VISIBLE);
 			}
+			//是否显示无数据View
+			nodataView.setVisibility(dataSource.size() > 0 ? View.GONE : View.VISIBLE);
 			//通知适配器更新
 			adapter.notifyDataSetChanged();
 		}
@@ -273,7 +289,7 @@ public class DownloadByFragmentDowning extends Fragment  {
 		private ProgressBar progressBar;
 		private Button btnPause;
 		private DownloadState state;
-		private String lessonId;
+		private DownloadComplete downloadComplete;
 		/**
 		 * 构造函数。
 		 * @param convertView
@@ -297,8 +313,7 @@ public class DownloadByFragmentDowning extends Fragment  {
 		 */
 		public void loadData(DownloadComplete download){
 			if(download == null) return;
-			//设置课程资源ID。
-			this.lessonId = download.getLessonId();
+			this.downloadComplete = download;
 			//标题
 			this.tvTitle.setText(download.getLessonName());
 			//进度
@@ -326,7 +341,10 @@ public class DownloadByFragmentDowning extends Fragment  {
 				}
 				case FAIL:{//连接失败
 					final Drawable top = getActivity().getResources().getDrawable(R.drawable.download_group_downing_item_retry);
-					this.btnPause.setCompoundDrawables(null, top, null, null);
+					if(top != null){
+						top.setBounds(0, 0, top.getMinimumWidth(), top.getMinimumHeight());
+						this.btnPause.setCompoundDrawables(null, top, null, null);
+					}
 					this.btnPause.setText(R.string.download_group_downing_item_btn_start);
 					this.btnPause.setVisibility(View.VISIBLE);
 					this.btnPause.setEnabled(true);
@@ -338,7 +356,10 @@ public class DownloadByFragmentDowning extends Fragment  {
 				}
 				case PAUSE:{//暂停
 					final Drawable top = getActivity().getResources().getDrawable(R.drawable.download_group_downing_item_btn_continue_icon);
-					this.btnPause.setCompoundDrawables(null, top, null, null);
+					if(top != null){
+						top.setBounds(0, 0, top.getMinimumWidth(), top.getMinimumHeight());
+						this.btnPause.setCompoundDrawables(null, top, null, null);
+					}
 					this.btnPause.setText(R.string.download_group_downing_item_btn_pause);
 					this.btnPause.setVisibility(View.VISIBLE);
 					this.btnPause.setEnabled(true);
@@ -346,7 +367,10 @@ public class DownloadByFragmentDowning extends Fragment  {
 				}
 				case DOWNING:{//下载中
 					final Drawable top = getActivity().getResources().getDrawable(R.drawable.download_group_downing_item_btn_pause_icon);
-					this.btnPause.setCompoundDrawables(null, top, null, null);
+					if(top != null){
+						top.setBounds(0, 0, top.getMinimumWidth(), top.getMinimumHeight());
+						this.btnPause.setCompoundDrawables(null, top, null, null);
+					}
 					this.btnPause.setText(R.string.download_group_downing_item_btn_start);
 					this.btnPause.setVisibility(View.VISIBLE);
 					this.btnPause.setEnabled(true);
@@ -370,16 +394,40 @@ public class DownloadByFragmentDowning extends Fragment  {
 		public void onClick(View v) {
 			try{
 				Log.d(TAG, "按钮点击事件处理..." + v);
-				if(StringUtils.isBlank(this.lessonId)) return;
+				if(this.downloadComplete == null)return;
+				final String lessonId = this.downloadComplete.getLessonId();
+				if(StringUtils.isBlank(lessonId)) return;
 				if(this.state == DownloadState.DOWNING){//下载=>暂停
 					//通知后台下载服务暂停
-					if(downloadService != null) downloadService.pauseDownload(this.lessonId);
+					if(downloadService != null) downloadService.pauseDownload(lessonId);
+					//暂停
+					this.state = DownloadState.PAUSE;
 				}else{//暂停=>下载
 					//通知后台下载服务继续
-					if(downloadService != null) downloadService.continueDownload(this.lessonId);
+					if(downloadService != null) downloadService.continueDownload(lessonId);
+					//下载
+					this.state = DownloadState.DOWNING;
 				}
-				//通知异步重新加载数据。
-				new AsyncLoadData().execute((Void)null);
+				if(dataSource.size() == 0) return;
+				//初始化
+				final List<DownloadComplete> list = new ArrayList<DownloadComplete>();
+				for(DownloadComplete data : dataSource){
+					if(data == null) continue;
+					if(StringUtils.equalsIgnoreCase(data.getLessonId(), lessonId)){
+						//更新状态
+						data.setState(this.state.getValue());
+					}
+					list.add(data);
+				}
+				//清空数据源
+				dataSource.clear();
+				//填充数据
+				if(list != null && list.size() > 0){
+					Log.d(TAG, "填充数据...");
+					dataSource.addAll(list);
+				}
+				//通知数据适配器更新
+				adapter.notifyDataSetChanged();
 			}catch(Exception e){
 				Log.e(TAG, "按钮点击操作时异常:" + e.getMessage(), e);
 			}
@@ -415,49 +463,53 @@ public class DownloadByFragmentDowning extends Fragment  {
 				case Constant.HANLDER_WHAT_PROGRESS:{//更新进度。
 					//获取须更新的课程资源ID
 					final String lessonId = (String)msg.obj;
-					if(StringUtils.isBlank(lessonId)) return;
+					if(StringUtils.isBlank(lessonId) || adapter.getDataSource().size() == 0) return;
 					//获取数据源
-					final List<DownloadComplete> list = adapter.getDataSource();
-					if(list == null || list.size() == 0) return;
-					for(DownloadComplete data : list){
+					final List<DownloadComplete> list = new ArrayList<DownloadComplete>();
+					for(DownloadComplete data : adapter.getDataSource()){
 						if(data == null) continue;
 						if(StringUtils.equalsIgnoreCase(data.getLessonId(), lessonId)){
 							//设置完成数据
 							data.setCompleteSize(data.getFileSize() * (msg.arg1 / 100));
-							//通知适配器更新
-							adapter.notifyDataSetChanged();
-							break;
 						}
+						list.add(data);
 					}
+					//清空数据源
+					adapter.getDataSource().clear();
+					//复制数据
+					adapter.getDataSource().addAll(list);
+					//通知适配器更新
+					adapter.notifyDataSetChanged();
 					break;
 				}
 				case Constant.HANLDER_WHAT_STATE:{//更新状态
 					//获取须更新的课程资源ID
 					final String lessonId = (String)msg.obj;
-					if(StringUtils.isBlank(lessonId)) return;
-					//获取数据源
-					final List<DownloadComplete> list = adapter.getDataSource();
-					if(list == null || list.size() == 0) return;
 					final DownloadState state = DownloadState.parse(msg.arg1);
-					for(DownloadComplete data : list){
+					if(StringUtils.isBlank(lessonId) || adapter.getDataSource().size() == 0) return;
+					//获取数据源
+					final List<DownloadComplete> list = new ArrayList<DownloadComplete>();
+					for(DownloadComplete data : adapter.getDataSource()){
 						if(data == null) continue;
 						if(StringUtils.equalsIgnoreCase(data.getLessonId(), lessonId)){
 							//设置状态
 							data.setState(state.getValue());
 							//取消或完成
 							if(state == DownloadState.CANCEL || state == DownloadState.FINISH){
-								//移除
-								list.remove(data);
+								continue;
 							}
-							//通知适配器更新
-							adapter.notifyDataSetChanged();
-							break;
+							list.add(data);
 						}
 					}
+					//清空数据源
+					adapter.getDataSource().clear();
+					//复制数据
+					adapter.getDataSource().addAll(list);
+					//通知适配器更新
+					adapter.notifyDataSetChanged();
 					break;
 				}
 			}
-				 
 		}
 	}
 }

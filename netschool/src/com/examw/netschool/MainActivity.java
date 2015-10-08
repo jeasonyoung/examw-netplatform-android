@@ -294,6 +294,7 @@ public class MainActivity extends Activity implements OnItemClickListener{
 				if(item.getIconResId() > 0){
 					final Drawable topDrawable = getResources().getDrawable(item.getIconResId());
 					if(topDrawable != null){
+						topDrawable.setBounds(0, 0, topDrawable.getMinimumWidth(), topDrawable.getMinimumHeight());
 						this.tvTitle.setCompoundDrawables(null, topDrawable, null, null);
 					}
 				}

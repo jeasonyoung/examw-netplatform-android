@@ -21,6 +21,7 @@ import android.util.Log;
  */
 public class AQDetailDao extends BaseDao {
 	private static final String TAG = "AQDetailDao";
+	private SQLiteDatabase db;
 	/**
 	 * 构造函数。
 	 * @param context
@@ -47,18 +48,17 @@ public class AQDetailDao extends BaseDao {
 		Log.d(TAG, "是否存在明细...." + detailId);
 		boolean result = false;
 		if(StringUtils.isBlank(detailId)) return result;
-		SQLiteDatabase db = null;
 		try{
 			//sql
 			final String query = "SELECT COUNT(0) FROM tbl_AQDetail WHERE id = ?;";
 			//
-			db = this.dbHelper.getReadableDatabase();
+			db = dbHelper.getReadableDatabase();
 			final Cursor cursor =  db.rawQuery(query, new String[]{ detailId });
 			while(cursor.moveToNext()){
 				result = cursor.getInt(0) > 0;
 				break;
 			}
-			//
+			//关闭游标
 			cursor.close();
 		}catch(Exception e){
 			Log.e(TAG, "发生异常:" + e.getMessage(), e);
@@ -77,12 +77,11 @@ public class AQDetailDao extends BaseDao {
 		Log.d(TAG, "加载答疑明细..." + id);
 		AQDetail detail = null;
 		if(StringUtils.isBlank(id)) return detail;
-		SQLiteDatabase db = null;
 		try{
 			//sql
 			final String query = "SELECT id,topicId,content,userId,userName,createTime FROM tbl_AQDetail WHERE id = ?;";
 			//
-			db = this.dbHelper.getReadableDatabase();
+			db = dbHelper.getReadableDatabase();
 			final Cursor cursor =  db.rawQuery(query, new String[]{ id });
 			while(cursor.moveToNext()){
 				detail = this.read(cursor);
@@ -104,15 +103,14 @@ public class AQDetailDao extends BaseDao {
 	 */
 	public List<AQDetail> loadDetails(String topicId){
 		Log.d(TAG, "加载答疑主题["+topicId+"]下的明细集合...");
-		if(StringUtils.isBlank(topicId)) return null;
 		List<AQDetail> details = null;
-		SQLiteDatabase db = null;
+		if(StringUtils.isBlank(topicId)) return details;
 		try{
 			//sql
 			final String query = " SELECT id,topicId,content,userId,userName,createTime FROM tbl_AQDetail "
 					+ " WHERE topicId = ? ORDER BY createTime;";
 			//
-			db = this.dbHelper.getReadableDatabase();
+			db = dbHelper.getReadableDatabase();
 			final Cursor cursor =  db.rawQuery(query, new String[]{ topicId });
 			details = new ArrayList<AQDetail>();
 			while(cursor.moveToNext()){
@@ -157,45 +155,47 @@ public class AQDetailDao extends BaseDao {
 	 */
 	public void insert(AQDetail detail){
 		Log.d(TAG, "插入答疑主题...");
-		if(detail == null)return;
-		SQLiteDatabase db = null;
-		try{
-			//检查数据
-			if(StringUtils.isBlank(detail.getTopicId())){
-				Log.d(TAG, "所属答疑主题ID为空!");
-				return;
-			}
-			//主题明细ID
-			if(StringUtils.isBlank(detail.getId())) detail.setId(UUID.randomUUID().toString());
-			//初始化
-			db = this.dbHelper.getWritableDatabase();
-			//开启事务
-			db.beginTransaction();
-			//执行操作
-			db.execSQL("INSERT INTO tbl_AQDetail(id,topicId,content,userId,userName,createTime) values(?,?,?,?,?,?);", new Object[]{
-				//明细ID
-				StringUtils.trimToNull(detail.getId()),
-				//所属主题ID
-				StringUtils.trimToNull(detail.getTopicId()),
-				//明细内容
-				StringUtils.trimToNull(detail.getContent()),
-				//用户ID
-				StringUtils.trimToNull(detail.getUserId()),
-				//用户姓名
-				StringUtils.trimToNull(detail.getUserName()),
-				//时间
-				StringUtils.trimToNull(detail.getCreateTime())
-			});
-			//设置事务成功
-			db.setTransactionSuccessful();
-		}catch(Exception e){
-			Log.e(TAG, "插入数据异常:" + e.getMessage(), e);
-		}finally{
-			if(db != null){
-				//结束事务
-				db.endTransaction();
-				//关闭连接
-				db.close();
+		if(detail == null) return;
+		//检查数据
+		if(StringUtils.isBlank(detail.getTopicId())){
+			Log.d(TAG, "所属答疑主题ID为空!");
+			return;
+		}
+		
+		synchronized(dbHelper){
+			try{
+				//主题明细ID
+				if(StringUtils.isBlank(detail.getId())) detail.setId(UUID.randomUUID().toString());
+				//初始化
+				db = dbHelper.getWritableDatabase();
+				//开启事务
+				db.beginTransaction();
+				//执行操作
+				db.execSQL("INSERT INTO tbl_AQDetail(id,topicId,content,userId,userName,createTime) values(?,?,?,?,?,?);", new Object[]{
+					//明细ID
+					StringUtils.trimToNull(detail.getId()),
+					//所属主题ID
+					StringUtils.trimToNull(detail.getTopicId()),
+					//明细内容
+					StringUtils.trimToNull(detail.getContent()),
+					//用户ID
+					StringUtils.trimToNull(detail.getUserId()),
+					//用户姓名
+					StringUtils.trimToNull(detail.getUserName()),
+					//时间
+					StringUtils.trimToNull(detail.getCreateTime())
+				});
+				//设置事务成功
+				db.setTransactionSuccessful();
+			}catch(Exception e){
+				Log.e(TAG, "插入数据异常:" + e.getMessage(), e);
+			}finally{
+				if(db != null){
+					//结束事务
+					db.endTransaction();
+					//关闭连接
+					db.close();
+				}
 			}
 		}
 	}
@@ -205,43 +205,44 @@ public class AQDetailDao extends BaseDao {
 	 */
 	public void update(AQDetail detail){
 		Log.d(TAG, "更新答疑主题明细...");
-		if(detail == null)return;
-		SQLiteDatabase db = null;
-		try{
-			//检查数据
-			if(StringUtils.isBlank(detail.getTopicId())){
-				Log.d(TAG, "所属答疑主题ID为空!");
-				return;
-			}
-			//初始化
-			db = this.dbHelper.getWritableDatabase();
-			//开启事务
-			db.beginTransaction();
-			//执行操作
-			db.execSQL("UPDATE tbl_AQDetail SET topicId= ?,content = ?, userId= ?, userName = ?, createTime = ? WHERE id = ?;", new Object[]{
-				//所属主题ID
-				StringUtils.trimToNull(detail.getTopicId()),
-				//明细内容
-				StringUtils.trimToNull(detail.getContent()),
-				//用户ID
-				StringUtils.trimToNull(detail.getUserId()),
-				//用户姓名
-				StringUtils.trimToNull(detail.getUserName()),
-				//时间
-				StringUtils.trimToNull(detail.getCreateTime()),
-				//明细ID
-				StringUtils.trimToNull(detail.getId())
-			});
-			//设置事务成功
-			db.setTransactionSuccessful();
-		}catch(Exception e){
-			Log.e(TAG, "插入数据异常:" + e.getMessage(), e);
-		}finally{
-			if(db != null){
-				//结束事务
-				db.endTransaction();
-				//关闭连接
-				db.close();
+		if(detail == null) return;
+		//检查数据
+		if(StringUtils.isBlank(detail.getTopicId())){
+			Log.d(TAG, "所属答疑主题ID为空!");
+			return;
+		}
+		synchronized(dbHelper){
+			try{
+				//初始化
+				db = dbHelper.getWritableDatabase();
+				//开启事务
+				db.beginTransaction();
+				//执行操作
+				db.execSQL("UPDATE tbl_AQDetail SET topicId= ?,content = ?, userId= ?, userName = ?, createTime = ? WHERE id = ?;", new Object[]{
+					//所属主题ID
+					StringUtils.trimToNull(detail.getTopicId()),
+					//明细内容
+					StringUtils.trimToNull(detail.getContent()),
+					//用户ID
+					StringUtils.trimToNull(detail.getUserId()),
+					//用户姓名
+					StringUtils.trimToNull(detail.getUserName()),
+					//时间
+					StringUtils.trimToNull(detail.getCreateTime()),
+					//明细ID
+					StringUtils.trimToNull(detail.getId())
+				});
+				//设置事务成功
+				db.setTransactionSuccessful();
+			}catch(Exception e){
+				Log.e(TAG, "插入数据异常:" + e.getMessage(), e);
+			}finally{
+				if(db != null){
+					//结束事务
+					db.endTransaction();
+					//关闭连接
+					db.close();
+				}
 			}
 		}
 	}
@@ -253,24 +254,25 @@ public class AQDetailDao extends BaseDao {
 	public void delete(String id){
 		Log.d(TAG, "删除主题明细..." + id);
 		if(StringUtils.isBlank(id)) return;
-		SQLiteDatabase db = null;
-		try{
-			//初始化
-			db = this.dbHelper.getWritableDatabase();
-			//开启事务
-			db.beginTransaction();
-			//执行操作
-			db.execSQL("DELETE FROM tbl_AQDetail WHERE id = ?;", new Object[]{ id });
-			//设置事务成功
-			db.setTransactionSuccessful();
-		}catch(Exception e){
-			Log.e(TAG, "插入数据异常:" + e.getMessage(), e);
-		}finally{
-			if(db != null){
-				//结束事务
-				db.endTransaction();
-				//关闭连接
-				db.close();
+		synchronized(dbHelper){
+			try{
+				//初始化
+				db = this.dbHelper.getWritableDatabase();
+				//开启事务
+				db.beginTransaction();
+				//执行操作
+				db.execSQL("DELETE FROM tbl_AQDetail WHERE id = ?;", new Object[]{ id });
+				//设置事务成功
+				db.setTransactionSuccessful();
+			}catch(Exception e){
+				Log.e(TAG, "插入数据异常:" + e.getMessage(), e);
+			}finally{
+				if(db != null){
+					//结束事务
+					db.endTransaction();
+					//关闭连接
+					db.close();
+				}
 			}
 		}
 	}

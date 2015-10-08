@@ -47,6 +47,8 @@
     <dimen name="play_video_video_control_right">30.0dp</dimen>
     <dimen name="play_video_video_control_bottom">2.0dp</dimen>
     
+    <!-- 下载 Activity -->
+    
     <!-- 免费体验 Activity -->
     <dimen name="free_experience_search_text_height">40.0dp</dimen>
     <dimen name="free_experience_search_text_top">5.0dp</dimen>

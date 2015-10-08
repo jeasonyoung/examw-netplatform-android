@@ -39,4 +39,4 @@
 -libraryjars libs/commons-httpclient-3.1.jar
 -libraryjars libs/gson-1.7.1.jar
 -libraryjars libs/httpmime-4.2.3.jar
--libraryjars libs/umeng_sdk.jar
+#-libraryjars libs/umeng_sdk.jar

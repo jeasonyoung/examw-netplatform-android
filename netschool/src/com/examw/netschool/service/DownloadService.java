@@ -1,11 +1,11 @@
 package com.examw.netschool.service;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -34,9 +34,9 @@ public class DownloadService extends Service implements IDownloadService {
 	 private static final long THREAD_SLEEP = 500;
 	 
 	 private final ExecutorService pools;	 
-	 private final Queue<Download> downloadQueue;
-	 private final Map<String, Download> downloadPosCache;
-	 private final Map<String, MultiThreadDownload> downloadThreads;
+	 private final BlockingQueue<Download> downloadQueue;
+	 private final ConcurrentMap<String, Download> downloadPosCache;
+	 private final ConcurrentMap<String, MultiThreadDownload> downloadThreads;
 	 private Handler handler;
 	
 	 private IBinder binder;
@@ -50,11 +50,11 @@ public class DownloadService extends Service implements IDownloadService {
 		//下载服务队列轮询单线程池
 		this.pools = Executors.newSingleThreadExecutor();
 		//下载队列
-		this.downloadQueue = new LinkedList<Download>();
+		this.downloadQueue = new LinkedBlockingQueue<Download>();
 		//下载位置集合缓存
-		this.downloadPosCache = new HashMap<String, Download>();
+		this.downloadPosCache = new ConcurrentHashMap<String, Download>();
  		//下载线程集合
- 		this.downloadThreads =  new HashMap<String, MultiThreadDownload>();
+ 		this.downloadThreads =  new ConcurrentHashMap<String, MultiThreadDownload>();
 		//服务绑定接口
 		this.binder = new FileDownloadServiceBinder(this);
 	}
@@ -77,6 +77,8 @@ public class DownloadService extends Service implements IDownloadService {
 	@Override
 	public void onCreate() {
 		Log.d(TAG, "下载服务正在被创建...");
+		//初始化下载数据操作
+		downloadDao = new DownloadDao(AppContext.getContext(), AppContext.getCurrentUserId());
 		//执行文件下载管理线程。
 		pools.execute(this.downloadThreadMgr);
 		//
@@ -103,6 +105,8 @@ public class DownloadService extends Service implements IDownloadService {
 						Log.d(TAG, "下载队列已空!");
 						continue;
 					}
+					//转换下载状态
+					DownloadState state = DownloadState.parse(download.getState());
 					Log.d(TAG, "准备开始下载课程["+download+"]...");
 					//下载线程
 					MultiThreadDownload threadDownload = downloadThreads.get(download.getLessonId());
@@ -115,33 +119,31 @@ public class DownloadService extends Service implements IDownloadService {
 						//添加下载线程
 						downloadThreads.put(download.getLessonId(), threadDownload);
 					}
-					//下载状态
-					DownloadState state = DownloadState.parse(download.getState());
+					//设置下载中状态
+					download.setState((state = DownloadState.DOWNING).getValue());
+					//更新数据库数据
+					if(downloadDao != null) downloadDao.update(download);
+					//发送下载状态
+					sendUpdateState(download.getLessonId(), state);
 					try{
-						//下载中状态
-						state = DownloadState.DOWNING;
-						download.setState(state.getValue());
-						//更新下载状态
-						sendUpdateState(download.getLessonId(), state);
-						//更新数据
-						asyncUpdateDownload(download);
-						
-						//启动下载
+						//启动下载线程
 						threadDownload.start();
-						
-						//下载完成
+						//设置下载完成状态
 						download.setState((state = DownloadState.FINISH).getValue());
-						asyncUpdateDownload(download);
+						//更新数据库数据
+						if(downloadDao != null) downloadDao.update(download);
+						//发送下载状态
 						sendUpdateState(download.getLessonId(), state);
 					}catch(Exception e){
-						download.setState((state = DownloadState.FAIL).getValue());
 						Log.e(TAG, "下载课程["+download+"]异常:" + e.getMessage(), e);
-						//更新下载状态
-						sendUpdateState(download.getLessonId(),state);
+						//设置下载失败状态
+						download.setState((state = DownloadState.FAIL).getValue());
+						//更新数据
+						if(downloadDao != null) downloadDao.update(download);
+						//发送下载状态
+						sendUpdateState(download.getLessonId(), state);
 						//发生下载消息
 						sendMessage(state, e.getMessage());
-						//取消下载
-						cancelDownload(download.getLessonId());
 					}
 				}catch(Exception e){
 					Log.e(TAG, "下载轮询线程:" + e.getMessage(), e);
@@ -217,7 +219,7 @@ public class DownloadService extends Service implements IDownloadService {
 		}
 	}
 	//发送状态更新
-	private synchronized void sendUpdateState(String id, DownloadState state){
+	private void sendUpdateState(String id, DownloadState state){
 		if(this.handler != null && StringUtils.isNotBlank(id)){
 			Log.d(TAG, "发送状态更新:["+id+"]" + state);
 			//初始化消息
@@ -239,8 +241,7 @@ public class DownloadService extends Service implements IDownloadService {
 	@Override
 	public void addDownload(Download download) {
 		Log.d(TAG, "添加下载课程["+download+"]到队列...");
-		final String lessonId;
-		if(download == null || StringUtils.isBlank(lessonId = download.getLessonId())) return;
+		if(download == null || StringUtils.isBlank(download.getLessonId())) return;
 		//下载状态
 		final DownloadState state = DownloadState.NONE;
 		//设置下载状态值。
@@ -254,11 +255,11 @@ public class DownloadService extends Service implements IDownloadService {
 		final boolean result = this.downloadQueue.offer(download);
 		Log.d(TAG, "课程["+download+"]压入到队尾:" + result); 
 		//设置位置集合
-		this.downloadPosCache.put(lessonId, download);
+		this.downloadPosCache.put(download.getLessonId(), download);
 		//更新到数据库
-		this.asyncUpdateDownload(download);
-		//发送UIHandler
-		this.sendUpdateState(lessonId, state);
+		if(downloadDao != null) downloadDao.update(download);
+		//发送下载状态
+		sendUpdateState(download.getLessonId(), state);
 	}
 	/*
 	 * 取消下载。
@@ -291,8 +292,8 @@ public class DownloadService extends Service implements IDownloadService {
 		if(this.downloadPosCache.containsKey(id)){
 			this.downloadPosCache.remove(id);
 		}
-		//更新到数据库
-		this.asyncDeleteDownload(download);
+		//删除数据
+		if(downloadDao != null) downloadDao.delete(download.getLessonId());
 		//发送状态消息
 		this.sendUpdateState(id, state);
 	}
@@ -324,7 +325,7 @@ public class DownloadService extends Service implements IDownloadService {
 			this.downloadThreads.remove(id);
 		}
 		//更新到数据库
-		this.asyncUpdateDownload(download);
+		if(downloadDao != null) downloadDao.update(download);
 		//发送状态消息
 		this.sendUpdateState(id, state);
 	}
@@ -340,46 +341,6 @@ public class DownloadService extends Service implements IDownloadService {
 		Log.d(TAG, "继续课程["+ download +"]下载...");
 		//添加到下载
 		this.addDownload(download);
-	}
-	//异步更新下载状态
-	private void asyncUpdateDownload(final Download download){
-		if(download == null) return;
-		AppContext.pools_fixed.execute(new Runnable() {
-			@Override
-			public void run() {
-				try{
-					Log.d(TAG, "开始异步更新下载数据..");
-					if(downloadDao == null){
-						Log.d(TAG, "惰性初始化下载数据操作...");
-						downloadDao = new DownloadDao(AppContext.getContext(), AppContext.getCurrentUserId());
-					}
-					//更新数据
-					downloadDao.update(download);
-				}catch(Exception e){
-					Log.e(TAG, "异步更新下载数据异常:" + e.getMessage(), e);
-				}
-			}
-		});
-	}
-	//异步删除下载课程
-	private void asyncDeleteDownload(final Download download){
-		if(download == null) return;
-		AppContext.pools_fixed.execute(new Runnable() {
-			@Override
-			public void run() {
-				try{
-					Log.d(TAG, "开始异步更新下载数据..");
-					if(downloadDao == null){
-						Log.d(TAG, "惰性初始化下载数据操作...");
-						downloadDao = new DownloadDao(AppContext.getContext(), AppContext.getCurrentUserId());
-					}
-					//删除数据
-					downloadDao.delete(download.getLessonId());
-				}catch(Exception e){
-					Log.e(TAG, "异步更新下载数据异常:" + e.getMessage(), e);
-				}
-			}
-		});
 	}
 	//检测网络
 	private synchronized static final boolean checkNetwork(Context context) throws Exception{

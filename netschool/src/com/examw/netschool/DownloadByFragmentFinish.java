@@ -65,7 +65,7 @@ public class DownloadByFragmentFinish extends Fragment {
 		this.nodataView = (LinearLayout)view.findViewById(R.id.nodata_view);
 		this.nodataView.setVisibility(View.VISIBLE);
 		//列表
-		final ListView listView = (ListView)view.findViewById(R.id.download_listview_downing);
+		final ListView listView = (ListView)view.findViewById(R.id.download_listview_finish);
 		//长按弹出删除已下载的课程资源
 		listView.setOnItemLongClickListener(this.onItemLongClickListener);
 		//设置数据适配器
@@ -80,7 +80,9 @@ public class DownloadByFragmentFinish extends Fragment {
 	@Override
 	public void onStart() {
 		Log.d(TAG, "重载启动，异步加载数据...");
-		// TODO Auto-generated method stub
+		//异步加载数据
+		new AsyncLoadData().execute((Void)null);
+		//
 		super.onStart();
 	}
 	//长按删除下载
@@ -135,7 +137,6 @@ public class DownloadByFragmentFinish extends Fragment {
 			return false;
 		}
 	};
-	//异步加载数据
 	//异步加载数据
 	private class AsyncLoadData extends AsyncTask<Void, Void, List<Download>>{
 		 private static final String TAG = "AsyncLoadData";
