@@ -8,7 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.examw.netschool.model.PlayRecord;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -22,15 +21,6 @@ import android.util.Log;
 public class PlayRecordDao extends BaseDao {
 	private static final String TAG = "PlayRecordDao";
 	private SQLiteDatabase db;
-	/**
-	 * 构造函数。
-	 * @param context
-	 * @param userId
-	 */
-	public PlayRecordDao(Context context, String userId){
-		super(context, userId);
-		Log.d(TAG, "初始化...");
-	}
 	/**
 	 * 删除播放记录。
 	 * @param recordId
@@ -192,39 +182,41 @@ public class PlayRecordDao extends BaseDao {
 	public List<PlayRecord> loadPlayRecords(){
 		Log.d(TAG, "加载播放记录...");
 		final List<PlayRecord> records = new ArrayList<PlayRecord>();
-		try {
-			final String query = "SELECT a.id,a.lesson_id,b.name,a.playTime,a.createTime From tbl_PlayRecords a "
-					+ " INNER JOIN tbl_Lessones b ON b.id = a.lesson_id ORDER BY a.createTime DESC";
-			//
-			Log.d(TAG, query);
-			//初始化
-			db = dbHelper.getReadableDatabase();
-			//查询数据
-			final Cursor cursor =  db.rawQuery(query, null);
-			//循环赋值
-			while(cursor.moveToNext()){
+		synchronized(dbHelper){
+			try {
+				final String query = "SELECT a.id,a.lesson_id,b.name,a.playTime,a.createTime From tbl_PlayRecords a "
+						+ " INNER JOIN tbl_Lessones b ON b.id = a.lesson_id ORDER BY a.createTime DESC";
+				//
+				Log.d(TAG, query);
 				//初始化
-				final PlayRecord record = new PlayRecord();
-				//播放记录ID
-				record.setId(StringUtils.trimToNull(cursor.getString(0)));
-				//课程资源ID
-				record.setLessonId(StringUtils.trimToNull(cursor.getString(1)));
-				//课程资源名称
-				record.setLessonName(StringUtils.trimToNull(cursor.getString(2)));
-				//播放时间
-				record.setPlayTime(cursor.getInt(3));
-				//创建时间
-				record.setCreateTime(StringUtils.trimToNull(cursor.getString(4)));
-				//添加到集合
-				records.add(record);
+				db = dbHelper.getReadableDatabase();
+				//查询数据
+				final Cursor cursor =  db.rawQuery(query, null);
+				//循环赋值
+				while(cursor.moveToNext()){
+					//初始化
+					final PlayRecord record = new PlayRecord();
+					//播放记录ID
+					record.setId(StringUtils.trimToNull(cursor.getString(0)));
+					//课程资源ID
+					record.setLessonId(StringUtils.trimToNull(cursor.getString(1)));
+					//课程资源名称
+					record.setLessonName(StringUtils.trimToNull(cursor.getString(2)));
+					//播放时间
+					record.setPlayTime(cursor.getInt(3));
+					//创建时间
+					record.setCreateTime(StringUtils.trimToNull(cursor.getString(4)));
+					//添加到集合
+					records.add(record);
+				}
+				//关闭
+				cursor.close();
+			} catch (Exception e) {
+				Log.e(TAG, "加载数据异常:" + e.getMessage(), e);
+			} finally {
+				//关闭连接
+				if(db != null) db.close();
 			}
-			//关闭
-			cursor.close();
-		} catch (Exception e) {
-			Log.e(TAG, "加载数据异常:" + e.getMessage(), e);
-		} finally {
-			//关闭连接
-			if(db != null) db.close();
 		}
 		return records;
 	}
@@ -237,38 +229,39 @@ public class PlayRecordDao extends BaseDao {
 		Log.d(TAG, "加载播放记录..." + recordId);
 		PlayRecord data = null;
 		if(StringUtils.isBlank(recordId)) return data;
-		try{
-			//sql
-			final String query = "SELECT a.id,a.lesson_id,b.name,a.playTime,a.createTime From tbl_PlayRecords a "
-					+ " INNER JOIN tbl_Lessones b ON b.id = a.lesson_id WHERE a.id = ?";
-			Log.d(TAG, query);
-			//初始化
-			db = dbHelper.getReadableDatabase();
-			//查询数据
-			final Cursor cursor =  db.rawQuery(query, new String[]{ StringUtils.trimToEmpty(recordId) });
-			//循环赋值
-			while(cursor.moveToNext()){
+		synchronized(dbHelper){
+			try{
+				//sql
+				final String query = "SELECT a.id,a.lesson_id,b.name,a.playTime,a.createTime From tbl_PlayRecords a "
+						+ " INNER JOIN tbl_Lessones b ON b.id = a.lesson_id WHERE a.id = ?";
+				Log.d(TAG, query);
 				//初始化
-				data = new PlayRecord();
-				//播放记录ID
-				data.setId(StringUtils.trimToNull(cursor.getString(0)));
-				//课程资源ID
-				data.setLessonId(StringUtils.trimToNull(cursor.getString(1)));
-				//课程资源名称
-				data.setLessonName(StringUtils.trimToNull(cursor.getString(2)));
-				//播放时间
-				data.setPlayTime(cursor.getInt(3));
-				//创建时间
-				data.setCreateTime(StringUtils.trimToNull(cursor.getString(4)));
-				break;
+				db = dbHelper.getReadableDatabase();
+				//查询数据
+				final Cursor cursor =  db.rawQuery(query, new String[]{ StringUtils.trimToEmpty(recordId) });
+				//循环赋值
+				if(cursor.moveToFirst()){
+					//初始化
+					data = new PlayRecord();
+					//播放记录ID
+					data.setId(StringUtils.trimToNull(cursor.getString(0)));
+					//课程资源ID
+					data.setLessonId(StringUtils.trimToNull(cursor.getString(1)));
+					//课程资源名称
+					data.setLessonName(StringUtils.trimToNull(cursor.getString(2)));
+					//播放时间
+					data.setPlayTime(cursor.getInt(3));
+					//创建时间
+					data.setCreateTime(StringUtils.trimToNull(cursor.getString(4)));
+				}
+				//关闭
+				cursor.close();
+			}catch(Exception e){
+				Log.e(TAG, "加载数据异常:" + e.getMessage(), e);
+			}finally{
+				//关闭连接
+				if(db != null) db.close();
 			}
-			//关闭
-			cursor.close();
-		}catch(Exception e){
-			Log.e(TAG, "加载数据异常:" + e.getMessage(), e);
-		}finally{
-			//关闭连接
-			if(db != null) db.close();
 		}
 		return data;
 	}

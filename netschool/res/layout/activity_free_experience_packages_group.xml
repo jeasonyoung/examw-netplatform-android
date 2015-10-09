@@ -8,7 +8,8 @@
     
     <TextView android:id="@+id/group_title"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/free_experience_packages_group_height"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/free_experience_item_height"
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
         android:layout_marginRight="10dp"

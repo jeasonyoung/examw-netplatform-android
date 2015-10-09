@@ -3,7 +3,7 @@
     <!-- 通用 -->
     <string name="app_name">汇课网校</string>
     <string name="btn_return_bg_img_desc">返回图标</string>
-    
+     <string name="progress_msg">努力加载中,请稍候. . .</string>
     <!-- 启动Activity -->
     <string name="start_logo_desc">logo图标</string>
     <!-- 引导Activity -->
@@ -41,7 +41,6 @@
     <string name="activity_nodata_text">亲,木有数据!</string>
     <!-- 我的课程 Activity -->
     <string name="my_course_title">我的课程</string>
-    <string name="my_course_progress_msg">努力加载中,请稍候. . .</string>
     <string name="my_course_footer_online_title">在线课程</string>
     <string name="my_course_footer_offline_title">离线课程</string>
     <!-- 我的课程资源Activity -->

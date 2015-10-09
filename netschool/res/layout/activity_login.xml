@@ -145,7 +145,7 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/login_buttons_height"
             android:layout_weight="1.0"
-            android:background="@color/white"
+            android:background="@color/transparent"
             android:src="@drawable/btn_login_online_img" 
             android:scaleType="centerInside"
             android:contentDescription="@string/btn_login_online_desc"/>
@@ -157,7 +157,7 @@
             android:layout_marginLeft="10.0dp"
             android:layout_marginStart="10dp"
             android:layout_weight="1.0"
-            android:background="@color/white"
+            android:background="@color/transparent"
             android:src="@drawable/btn_login_offline_img"
             android:scaleType="centerInside"
             android:contentDescription="@string/btn_login_offline_desc" />

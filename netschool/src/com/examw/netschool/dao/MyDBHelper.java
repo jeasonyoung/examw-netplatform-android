@@ -2,15 +2,10 @@ package com.examw.netschool.dao;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.examw.netschool.codec.digest.DigestUtils;
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 /**
  * SQLite操作工具类。
  * @author jeasonyoung
@@ -19,35 +14,15 @@ import java.util.concurrent.ConcurrentMap;
 public class MyDBHelper extends SQLiteOpenHelper {
 	private static final String TAG = "MyDBHelper";
 	private static final int VERSION = 1; 
-	private static final ConcurrentMap<String, MyDBHelper> instanceCacheMap = new ConcurrentHashMap<String, MyDBHelper>();
 	/**
 	 * 构造函数。
 	 * @param context
 	 * @param userId
 	 */
-	private MyDBHelper(Context context, String userId){
+	public MyDBHelper(Context context, String userId){
 		super(context, "eschool_" + (StringUtils.isBlank(userId) ? "_" :  userId) + ".db", null, VERSION);
 		Log.d(TAG, "初始化数据库操作:eschool_" +(StringUtils.isBlank(userId) ? "_" :  userId) + ".db...");
 	}
-	
-	/**
-	 * 获取SQLite操作工具实例对象
-	 * @param context
-	 * @param userId
-	 * @return
-	 */
-	public synchronized static MyDBHelper getInstance(Context context, String userId){
-		final String key = DigestUtils.md5Hex(StringUtils.trimToEmpty(userId));
-		MyDBHelper instance = instanceCacheMap.get(key);
-		if(instance == null){
-			Log.d(TAG, "缓存中不存在，重新创建...");
-			instance = new MyDBHelper(context, userId);
-			Log.d(TAG, "加入到缓存...");
-			instanceCacheMap.put(key, instance);
-		}
-		return instance;
-	}
-	
 	/*
 	 * 重载创建数据库时创建表结构。
 	 * @see android.database.sqlite.SQLiteOpenHelper#onCreate(android.database.sqlite.SQLiteDatabase)

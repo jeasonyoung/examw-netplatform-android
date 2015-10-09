@@ -47,9 +47,6 @@ public class MyCourseLessonActivity extends Activity {
 	
 	private final List<Lesson> lessons;
 	private final LessonAdapter adapter;
-	
-	private LessonDao lessonDao;
-	private DownloadDao downloadDao;
 	/**
 	 * 构造函数。
 	 */
@@ -115,6 +112,8 @@ public class MyCourseLessonActivity extends Activity {
 				intent.putExtra(Constant.CONST_USERID, userId);
 				//设置用户名
 				intent.putExtra(Constant.CONST_USERNAME, userName);
+				//设置索引
+				intent.putExtra(DownloadActivity.CONST_FRAGMENT_INDEX, DownloadActivity.CONST_FRAGMENT_DOWNING);
 				//发送意图
 				startActivity(intent);
 			}
@@ -132,6 +131,8 @@ public class MyCourseLessonActivity extends Activity {
 				intent.putExtra(Constant.CONST_USERID, userId);
 				//设置用户名
 				intent.putExtra(Constant.CONST_USERNAME, userName);
+				//设置索引
+				intent.putExtra(DownloadActivity.CONST_FRAGMENT_INDEX, DownloadActivity.CONST_FRAGMENT_FINISH);
 				//发送意图
 				startActivity(intent);
 			}
@@ -175,6 +176,8 @@ public class MyCourseLessonActivity extends Activity {
 			protected List<Lesson> doInBackground(Void... params) {
 				try {
 					Log.d(TAG, "后台下载加载数据...");
+					//初始化
+					final LessonDao lessonDao = new LessonDao();
 					//检查是否从网络下载数据
 					if(StringUtils.isNotBlank(classId) && appContext != null && appContext.getLoginState() == LoginState.LOGINED && appContext.isNetworkConnected()){
 						//请求网络数据
@@ -185,11 +188,6 @@ public class MyCourseLessonActivity extends Activity {
 							final Type type = new TypeToken<JSONCallback<Lesson[]>>(){}.getType();
 							final JSONCallback<Lesson[]> callback = gson.fromJson(result, type);
 							if(callback.getSuccess()){
-								//惰性加载数据
-								if(lessonDao == null){
-									Log.d(TAG, "惰性初始化数据加载...");
-									lessonDao = new LessonDao(MyCourseLessonActivity.this, userId);
-								}
 								//删除原有记录
 								lessonDao.deleteByClass(classId);
 								//新增记录
@@ -198,11 +196,6 @@ public class MyCourseLessonActivity extends Activity {
 								Log.e(TAG, "下载课程资源失败:" + callback.getMsg());
 							}
 						}
-					}
-					//惰性加载数据
-					if(lessonDao == null){
-						Log.d(TAG, "惰性初始化数据加载...");
-						lessonDao = new LessonDao(MyCourseLessonActivity.this, userId);
 					}
 					//加载数据库中的数据
 					return lessonDao.loadLessonsByClass(classId);
@@ -331,11 +324,8 @@ public class MyCourseLessonActivity extends Activity {
 			this.tvLesson.setText(this.lesson.getName());
 			//下载状态
 			if(StringUtils.isNotBlank(this.lesson.getId())){
-				//惰性加载数据
-				if(downloadDao == null){
-					Log.d(TAG, "惰性初始化数据加载...");
-					downloadDao = new DownloadDao(MyCourseLessonActivity.this, userId);
-				}
+				//初始化
+				final DownloadDao downloadDao = new DownloadDao();
 				//是否存在
 				if(downloadDao.hasDownload(lesson.getId())){//已下载
 					//加载下载数据

@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -46,13 +47,12 @@ public class AnswerActivity extends Activity implements OnClickListener,OnItemCl
 	
 	
 	private LinearLayout nodataView;
+	private ProgressDialog progressDialog;
 	
 	private final List<AQTopic> topics;
 	private final AnswerAdapter adapter;
 	
 	private String userId,userName;
-	
-	private AQTopicDao topicDao;
 	/**
 	 * 构造函数。
 	 */
@@ -108,6 +108,13 @@ public class AnswerActivity extends Activity implements OnClickListener,OnItemCl
 	@Override
 	protected void onStart() {
 		Log.d(TAG, "重载启动...");
+		//数据加载等待
+		if(this.progressDialog == null){
+			this.progressDialog = ProgressDialog.show(this, null, this.getResources().getText(R.string.progress_msg), true, true);
+			this.progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		}
+		//显示等待
+		this.progressDialog.show();
 		//异步数据加载。
 		new AsyncLoadData().execute((Void)null);
 		//
@@ -128,6 +135,8 @@ public class AnswerActivity extends Activity implements OnClickListener,OnItemCl
 			}
 			case R.id.btn_refresh:{//刷新事件处理
 				Log.d(TAG, "刷新事件处理...");
+				//加载View
+				if(progressDialog != null) progressDialog.show();
 				//异步数据加载。
 				new AsyncLoadData().execute((Void)null);
 				break;
@@ -181,6 +190,8 @@ public class AnswerActivity extends Activity implements OnClickListener,OnItemCl
 		protected List<AQTopic> doInBackground(Void... params) {
 			try{
 				Log.d(TAG, "后台线程加载数据...");
+				//初始化
+				final AQTopicDao topicDao = new AQTopicDao();
 				//检查网络
 				final AppContext appContext = (AppContext)getApplicationContext();
 				if(appContext != null && appContext.isNetworkConnected() && StringUtils.isNotBlank(userId)){
@@ -193,11 +204,6 @@ public class AnswerActivity extends Activity implements OnClickListener,OnItemCl
 						final JSONCallback<AQTopic[]> callback = gson.fromJson(result, type);
 						//获取数据成功
 						if(callback.getSuccess() && callback.getData() != null && callback.getData().length > 0){
-							//惰性加载数据
-							if(topicDao == null){
-								Log.d(TAG, "惰性加载数据操作...");
-								topicDao = new AQTopicDao(AnswerActivity.this, userId);
-							}
 							//更新数据
 							for(AQTopic topic : callback.getData()){
 								if(topic == null || StringUtils.isBlank(topic.getId())) continue;
@@ -211,11 +217,6 @@ public class AnswerActivity extends Activity implements OnClickListener,OnItemCl
 							}
 						}
 					}
-				}
-				//惰性加载数据操作
-				if(topicDao == null){
-					Log.d(TAG, "惰性加载数据操作...");
-					topicDao = new AQTopicDao(AnswerActivity.this, userId);
 				}
 				//加载数据
 				return topicDao.loadTopics();
@@ -231,6 +232,8 @@ public class AnswerActivity extends Activity implements OnClickListener,OnItemCl
 		@Override
 		protected void onPostExecute(List<AQTopic> result) {
 			Log.d(TAG, "前台主线程更新数据...");
+			//关闭等待动画
+			if(progressDialog != null) progressDialog.dismiss();
 			//清除数据源
 			topics.clear();
 			//填充数据

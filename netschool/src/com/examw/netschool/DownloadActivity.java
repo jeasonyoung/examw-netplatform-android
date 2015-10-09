@@ -29,8 +29,22 @@ import android.widget.TextView;
 public class DownloadActivity extends FragmentActivity implements OnCheckedChangeListener {
 	private static final String TAG = "DownloadActivity";
 	private String userId,lessonId;
+	
+	private int index = 0;
 	private ViewPager viewPager;
-	private DownloadDao dao;
+	private RadioGroup radioGroup;
+	/**
+	 * 索引参数键。
+	 */
+	public static final String CONST_FRAGMENT_INDEX = "page_index";
+	/**
+	 * 下载课程UI。
+	 */
+	public static final int CONST_FRAGMENT_DOWNING = 0;
+	/**
+	 * 离线课程UI。
+	 */
+	public static final int CONST_FRAGMENT_FINISH = 1;
 	/*
 	 * 重载创建
 	 * @see android.support.v4.app.FragmentActivity#onCreate(android.os.Bundle)
@@ -48,6 +62,8 @@ public class DownloadActivity extends FragmentActivity implements OnCheckedChang
 			this.userId = intent.getStringExtra(Constant.CONST_USERID);
 			//课程资源ID
 			this.lessonId = intent.getStringExtra(Constant.CONST_LESSON_ID);
+			//页面索引
+			index = intent.getIntExtra(CONST_FRAGMENT_INDEX, CONST_FRAGMENT_DOWNING);
 		}
 		
 		//返回按钮
@@ -66,7 +82,7 @@ public class DownloadActivity extends FragmentActivity implements OnCheckedChang
 		}
 		
 		//分组选项
-		final RadioGroup radioGroup = (RadioGroup)this.findViewById(R.id.down_radio_group);
+		this.radioGroup = (RadioGroup)this.findViewById(R.id.down_radio_group);
 		radioGroup.setOnCheckedChangeListener(this);
 		//ViewPager
 		this.viewPager = (ViewPager)this.findViewById(R.id.download_pagers);
@@ -94,17 +110,18 @@ public class DownloadActivity extends FragmentActivity implements OnCheckedChang
 					Log.d(TAG, "后台线程加载下载数据...");
 					//检查课程资源ID
 					if(StringUtils.isBlank(lessonId)) return null;
-					//惰性加载数据操作
-					if(dao == null){
-						Log.d(TAG, "惰性加载数据操作...");
-						dao = new DownloadDao(getApplicationContext(), userId);
-					}
+					//初始化
+					final DownloadDao downloadDao = new DownloadDao();
 					//检查是否存在
-					if(!dao.hasDownload(lessonId)){
+					if(!downloadDao.hasDownload(lessonId)){
+						//初始化
+						final LessonDao lessonDao = new LessonDao();
 						//查询课程信息
-						final Lesson lesson = new LessonDao(dao).getLesson(lessonId);
-						//添加到下载
-						dao.add(new Download(lesson)); 
+						final Lesson lesson = lessonDao.getLesson(lessonId);
+						if(lesson != null){
+							//添加到下载
+							downloadDao.add(new Download(lesson)); 
+						}
 					}
 				}catch(Exception e){
 					Log.e(TAG, "后台线程加载下载数据异常:" + e.getMessage(), e);
@@ -118,7 +135,11 @@ public class DownloadActivity extends FragmentActivity implements OnCheckedChang
 			@Override
 			protected void onPostExecute(Void result) {
 				 Log.d(TAG, "前端主线程更新数据...");
+				 //通知数据适配器更新数据
 				 mAdapter.notifyDataSetChanged();
+				 //
+				 final int pageIndex = Math.min(index, mAdapter.getCount() - 1);
+				 radioGroup.check(pageIndex == CONST_FRAGMENT_DOWNING ?  R.id.btn_downing : R.id.btn_finish);
 			}
 		}.execute((Void)null);
 		//

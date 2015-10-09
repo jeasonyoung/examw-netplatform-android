@@ -7,7 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.examw.netschool.model.Lesson;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -21,23 +20,6 @@ import android.util.Log;
 public class LessonDao extends BaseDao {
 	private static final String TAG = "LessonDao";
 	private SQLiteDatabase db;
-	/**
-	 * 构造函数。
-	 * @param context
-	 * @param userId
-	 */
-	public LessonDao(Context context, String userId){
-		super(context, userId);
-		Log.d(TAG, "初始化...");
-	}
-	/**
-	 * 构造函数。
-	 * @param dao
-	 */
-	public LessonDao(BaseDao dao){
-		super(dao);
-		Log.d(TAG, "初始化...");
-	}
 	/**
 	 * 删除班级ID下的课程资源数据。
 	 * @param classId
@@ -112,40 +94,42 @@ public class LessonDao extends BaseDao {
 		Log.d(TAG, "加载班级["+classId+"]下的课程资源数据...");
 		final List<Lesson> lessons = new ArrayList<Lesson>();
 		if(StringUtils.isBlank(classId)) return lessons;
-		try {
-			//创建sql
-			final String query = "SELECT id,name,videoUrl,highVideoUrl,superVideoUrl,time,orderNo FROM tbl_Lessones WHERE class_id = ? ORDER BY orderNo";
-			Log.d(TAG, "sql:" + query);
-			//初始化
-			db = dbHelper.getReadableDatabase();
-			//查询数据
-			final Cursor cursor = db.rawQuery(query, new String[]{ StringUtils.trimToEmpty(classId) });
-			while(cursor.moveToNext()){
-				final Lesson lesson = new Lesson();
-				//课程资源ID
-				lesson.setId(StringUtils.trimToNull(cursor.getString(0)));
-				//课程资源名称
-				lesson.setName(StringUtils.trimToNull(cursor.getString(1)));
-				//课程资源视频URL
-				lesson.setVideoUrl(StringUtils.trimToNull(cursor.getString(2)));
-				//课程资源高清视频URL
-				lesson.setHighVideoUrl(StringUtils.trimToNull(cursor.getString(3)));
-				//课程资源超清视频URL
-				lesson.setSuperVideoUrl(StringUtils.trimToNull(cursor.getString(4)));
-				//考试时长
-				lesson.setTime(Integer.valueOf(cursor.getInt(5)));
-				//排序号
-				lesson.setOrderNo(Integer.valueOf(cursor.getInt(6)));
-				//添加到集合
-				lessons.add(lesson);
-			}
-			cursor.close();
-		} catch (Exception e) {
-			Log.e(TAG, "加载数据异常:" + e.getMessage(), e);
-		} finally {
-			//关闭连接
-			if(db != null) db.close();
-		} 
+		synchronized(dbHelper){
+			try {
+				//创建sql
+				final String query = "SELECT id,name,videoUrl,highVideoUrl,superVideoUrl,time,orderNo FROM tbl_Lessones WHERE class_id = ? ORDER BY orderNo";
+				Log.d(TAG, "sql:" + query);
+				//初始化
+				db = dbHelper.getReadableDatabase();
+				//查询数据
+				final Cursor cursor = db.rawQuery(query, new String[]{ StringUtils.trimToEmpty(classId) });
+				while(cursor.moveToNext()){
+					final Lesson lesson = new Lesson();
+					//课程资源ID
+					lesson.setId(StringUtils.trimToNull(cursor.getString(0)));
+					//课程资源名称
+					lesson.setName(StringUtils.trimToNull(cursor.getString(1)));
+					//课程资源视频URL
+					lesson.setVideoUrl(StringUtils.trimToNull(cursor.getString(2)));
+					//课程资源高清视频URL
+					lesson.setHighVideoUrl(StringUtils.trimToNull(cursor.getString(3)));
+					//课程资源超清视频URL
+					lesson.setSuperVideoUrl(StringUtils.trimToNull(cursor.getString(4)));
+					//考试时长
+					lesson.setTime(Integer.valueOf(cursor.getInt(5)));
+					//排序号
+					lesson.setOrderNo(Integer.valueOf(cursor.getInt(6)));
+					//添加到集合
+					lessons.add(lesson);
+				}
+				cursor.close();
+			} catch (Exception e) {
+				Log.e(TAG, "加载数据异常:" + e.getMessage(), e);
+			} finally {
+				//关闭连接
+				if(db != null) db.close();
+			} 
+		}
 		return lessons;
 	}
 	/**
@@ -158,38 +142,39 @@ public class LessonDao extends BaseDao {
 		Log.d(TAG, "加载课程资源["+lessonId+"]....");
 		Lesson lesson = null;
 		if(StringUtils.isBlank(lessonId)) return lesson;
-		try {
-			//创建sql
-			final String query = "SELECT id,name,videoUrl,highVideoUrl,superVideoUrl,time,orderNo FROM tbl_Lessones WHERE id = ? ";
-			Log.d(TAG, "sql:" + query);
-			//初始化
-			db = dbHelper.getReadableDatabase();
-			//查询数据
-			final Cursor cursor = db.rawQuery(query, new String[]{ StringUtils.trimToEmpty(lessonId) });
-			while(cursor.moveToNext()){
-				lesson = new Lesson();
-				//课程资源ID
-				lesson.setId(StringUtils.trimToNull(cursor.getString(0)));
-				//课程资源名称
-				lesson.setName(StringUtils.trimToNull(cursor.getString(1)));
-				//课程资源视频URL
-				lesson.setVideoUrl(StringUtils.trimToNull(cursor.getString(2)));
-				//课程资源高清视频URL
-				lesson.setHighVideoUrl(StringUtils.trimToNull(cursor.getString(3)));
-				//课程资源超清视频URL
-				lesson.setSuperVideoUrl(StringUtils.trimToNull(cursor.getString(4)));
-				//考试时长
-				lesson.setTime(Integer.valueOf(cursor.getInt(5)));
-				//排序号
-				lesson.setOrderNo(Integer.valueOf(cursor.getInt(6)));
-				break;
+		synchronized(dbHelper){
+			try {
+				//创建sql
+				final String query = "SELECT id,name,videoUrl,highVideoUrl,superVideoUrl,time,orderNo FROM tbl_Lessones WHERE id = ? ";
+				Log.d(TAG, "sql:" + query);
+				//初始化
+				db = dbHelper.getReadableDatabase();
+				//查询数据
+				final Cursor cursor = db.rawQuery(query, new String[]{ StringUtils.trimToEmpty(lessonId) });
+				if(cursor.moveToFirst()){
+					lesson = new Lesson();
+					//课程资源ID
+					lesson.setId(StringUtils.trimToNull(cursor.getString(0)));
+					//课程资源名称
+					lesson.setName(StringUtils.trimToNull(cursor.getString(1)));
+					//课程资源视频URL
+					lesson.setVideoUrl(StringUtils.trimToNull(cursor.getString(2)));
+					//课程资源高清视频URL
+					lesson.setHighVideoUrl(StringUtils.trimToNull(cursor.getString(3)));
+					//课程资源超清视频URL
+					lesson.setSuperVideoUrl(StringUtils.trimToNull(cursor.getString(4)));
+					//考试时长
+					lesson.setTime(Integer.valueOf(cursor.getInt(5)));
+					//排序号
+					lesson.setOrderNo(Integer.valueOf(cursor.getInt(6)));
+				}
+				cursor.close();
+			} catch (Exception e) {
+				Log.e(TAG, "加载数据异常:" + e.getMessage(), e);
+			}finally{
+				//关闭连接
+				if(db != null) db.close();
 			}
-			cursor.close();
-		} catch (Exception e) {
-			Log.e(TAG, "加载数据异常:" + e.getMessage(), e);
-		}finally{
-			//关闭连接
-			if(db != null) db.close();
 		}
 		return lesson;
 	}

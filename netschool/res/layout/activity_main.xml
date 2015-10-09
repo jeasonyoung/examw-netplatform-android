@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_banner_height"
         android:layout_alignParentTop="true"
-        android:background="@drawable/main_top_bg_img"
+        android:background="@color/main_top_bgcolor"
         android:gravity="center"
         android:orientation="vertical" >
 

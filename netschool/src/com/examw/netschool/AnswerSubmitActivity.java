@@ -48,9 +48,6 @@ public class AnswerSubmitActivity extends Activity implements OnClickListener {
 	private final List<Lesson> lessons;
 	private final SpinnerClassAdapter classAdapter;
 	private final SpinnerLessonAdapter lessonAdapter;
-	
-	private MyCourseDao courseDao;
-	private LessonDao lessonDao;
 	/**
 	 * 构造函数。
 	 */
@@ -303,14 +300,10 @@ public class AnswerSubmitActivity extends Activity implements OnClickListener {
 		protected List<MyCourse> doInBackground(Void... params) {
 			try{
 				Log.d(TAG, "后台线程加载班级数据...");
-				//惰性加载
-				if(courseDao == null){
-					Log.d(TAG, "惰性加载班级数据Dao...");
-					courseDao = new MyCourseDao(AnswerSubmitActivity.this, userId);
-				}
+				//初始化
+				final MyCourseDao courseDao = new MyCourseDao();
 				//返回班级数据
 				return courseDao.loadCoursesByClass();
-				
 			}catch(Exception e){
 				Log.e(TAG, "加载数据异常:" + e.getMessage(), e);
 			}
@@ -349,14 +342,10 @@ public class AnswerSubmitActivity extends Activity implements OnClickListener {
 				Log.d(TAG, "后台线程加载课程资源数据...");
 				//检查数据
 				if(params == null || StringUtils.isBlank(params[0])) return null;
-				//惰性加载数据操作
-				if(lessonDao == null){
-					Log.d(TAG, "惰性加载课程资源数据操作...");
-					lessonDao = new LessonDao(AnswerSubmitActivity.this, userId);
-				}
+				//初始化
+				final LessonDao lessonDao = new LessonDao();
 				//返回
 				return lessonDao.loadLessonsByClass(params[0]);
-				
 			}catch(Exception e){
 				Log.e(TAG, "加载课程资源数据异常:" + e.getMessage(), e);
 			}

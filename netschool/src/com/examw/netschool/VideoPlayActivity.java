@@ -75,11 +75,9 @@ public class VideoPlayActivity extends Activity /*implements OnTouchListener, On
 	private GestureDetector gestureDetector;
 	
 	private int volumnMax,currentPlayTimeBySecond;
-	private String userId, lessonId, lessonName,recordId;
+	private String lessonId, lessonName,recordId;
 	
 	private AutoUpdateVideoSeekHandler autoUpdateVideoSeekHandler;
-	
-	private PlayRecordDao playRecordDao;
 	/*
 	 * 重载创建
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -98,7 +96,7 @@ public class VideoPlayActivity extends Activity /*implements OnTouchListener, On
 		final Intent intent = this.getIntent();
 		if(intent != null){
 			//当前用户ID
-			this.userId = intent.getStringExtra(Constant.CONST_USERID);
+			//this.userId = intent.getStringExtra(Constant.CONST_USERID);
 			//当前课程资源ID
 			this.lessonId = intent.getStringExtra(Constant.CONST_LESSON_ID);
 			//当前课程资源名称
@@ -379,8 +377,8 @@ public class VideoPlayActivity extends Activity /*implements OnTouchListener, On
 			protected Object doInBackground(Void... params) {
 				try{
 					Log.d(TAG, "后台线程加载数据处理...");
-					//惰性初始化播放记录
-					if(playRecordDao == null){ playRecordDao = new PlayRecordDao(VideoPlayActivity.this, userId); }
+					//初始化
+					final PlayRecordDao playRecordDao = new PlayRecordDao();
 					//设置当前播放时间
 					currentPlayTimeBySecond = 0;
 					//如果存在播放记录
@@ -403,7 +401,7 @@ public class VideoPlayActivity extends Activity /*implements OnTouchListener, On
 						return null;
 					}
 					//检查视频是否被下载,优先加载下载到本地的数据
-					final DownloadDao downloadDao = new DownloadDao(playRecordDao);
+					final DownloadDao downloadDao = new DownloadDao();
 					if(downloadDao.hasDownload(lessonId)){
 						Log.d(TAG, "检查是否存在本地视频可以播放...");
 						final Download download = downloadDao.getDownload(lessonId);
@@ -418,7 +416,7 @@ public class VideoPlayActivity extends Activity /*implements OnTouchListener, On
 						}
 					}
 					//加载课程资源。
-					final LessonDao lessonDao = new LessonDao(downloadDao);
+					final LessonDao lessonDao = new LessonDao();
 					final Lesson lesson = lessonDao.getLesson(lessonId);
 					if(lesson == null){
 						Log.e(TAG, "课程资源["+lessonId+"]不存在!");
@@ -660,11 +658,8 @@ public class VideoPlayActivity extends Activity /*implements OnTouchListener, On
 			public void run() {
 				try {
 					Log.d(TAG, "异步线程更新播放记录时间...");
-					//惰性加载
-					if(playRecordDao == null){
-						Log.d(TAG, "惰性加载播放记录...");
-						playRecordDao = new PlayRecordDao(VideoPlayActivity.this, userId);
-					}
+					//初始化
+					final PlayRecordDao playRecordDao = new PlayRecordDao();
 					//更新播放时间
 					if(playVideoView == null) return;
 					final int pos = (int)(playVideoView.getCurrentPosition() / 1000);

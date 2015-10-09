@@ -67,12 +67,17 @@ public class FreeExperienceActivity extends FragmentActivity implements OnClickL
 	@Override
 	protected void onStart() {
 		Log.d(TAG, "重载启动...");
-		//添加Fragment
-		this.getSupportFragmentManager()
-			.beginTransaction()
-			.add(R.id.fragment_container, new FreeExperienceFragmentByCategory(this.userId, this.search))
-			.commit();
+		//
+		this.loadFirstFragment();
+		//
 		super.onStart();
+	}
+	//加载第一个Fragment
+	private void loadFirstFragment(){
+		this.getSupportFragmentManager().beginTransaction()
+		.addToBackStack(null)
+		.add(R.id.fragment_container, new FreeExperienceFragmentByCategory(this.userId, this.search))
+		.commit();
 	}
 	/*
 	 * 点击事件处理。
@@ -83,13 +88,16 @@ public class FreeExperienceActivity extends FragmentActivity implements OnClickL
 		Log.d(TAG, "点击事件处理..." + v);
 		switch(v.getId()){
 			case R.id.btn_return:{//返回
-				this.finish();
+				if(this.getSupportFragmentManager().getBackStackEntryCount() > 1){
+					this.getSupportFragmentManager().popBackStack();
+				}else{
+					this.finish();
+				}
 				break;
 			}
 			case R.id.btn_free_experience:{//课程中心
-				this.getSupportFragmentManager().beginTransaction()
-				.add(R.id.fragment_container, new FreeExperienceFragmentByCategory(this.userId, this.search))
-				.commit();
+				//加载Frist
+				this.loadFirstFragment();
 				break;
 			}
 			case R.id.btn_my_course:{//我的课程
@@ -97,6 +105,8 @@ public class FreeExperienceActivity extends FragmentActivity implements OnClickL
 				 intent.putExtra(Constant.CONST_USERID, userId);
 				 intent.putExtra(Constant.CONST_USERNAME, userName);
 				 this.startActivity(intent);
+				 //关闭当前
+				 this.finish();
 				break;
 			}
 			case R.id.btn_play_record:{//播放记录
@@ -104,6 +114,8 @@ public class FreeExperienceActivity extends FragmentActivity implements OnClickL
 				 intent.putExtra(Constant.CONST_USERID, userId);
 				 intent.putExtra(Constant.CONST_USERNAME, userName);
 				 this.startActivity(intent);
+				 //关闭当前
+				 this.finish();
 				break;
 			}
 		}
@@ -128,6 +140,12 @@ public class FreeExperienceActivity extends FragmentActivity implements OnClickL
 		 */
 		public String getSearchKey(){
 			return this.etSearch.getText().toString();
+		}
+		/**
+		 * 清空搜索关键字
+		 */
+		public void clean(){
+			this.etSearch.setText(null);
 		}
 		/**
 		 * 设置查询事件响应。

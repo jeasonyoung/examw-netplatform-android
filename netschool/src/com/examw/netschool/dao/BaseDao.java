@@ -1,5 +1,7 @@
 package com.examw.netschool.dao;
 
+import com.examw.netschool.app.AppContext;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -9,24 +11,19 @@ import android.util.Log;
  * @author jeasonyoung
  * @since 2015年9月9日
  */
-public class BaseDao {
+public abstract class BaseDao {
 	private static final String TAG = "BaseDao";
 	protected final MyDBHelper dbHelper;
 	/**
 	 * 构造函数。
-	 * @param context
-	 * @param userId
 	 */
-	public BaseDao(Context context, String userId){
+	public BaseDao(){
 		Log.d(TAG, "构造函数...");
-		this.dbHelper =  MyDBHelper.getInstance(context, userId);
-	}
-	/**
-	 * 构造函数。
-	 * @param dao
-	 */
-	public BaseDao(BaseDao dao){
-		Log.d(TAG, "构造函数...");
-		this.dbHelper = (dao == null) ?  null : dao.dbHelper;
+		final Context context = AppContext.getContext();
+		if(context == null){
+			Log.e(TAG, "初始化数据操作基础类上下文不存在!");
+			throw new RuntimeException("上下文不存在!");
+		}
+		this.dbHelper = new MyDBHelper(context, AppContext.getCurrentUserId());
 	}
 }

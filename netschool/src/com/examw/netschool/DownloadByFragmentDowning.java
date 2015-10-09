@@ -54,7 +54,7 @@ public class DownloadByFragmentDowning extends Fragment implements ServiceConnec
 	private static final String TAG = "DownloadByFragmentDowning";
 	private LinearLayout nodataView;
 	private IDownloadService downloadService;
-	private final DownloadDao downloadDao;
+	
 	private final List<DownloadComplete> dataSource;
 	private final DowningAdapter adapter;
 	/**
@@ -68,7 +68,6 @@ public class DownloadByFragmentDowning extends Fragment implements ServiceConnec
 		if(context != null){
 			context.bindService(new Intent(context, DownloadService.class), this, Context.BIND_AUTO_CREATE);	
 		}
-		this.downloadDao = new DownloadDao(AppContext.getContext(), userId);
 		this.dataSource = new ArrayList<DownloadComplete>();
 		this.adapter = new DowningAdapter(this.dataSource);
 	}
@@ -147,8 +146,10 @@ public class DownloadByFragmentDowning extends Fragment implements ServiceConnec
 								Log.d(TAG, "取消后台服务下载["+download+"]...");
 								downloadService.cancelDownload(download.getLessonId());
 							}
+							//初始化
+							final DownloadDao downloadDao = new DownloadDao();
 							//从数据库中删除
-							if(downloadDao != null) downloadDao.delete(download.getLessonId());
+							downloadDao.delete(download.getLessonId());
 							//重新刷新数据
 							reloadData();
 						}
@@ -170,15 +171,14 @@ public class DownloadByFragmentDowning extends Fragment implements ServiceConnec
 		if(this.downloadService != null){
 			Log.d(TAG, "设置下载服务消息关联...");
 			this.downloadService.setHandler(new DowningUIHandler(this));
-			//添加下载课程资源
-			if(this.downloadDao != null){
-				Log.d(TAG, "添加下载课程资源...");
-				final  List<DownloadComplete> list = this.downloadDao.loadDownings();
-				if(list != null && list.size() > 0){
-					for(DownloadComplete data : list){
-						if(data == null) continue;
-						this.downloadService.addDownload(data);
-					}
+			//初始化
+			final DownloadDao downloadDao = new DownloadDao();
+			Log.d(TAG, "添加下载课程资源...");
+			final  List<DownloadComplete> list = downloadDao.loadDownings();
+			if(list != null && list.size() > 0){
+				for(DownloadComplete data : list){
+					if(data == null) continue;
+					this.downloadService.addDownload(data);
 				}
 			}
 		}
@@ -202,6 +202,8 @@ public class DownloadByFragmentDowning extends Fragment implements ServiceConnec
 		protected List<DownloadComplete> doInBackground(Void... params) {
 			try{
 				Log.d(TAG, "异步加载列表数据...");
+				//初始化
+				final DownloadDao downloadDao = new DownloadDao();
 				//返回未下载完成的数据
 				return downloadDao.loadDownings();
 			}catch(Exception e){
@@ -421,11 +423,11 @@ public class DownloadByFragmentDowning extends Fragment implements ServiceConnec
 				}
 				//设置下载状态
 				this.data.setState(state.getValue());
-				//更新数据到数据库
-				if(downloadDao != null){
-					Log.d(TAG, "更新状态到数据库...");
-					downloadDao.update(this.data);
-				}
+				//初始化
+				final DownloadDao downloadDao = new DownloadDao();
+				//更新数据到数据库 
+				Log.d(TAG, "更新状态到数据库...");
+				downloadDao.update(this.data); 
 				//重新加载数据
 				reloadData();
 			}catch(Exception e){

@@ -11,6 +11,7 @@
      <TextView android:id="@+id/child_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="@dimen/free_experience_item_height"
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginRight="10dp"

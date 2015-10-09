@@ -41,8 +41,6 @@ public class DownloadService extends Service implements IDownloadService {
 	
 	 private IBinder binder;
 	 private boolean stop;
-	 
-	 private DownloadDao downloadDao;
 	/**
 	 * 构造函数。
 	 */
@@ -77,8 +75,6 @@ public class DownloadService extends Service implements IDownloadService {
 	@Override
 	public void onCreate() {
 		Log.d(TAG, "下载服务正在被创建...");
-		//初始化下载数据操作
-		downloadDao = new DownloadDao(AppContext.getContext(), AppContext.getCurrentUserId());
 		//执行文件下载管理线程。
 		pools.execute(this.downloadThreadMgr);
 		//
@@ -121,6 +117,8 @@ public class DownloadService extends Service implements IDownloadService {
 					}
 					//设置下载中状态
 					download.setState((state = DownloadState.DOWNING).getValue());
+					//初始化
+					final DownloadDao downloadDao = new DownloadDao();
 					//更新数据库数据
 					if(downloadDao != null){
 						Log.d(TAG, "轮询时更新["+state.getName()+"]下载状态到数据库....");
@@ -265,11 +263,10 @@ public class DownloadService extends Service implements IDownloadService {
 		Log.d(TAG, "课程["+download+"]压入到队尾:" + result); 
 		//设置位置集合
 		this.downloadPosCache.put(download.getLessonId(), download);
+		//初始化
+		final DownloadDao downloadDao = new DownloadDao();
 		//更新到数据库
-		if(downloadDao != null){
-			Log.d(TAG, "更新下载状态到数据库...");
-			downloadDao.update(download);
-		}
+		downloadDao.update(download);
 		//发送下载状态
 		sendUpdateState(download.getLessonId(), state);
 	}
@@ -304,8 +301,10 @@ public class DownloadService extends Service implements IDownloadService {
 		if(this.downloadPosCache.containsKey(id)){
 			this.downloadPosCache.remove(id);
 		}
+		//初始化
+		final DownloadDao downloadDao = new DownloadDao();
 		//删除数据
-		if(downloadDao != null) downloadDao.delete(download.getLessonId());
+		downloadDao.delete(download.getLessonId());
 		//发送状态消息
 		this.sendUpdateState(id, state);
 	}
@@ -336,8 +335,10 @@ public class DownloadService extends Service implements IDownloadService {
 			//移除下载线程集合
 			this.downloadThreads.remove(id);
 		}
+		//初始化
+		final DownloadDao downloadDao = new DownloadDao();
 		//更新到数据库
-		if(downloadDao != null) downloadDao.update(download);
+		downloadDao.update(download);
 		//发送状态消息
 		this.sendUpdateState(id, state);
 	}

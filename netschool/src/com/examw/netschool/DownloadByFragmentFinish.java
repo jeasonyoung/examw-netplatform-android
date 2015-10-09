@@ -39,7 +39,6 @@ public class DownloadByFragmentFinish extends Fragment {
 	private LinearLayout nodataView;
 	private final String userId;
 
-	private DownloadDao downloadDao;
 	private final List<Download> dataSource;
 	private final FinishAdapter adapter;
 	/**
@@ -120,11 +119,8 @@ public class DownloadByFragmentFinish extends Fragment {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							Log.d(TAG, "删除下载课程资源["+download+"]...");
-							//惰性加载数据
-							if(downloadDao == null){
-								Log.d(TAG, "惰性加载数据...");
-								downloadDao = new DownloadDao(getActivity(), userId);
-							}
+							//初始化
+							final DownloadDao downloadDao = new DownloadDao();
 							//从数据库中删除
 							downloadDao.delete(download.getLessonId());
 							//重新刷新数据
@@ -148,11 +144,8 @@ public class DownloadByFragmentFinish extends Fragment {
 		protected List<Download> doInBackground(Void... params) {
 			try{
 				Log.d(TAG, "异步线程加载数据...");
-				//惰性加载数据操作
-				if(downloadDao == null){
-					Log.d(TAG, "惰性加载数据操作...");
-					downloadDao = new DownloadDao(getActivity(), userId);
-				}
+				//初始化
+				final DownloadDao downloadDao = new DownloadDao();
 				//加载数据
 				return downloadDao.loadDownloads(DownloadState.FINISH);
 			}catch(Exception e){

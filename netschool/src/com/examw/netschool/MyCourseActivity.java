@@ -50,8 +50,6 @@ public class MyCourseActivity extends Activity {
 	
 	private final List<MyCourse> courses;
 	private final MyCourseAdapter adapter;
-	
-	private MyCourseDao courseDao;
 	/**
 	 * 构造函数。
 	 */
@@ -137,8 +135,12 @@ public class MyCourseActivity extends Activity {
 				intent.putExtra(Constant.CONST_USERID, userId);
 				//设置用户名
 				intent.putExtra(Constant.CONST_USERNAME, userName);
+				//设置离线课程索引
+				intent.putExtra(DownloadActivity.CONST_FRAGMENT_INDEX, DownloadActivity.CONST_FRAGMENT_FINISH);
 				//发送意图
 				startActivity(intent);
+				//关闭当前
+				finish();
 			}
 		});
 		
@@ -156,6 +158,8 @@ public class MyCourseActivity extends Activity {
 				intent.putExtra(Constant.CONST_USERNAME, userName);
 				//发送意图
 				startActivity(intent);
+				//关闭当前
+				finish();
 			}
 		});
 		//
@@ -236,13 +240,11 @@ public class MyCourseActivity extends Activity {
 		Log.d(TAG, "重载开始...");
 		//数据加载等待
 		if(this.progressDialog == null){
-			this.progressDialog = ProgressDialog.show(this, null, this.getResources().getText(R.string.my_course_progress_msg), true, true);
+			this.progressDialog = ProgressDialog.show(this, null, this.getResources().getText(R.string.progress_msg), true, true);
 			this.progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		}
 		//显示等待
 		this.progressDialog.show();
-		//初始化上下文
-		final AppContext appContext = (AppContext)this.getApplicationContext();
 		//异步线程加载数据
 		new AsyncTask<Void, Void, List<MyCourse>>() {
 			/*
@@ -253,6 +255,10 @@ public class MyCourseActivity extends Activity {
 			protected List<MyCourse> doInBackground(Void... params) {
 				try{
 					Log.d(TAG, "后台线程加载数据...");
+					//初始化
+					final MyCourseDao courseDao = new MyCourseDao();
+					//初始化上下文
+					final AppContext appContext = (AppContext)getApplicationContext();
 					//检查是否从网络下载数据
 					if(appContext != null && appContext.getLoginState() == LoginState.LOGINED && appContext.isNetworkConnected()){
 						Log.d(TAG, " 将从网络下载课程数据...");
@@ -263,11 +269,6 @@ public class MyCourseActivity extends Activity {
 							final Type type = new TypeToken<JSONCallback<MyCourse[]>>(){}.getType();
 							final JSONCallback<MyCourse[]> callback = gson.fromJson(result, type);
 							if(callback.getSuccess()){
-								//惰性加载
-								if(courseDao == null){
-									Log.d(TAG, "惰性初始化数据操作...");
-									courseDao = new MyCourseDao(MyCourseActivity.this, userId);
-								}
 								//清空数据
 								courseDao.deleteAll();
 								//新增数据
@@ -276,11 +277,6 @@ public class MyCourseActivity extends Activity {
 								Log.e(TAG, callback.getMsg());
 							}
 						}
-					}
-					//惰性加载
-					if(courseDao == null){
-						Log.d(TAG, "惰性初始化数据操作...");
-						courseDao = new MyCourseDao(MyCourseActivity.this, userId);
 					}
 					//查询数据
 					return courseDao.loadCourses(null);
@@ -297,7 +293,7 @@ public class MyCourseActivity extends Activity {
 			protected void onPostExecute(List<MyCourse> result) {
 				Log.d(TAG, "前台主线程处理...");
 				//关闭等待动画
-				progressDialog.dismiss();
+				if(progressDialog != null) progressDialog.dismiss();
 				//清空数据
 				courses.clear();
 				//更新数据
@@ -350,11 +346,8 @@ public class MyCourseActivity extends Activity {
 					Log.d(TAG, "加载分组["+groupPosition+"]课程数据失败!");
 					return 0;
 				}
-				//惰性加载
-				if(courseDao == null){
-					Log.d(TAG, "惰性初始化我的课程数据操作...");
-					courseDao = new MyCourseDao(MyCourseActivity.this, userId);
-				}
+				//初始化
+				final MyCourseDao courseDao = new MyCourseDao();
 				//加载数据
 				final List<MyCourse> list = courseDao.loadCourses(parent.getId());
 				if(list != null && list.size() > 0){

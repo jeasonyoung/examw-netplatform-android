@@ -10,6 +10,7 @@
         style="@style/free_experience_lesson_item_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="@dimen/free_experience_item_height"
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
         android:layout_marginRight="5dp"

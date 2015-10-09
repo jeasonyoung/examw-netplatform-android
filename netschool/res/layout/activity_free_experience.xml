@@ -32,6 +32,10 @@
                 android:layout_marginRight="@dimen/free_experience_search_text_right"
                 android:layout_marginEnd="@dimen/free_experience_search_text_right"
                 android:layout_marginTop="@dimen/free_experience_search_text_top"
+                android:paddingLeft="@dimen/free_experience_search_text_padding_left"
+                android:paddingStart="@dimen/free_experience_search_text_padding_left"
+                android:paddingRight="@dimen/free_experience_search_text_padding_right"
+                android:paddingEnd="@dimen/free_experience_search_text_padding_right"
                 android:inputType="text"
                 android:singleLine="true"
                 android:maxLines="1" />

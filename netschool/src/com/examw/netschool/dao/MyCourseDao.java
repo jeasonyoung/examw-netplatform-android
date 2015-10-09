@@ -7,7 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.examw.netschool.model.MyCourse;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -20,15 +19,6 @@ import android.util.Log;
 public class MyCourseDao extends BaseDao {
 	private final static String TAG = "MyCourseDao";
 	private SQLiteDatabase db;
-	/**
-	 * 构造函数。
-	 * @param context
-	 * @param userId
-	 */
-	public MyCourseDao(Context context, String userId){
-		super(context, userId);
-		Log.d(TAG, "初始化...");
-	}
 	/**
 	 * 删除全部数据。
 	 */
@@ -100,34 +90,36 @@ public class MyCourseDao extends BaseDao {
 	public List<MyCourse> loadCourses(String pid){
 		Log.d(TAG, "加载全部课程数据集合...");
 		final List<MyCourse> courses = new ArrayList<MyCourse>();
-		try {
-			//初始化
-			db = dbHelper.getReadableDatabase();
-			//查询数据
-			final Cursor cursor = db.rawQuery("SELECT pid,id,name,type,orderNo FROM tbl_MyCourses WHERE ifnull(pid, '') = ? ORDER BY orderNo", new String[]{  
-					StringUtils.trimToEmpty(pid)
-			});
-			while(cursor.moveToNext()){
-				final MyCourse course = new MyCourse();
-				//上级课程ID
-				course.setPid(StringUtils.trimToNull(cursor.getString(0)));
-				//课程ID
-				course.setId(StringUtils.trimToNull(cursor.getString(1)));
-				//课程名称
-				course.setName(cursor.getString(2));
-				//类型
-				course.setType(cursor.getString(3));
-				//排序
-				course.setOrderNo(Integer.valueOf(cursor.getInt(4)));
-				//添加到集合
-				courses.add(course);
+		synchronized(dbHelper){
+			try {
+				//初始化
+				db = dbHelper.getReadableDatabase();
+				//查询数据
+				final Cursor cursor = db.rawQuery("SELECT pid,id,name,type,orderNo FROM tbl_MyCourses WHERE ifnull(pid, '') = ? ORDER BY orderNo", new String[]{  
+						StringUtils.trimToEmpty(pid)
+				});
+				while(cursor.moveToNext()){
+					final MyCourse course = new MyCourse();
+					//上级课程ID
+					course.setPid(StringUtils.trimToNull(cursor.getString(0)));
+					//课程ID
+					course.setId(StringUtils.trimToNull(cursor.getString(1)));
+					//课程名称
+					course.setName(cursor.getString(2));
+					//类型
+					course.setType(cursor.getString(3));
+					//排序
+					course.setOrderNo(Integer.valueOf(cursor.getInt(4)));
+					//添加到集合
+					courses.add(course);
+				}
+				cursor.close();
+			} catch (Exception e) {
+				Log.e(TAG, "加载数据异常:" + e.getMessage(), e);
+			} finally {
+				//关闭连接
+				if(db != null) db.close();
 			}
-			cursor.close();
-		} catch (Exception e) {
-			Log.e(TAG, "加载数据异常:" + e.getMessage(), e);
-		} finally {
-			//关闭连接
-			if(db != null) db.close();
 		}
 		return courses;
 	}
@@ -138,34 +130,36 @@ public class MyCourseDao extends BaseDao {
 	public List<MyCourse> loadCoursesByClass(){
 		Log.d(TAG, "加载全部的班级数据...");
 		final List<MyCourse> courses = new ArrayList<MyCourse>();
-		try {
-			//初始化
-			db = dbHelper.getReadableDatabase();
-			//查询数据
-			final Cursor cursor = db.rawQuery("SELECT DISTINCT id,name,type,orderNo FROM tbl_MyCourses WHERE type = ? ORDER BY orderNo", new String[]{  
-					MyCourse.TYPE_CLASS
-			});
-			while(cursor.moveToNext()){
-				final MyCourse course = new MyCourse();
-				//上级课程ID
-				course.setPid(null);
-				//课程ID
-				course.setId(StringUtils.trimToNull(cursor.getString(0)));
-				//课程名称
-				course.setName(cursor.getString(1));
-				//类型
-				course.setType(cursor.getString(2));
-				//排序
-				course.setOrderNo(Integer.valueOf(cursor.getInt(3)));
-				//添加到集合
-				courses.add(course);
+		synchronized(dbHelper){
+			try {
+				//初始化
+				db = dbHelper.getReadableDatabase();
+				//查询数据
+				final Cursor cursor = db.rawQuery("SELECT DISTINCT id,name,type,orderNo FROM tbl_MyCourses WHERE type = ? ORDER BY orderNo", new String[]{  
+						MyCourse.TYPE_CLASS
+				});
+				while(cursor.moveToNext()){
+					final MyCourse course = new MyCourse();
+					//上级课程ID
+					course.setPid(null);
+					//课程ID
+					course.setId(StringUtils.trimToNull(cursor.getString(0)));
+					//课程名称
+					course.setName(cursor.getString(1));
+					//类型
+					course.setType(cursor.getString(2));
+					//排序
+					course.setOrderNo(Integer.valueOf(cursor.getInt(3)));
+					//添加到集合
+					courses.add(course);
+				}
+				cursor.close();
+			} catch (Exception e) {
+				Log.e(TAG, "加载数据异常:" + e.getMessage(), e);
+			} finally {
+				//关闭连接
+				if(db != null) db.close();
 			}
-			cursor.close();
-		} catch (Exception e) {
-			Log.e(TAG, "加载数据异常:" + e.getMessage(), e);
-		} finally {
-			//关闭连接
-			if(db != null) db.close();
 		}
 		return courses;
 	}

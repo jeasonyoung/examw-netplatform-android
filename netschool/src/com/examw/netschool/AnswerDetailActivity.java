@@ -43,7 +43,6 @@ public class AnswerDetailActivity extends Activity implements OnClickListener {
 	private ProgressDialog progressDialog;
 	
 	private String userId,userName,topicId;
-	private AQDetailDao detailDao;
 	
 	private final List<AQDetail> details;
 	private final DetailsAdapter adapter;
@@ -214,6 +213,8 @@ public class AnswerDetailActivity extends Activity implements OnClickListener {
 		protected List<AQDetail> doInBackground(Void... params) {
 			try{
 				Log.d(TAG, "后台异步线程加载数据...");
+				//初始化
+				final AQDetailDao detailDao = new AQDetailDao();
 				//检查网络
 				final AppContext appContext = (AppContext)getApplicationContext();
 				if(appContext != null && appContext.isNetworkConnected() && StringUtils.isNotBlank(topicId)){
@@ -226,11 +227,6 @@ public class AnswerDetailActivity extends Activity implements OnClickListener {
 						final JSONCallback<AQDetail[]> callback = gson.fromJson(result, type);
 						//获取数据成功
 						if(callback.getSuccess() && callback.getData() != null && callback.getData().length > 0){
-							//惰性加载数据
-							if(detailDao == null){
-								Log.d(TAG, "惰性加载数据操作...");
-								detailDao = new AQDetailDao(AnswerDetailActivity.this, userId);
-							}
 							//更新数据
 							for(AQDetail detail : callback.getData()){
 								if(detail == null || StringUtils.isBlank(detail.getId()) || StringUtils.isBlank(detail.getTopicId())) continue;
@@ -244,11 +240,6 @@ public class AnswerDetailActivity extends Activity implements OnClickListener {
 							}
 						}
 					}
-				}
-				//惰性加载数据
-				if(detailDao == null){
-					Log.d(TAG, "惰性加载数据操作...");
-					detailDao = new AQDetailDao(AnswerDetailActivity.this, userId);
 				}
 				//返回数据
 				return detailDao.loadDetails(topicId);

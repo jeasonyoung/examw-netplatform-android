@@ -40,7 +40,6 @@ public class PlayRecordActivity extends Activity implements OnClickListener, OnI
 	private LinearLayout nodataView;
 	
 	private String userId;
-	private PlayRecordDao playRecordDao;
 	/**
 	 * 构造函数。
 	 */
@@ -159,11 +158,8 @@ public class PlayRecordActivity extends Activity implements OnClickListener, OnI
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					Log.d(TAG, "删除播放记录["+record+"]...");
-					//惰性加载数据
-					if(playRecordDao == null){
-						Log.d(TAG, "惰性加载数据...");
-						playRecordDao = new PlayRecordDao(PlayRecordActivity.this, userId);
-					}
+					//初始化
+					final PlayRecordDao playRecordDao = new PlayRecordDao();
 					//从数据库中删除
 					playRecordDao.delete(record.getId());
 					//重新刷新数据
@@ -188,11 +184,8 @@ public class PlayRecordActivity extends Activity implements OnClickListener, OnI
 		protected List<PlayRecord> doInBackground(Void... params) {
 			try{
 				Log.d(TAG, "异步线程加载数据...");
-				//惰性加载数据操作
-				if(playRecordDao == null){
-					Log.d(TAG, "惰性初始化...");
-					playRecordDao = new PlayRecordDao(PlayRecordActivity.this, userId);
-				}
+				//初始化
+				final PlayRecordDao playRecordDao = new PlayRecordDao();
 				//加载数据 
 				return playRecordDao.loadPlayRecords();
 			}catch(Exception e){

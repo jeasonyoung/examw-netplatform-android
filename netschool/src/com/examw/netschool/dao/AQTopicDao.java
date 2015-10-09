@@ -8,7 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.examw.netschool.model.AQTopic;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -23,15 +22,6 @@ public class AQTopicDao extends BaseDao {
 	private static final String TAG = "AQTopicDao";
 	private SQLiteDatabase db;
 	/**
-	 * 构造函数。
-	 * @param context
-	 * @param userId
-	 */
-	public AQTopicDao(Context context, String userId) {
-		super(context, userId);
-		Log.d(TAG, "初始化...");
-	}
-	/**
 	 * 是否存在答疑主题。
 	 * @param id
 	 * @return
@@ -40,20 +30,21 @@ public class AQTopicDao extends BaseDao {
 		Log.d(TAG, "是否存在答疑主题..." + id);
 		boolean result = false;
 		if(StringUtils.isBlank(id)) return result;
-		try{
-			final String query = "SELECT COUNT(0) FROM tbl_AQTopic WHERE id = ?;";
-			db = dbHelper.getReadableDatabase();
-			final Cursor cursor =  db.rawQuery(query, new String[]{ id });
-			while(cursor.moveToNext()){
-				result = cursor.getInt(0) > 0;
-				break;
+		synchronized(dbHelper){
+			try{
+				final String query = "SELECT COUNT(0) FROM tbl_AQTopic WHERE id = ?;";
+				db = dbHelper.getReadableDatabase();
+				final Cursor cursor =  db.rawQuery(query, new String[]{ id });
+				if(cursor.moveToFirst()){
+					result = cursor.getInt(0) > 0;
+				}
+				//
+				cursor.close();
+			}catch(Exception e){
+				Log.e(TAG, "发生异常:" + e.getMessage(), e);
+			}finally{
+				if(db != null) db.close();
 			}
-			//
-			cursor.close();
-		}catch(Exception e){
-			Log.e(TAG, "发生异常:" + e.getMessage(), e);
-		}finally{
-			if(db != null) db.close();
 		}
 		return result;
 	}
@@ -66,25 +57,26 @@ public class AQTopicDao extends BaseDao {
 		Log.d(TAG, "获取答疑主题["+id+"]数据...");
 		AQTopic topic = null;
 		if(StringUtils.isBlank(id)) return topic;
-		try{
-			//sql
-			final String query = "SELECT a.id,a.lessonId,b.name,a.title,a.content,a.lastTime from tbl_AQTopic a "
-					+ " INNER JOIN tbl_Lessones b ON b.id = a.lessonId "
-					+ " WHERE a.id = ?"
-					+ " ORDER BY a.lastTime desc ";
-			//
-			db = dbHelper.getReadableDatabase();
-			final Cursor cursor =  db.rawQuery(query, new String[]{ id });
-			while(cursor.moveToNext()){
-				topic = this.read(cursor);
-				break;
+		synchronized(dbHelper){
+			try{
+				//sql
+				final String query = "SELECT a.id,a.lessonId,b.name,a.title,a.content,a.lastTime from tbl_AQTopic a "
+						+ " INNER JOIN tbl_Lessones b ON b.id = a.lessonId "
+						+ " WHERE a.id = ?"
+						+ " ORDER BY a.lastTime desc ";
+				//
+				db = dbHelper.getReadableDatabase();
+				final Cursor cursor =  db.rawQuery(query, new String[]{ id });
+				if(cursor.moveToFirst()){
+					topic = this.read(cursor);
+				}
+				//
+				cursor.close();
+			}catch(Exception e){
+				Log.e(TAG, "发生异常:" + e.getMessage(), e);
+			}finally{
+				if(db != null) db.close();
 			}
-			//
-			cursor.close();
-		}catch(Exception e){
-			Log.e(TAG, "发生异常:" + e.getMessage(), e);
-		}finally{
-			if(db != null) db.close();
 		}
 		return topic;
 	}
@@ -95,26 +87,28 @@ public class AQTopicDao extends BaseDao {
 	public List<AQTopic> loadTopics(){
 		Log.d(TAG, "加载全部数据集合....");
 		final List<AQTopic> topics = new ArrayList<AQTopic>();
-		try{
-			//sql
-			final String query = "SELECT a.id,a.lessonId,b.name,a.title,a.content,a.lastTime from tbl_AQTopic a "
-					+ " INNER JOIN tbl_Lessones b ON b.id = a.lessonId "
-					+ " ORDER BY a.lastTime desc ";
-			//
-			db = dbHelper.getReadableDatabase();
-			final Cursor cursor =  db.rawQuery(query, null);
-			while(cursor.moveToNext()){
-				final AQTopic topic = this.read(cursor);
-				if(topic != null){
-					topics.add(topic);
+		synchronized(dbHelper){
+			try{
+				//sql
+				final String query = "SELECT a.id,a.lessonId,b.name,a.title,a.content,a.lastTime from tbl_AQTopic a "
+						+ " INNER JOIN tbl_Lessones b ON b.id = a.lessonId "
+						+ " ORDER BY a.lastTime desc ";
+				//
+				db = dbHelper.getReadableDatabase();
+				final Cursor cursor =  db.rawQuery(query, null);
+				while(cursor.moveToNext()){
+					final AQTopic topic = this.read(cursor);
+					if(topic != null){
+						topics.add(topic);
+					}
 				}
+				//
+				cursor.close();
+			}catch(Exception e){
+				Log.e(TAG, "发生异常:" + e.getMessage(), e);
+			}finally{
+				if(db != null) db.close();
 			}
-			//
-			cursor.close();
-		}catch(Exception e){
-			Log.e(TAG, "发生异常:" + e.getMessage(), e);
-		}finally{
-			if(db != null) db.close();
 		}
 		return topics;
 	}

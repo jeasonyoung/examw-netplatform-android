@@ -9,7 +9,6 @@ import com.examw.netschool.model.Download;
 import com.examw.netschool.model.Download.DownloadState;
 import com.examw.netschool.model.DownloadComplete;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -22,23 +21,6 @@ public class DownloadDao extends BaseDao {
 	private static final String TAG = "DownloadDao";
 	private SQLiteDatabase db;
 	/**
-	 * 构造函数。
-	 * @param context
-	 * @param userId
-	 */
-	public DownloadDao(Context context, String userId) {
-		super(context, userId);
-		Log.d(TAG, "初始化...");
-	}
-	/**
-	 * 构造函数。
-	 * @param dao
-	 */
-	public DownloadDao(BaseDao dao){
-		super(dao);
-		Log.d(TAG, "初始化..");
-	}
-	/**
 	 * 是否存在下载课程资源。
 	 * @param lessonId
 	 * @return
@@ -47,22 +29,23 @@ public class DownloadDao extends BaseDao {
 		Log.d(TAG, "是否存在下载课程资源["+lessonId+"]...");
 		boolean result = false;
 		if(StringUtils.isBlank(lessonId)) return result;
-		try{
-			final String query = "SELECT COUNT(0) FROM tbl_Downloads WHERE lessonId = ? ";
-			Log.d(TAG, "sql:" + query);
-			//初始化
-			db = dbHelper.getReadableDatabase();
-			//查询数据
-			final Cursor cursor = db.rawQuery(query, new String[]{ StringUtils.trimToEmpty(lessonId) });
-			while(cursor.moveToNext()){
-				result = cursor.getInt(0) > 0;
-				break;
+		synchronized(dbHelper){
+			try{
+				final String query = "SELECT COUNT(0) FROM tbl_Downloads WHERE lessonId = ? ";
+				Log.d(TAG, "sql:" + query);
+				//初始化
+				db = dbHelper.getReadableDatabase();
+				//查询数据
+				final Cursor cursor = db.rawQuery(query, new String[]{ StringUtils.trimToEmpty(lessonId) });
+				if(cursor.moveToFirst()){
+					result = cursor.getInt(0) > 0;
+				}
+				cursor.close();
+			}catch(Exception e){
+				Log.e(TAG, "发生异常:" + e.getMessage(),	e);
+			}finally{
+				if(db != null) db.close();
 			}
-			cursor.close();
-		}catch(Exception e){
-			Log.e(TAG, "发生异常:" + e.getMessage(),	e);
-		}finally{
-			if(db != null) db.close();
 		}
 		return result;
 	}
@@ -75,24 +58,26 @@ public class DownloadDao extends BaseDao {
 		Log.d(TAG, "加载下载状态["+ state+"]数据...");
 		if(state == null) return null;
 		final List<Download> list = new ArrayList<Download>();
-		try{
-			final String query = "SELECT a.lessonId,b.name,a.filePath,a.fileSize,a.state FROM tbl_Downloads a "
-					+ " INNER JOIN tbl_Lessones b ON b.id = a.lessonId "
-					+ " WHERE a.state = ? ";
-			Log.d(TAG, "sql:" + query);
-			//初始化
-			db = dbHelper.getReadableDatabase();
-			//查询数据
-			final Cursor cursor = db.rawQuery(query, new String[]{ String.valueOf(state.getValue()) });
-			while(cursor.moveToNext()){
-				//添加到数据集合
-				list.add(this.createDownload(cursor));
+		synchronized(dbHelper){
+			try{
+				final String query = "SELECT a.lessonId,b.name,a.filePath,a.fileSize,a.state FROM tbl_Downloads a "
+						+ " INNER JOIN tbl_Lessones b ON b.id = a.lessonId "
+						+ " WHERE a.state = ? ";
+				Log.d(TAG, "sql:" + query);
+				//初始化
+				db = dbHelper.getReadableDatabase();
+				//查询数据
+				final Cursor cursor = db.rawQuery(query, new String[]{ String.valueOf(state.getValue()) });
+				while(cursor.moveToNext()){
+					//添加到数据集合
+					list.add(this.createDownload(cursor));
+				}
+				cursor.close();
+			}catch(Exception e){
+				Log.e(TAG, "发生异常:" + e.getMessage(),	e);
+			}finally{
+				if(db != null) db.close();
 			}
-			cursor.close();
-		}catch(Exception e){
-			Log.e(TAG, "发生异常:" + e.getMessage(),	e);
-		}finally{
-			if(db != null) db.close();
 		}
 		return list;
 	}
@@ -159,26 +144,25 @@ public class DownloadDao extends BaseDao {
 		Log.d(TAG, "加载课程资源["+lessonId+"]下载数据...");
 		Download data = null;
 		if(StringUtils.isBlank(lessonId)) return data;
-		try{
-			final String query = "SELECT a.lessonId,b.name,a.filePath,a.fileSize,a.state FROM tbl_Downloads a "
-					+ " INNER JOIN tbl_Lessones b ON b.id = a.lessonId "
-					+ " WHERE a.lessonId = ? ";
-			Log.d(TAG, "sql:" + query);
-			//初始化
-			db = dbHelper.getReadableDatabase();
-			//查询数据
-			final Cursor cursor = db.rawQuery(query, new String[]{ lessonId });
-			while(cursor.moveToNext()){
-				//
-				data = this.createDownload(cursor);
-				
-				break;
+		synchronized(dbHelper){
+			try{
+				final String query = "SELECT a.lessonId,b.name,a.filePath,a.fileSize,a.state FROM tbl_Downloads a "
+						+ " INNER JOIN tbl_Lessones b ON b.id = a.lessonId "
+						+ " WHERE a.lessonId = ? ";
+				Log.d(TAG, "sql:" + query);
+				//初始化
+				db = dbHelper.getReadableDatabase();
+				//查询数据
+				final Cursor cursor = db.rawQuery(query, new String[]{ lessonId });
+				if (cursor.moveToFirst()){
+					data = this.createDownload(cursor);
+				}
+				cursor.close();
+			}catch(Exception e){
+				Log.e(TAG, "发生异常:" + e.getMessage(),	e);
+			}finally{
+				if(db != null) db.close();
 			}
-			cursor.close();
-		}catch(Exception e){
-			Log.e(TAG, "发生异常:" + e.getMessage(),	e);
-		}finally{
-			if(db != null) db.close();
 		}
 		return data;
 	}

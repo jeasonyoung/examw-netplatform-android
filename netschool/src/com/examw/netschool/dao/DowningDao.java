@@ -7,7 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.examw.netschool.model.Downing;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -22,23 +21,6 @@ public class DowningDao extends BaseDao {
 	private static final String TAG = "DowningDao";
 	private SQLiteDatabase db;
 	/**
-	 * 构造函数。
-	 * @param context
-	 * @param userId
-	 */
-	public DowningDao(Context context, String userId) {
-		super(context, userId);
-		Log.d(TAG, "初始化...");
-	}
-	/**
-	 * 构造函数。
-	 * @param dao
-	 */
-	public DowningDao(BaseDao dao){
-		super(dao);
-		Log.d(TAG, "初始化...");
-	}
-	/**
 	 * 是否存在课程资源下载。
 	 * @param lessonId
 	 * @return
@@ -47,22 +29,23 @@ public class DowningDao extends BaseDao {
 		Log.d(TAG, "是否存在课程资源下载..." + lessonId);
 		boolean result = false;
 		if(StringUtils.isBlank(lessonId)) return result;
-		try{
-			final String query = "SELECT COUNT(0) FROM tbl_Downing WHERE lessonId = ? ";
-			Log.d(TAG, "sql:" + query);
-			//初始化
-			db = dbHelper.getReadableDatabase();
-			//查询数据
-			final Cursor cursor = db.rawQuery(query, new String[]{ StringUtils.trimToEmpty(lessonId) });
-			while(cursor.moveToNext()){
-				result = cursor.getInt(0) > 0;
-				break;
+		synchronized(dbHelper){
+			try{
+				final String query = "SELECT COUNT(0) FROM tbl_Downing WHERE lessonId = ? ";
+				Log.d(TAG, "sql:" + query);
+				//初始化
+				db = dbHelper.getReadableDatabase();
+				//查询数据
+				final Cursor cursor = db.rawQuery(query, new String[]{ StringUtils.trimToEmpty(lessonId) });
+				if(cursor.moveToFirst()){
+					result = cursor.getInt(0) > 0;
+				}
+				cursor.close();
+			}catch(Exception e){
+				Log.e(TAG, "发生异常:" + e.getMessage(),	e);
+			}finally{
+				if(db != null) db.close();
 			}
-			cursor.close();
-		}catch(Exception e){
-			Log.e(TAG, "发生异常:" + e.getMessage(),	e);
-		}finally{
-			if(db != null) db.close();
 		}
 		return result;
 	}
@@ -76,34 +59,36 @@ public class DowningDao extends BaseDao {
 		Log.d(TAG, "加载课程资源["+lessonId+"]数据下载进程...");
 		if(StringUtils.isBlank(lessonId)) return null;
 		final List<Downing> list = new ArrayList<Downing>();
-		try{
-			final String query = "SELECT threadId,startPos,endPos,completeSize FROM tbl_Downing WHERE lessonId = ? ";
-			Log.d(TAG, "sql:" + query);
-			//初始化
-			db = this.dbHelper.getReadableDatabase();
-			//查询数据
-			final Cursor cursor = db.rawQuery(query, new String[]{ StringUtils.trimToEmpty(lessonId) });
-			while(cursor.moveToNext()){
+		synchronized(dbHelper){
+			try{
+				final String query = "SELECT threadId,startPos,endPos,completeSize FROM tbl_Downing WHERE lessonId = ? ";
+				Log.d(TAG, "sql:" + query);
 				//初始化
-				final Downing data = new Downing();
-				//0.课程资源ID
-				data.setLessonId(lessonId);
-				//1.线程ID
-				data.setThreadId(cursor.getInt(0));
-				//2.起始位置
-				data.setStartPos(cursor.getLong(1));
-				//3.结束位置
-				data.setEndPos(cursor.getLong(2));
-				//4.完成下载
-				data.setCompleteSize(cursor.getLong(3));
-				//添加到集合
-				list.add(data);
+				db = this.dbHelper.getReadableDatabase();
+				//查询数据
+				final Cursor cursor = db.rawQuery(query, new String[]{ StringUtils.trimToEmpty(lessonId) });
+				while(cursor.moveToNext()){
+					//初始化
+					final Downing data = new Downing();
+					//0.课程资源ID
+					data.setLessonId(lessonId);
+					//1.线程ID
+					data.setThreadId(cursor.getInt(0));
+					//2.起始位置
+					data.setStartPos(cursor.getLong(1));
+					//3.结束位置
+					data.setEndPos(cursor.getLong(2));
+					//4.完成下载
+					data.setCompleteSize(cursor.getLong(3));
+					//添加到集合
+					list.add(data);
+				}
+				cursor.close();
+			}catch(Exception e){
+				Log.e(TAG, "发生异常:" + e.getMessage(), e);
+			}finally{
+				if(db != null) db.close();
 			}
-			cursor.close();
-		}catch(Exception e){
-			Log.e(TAG, "发生异常:" + e.getMessage(), e);
-		}finally{
-			if(db != null) db.close();
 		}
 		return list;
 	}
@@ -141,7 +126,7 @@ public class DowningDao extends BaseDao {
 		return result;
 	}
 	//插入数据
-	private synchronized void insert(final SQLiteDatabase db, Downing downing){
+	private void insert(final SQLiteDatabase db, Downing downing){
 		if(db == null || downing == null) return;
 		Log.d(TAG, "插入课程资源["+downing.getLessonId()+"]下载线程["+downing.getThreadId()+"]数据...");
 		if(StringUtils.isBlank(downing.getLessonId()) || downing.getThreadId() < 0) return;

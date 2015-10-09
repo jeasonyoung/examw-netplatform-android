@@ -11,6 +11,10 @@
     <!-- 下载完成列表 -->
     <ListView android:id="@+id/download_listview_finish"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content" 
+        android:divider="@drawable/topic_driver" 
+        android:dividerHeight="1.0dp" 
+        android:cacheColorHint="@color/transparent"
+        android:fadingEdge="none" />
 
 </LinearLayout>

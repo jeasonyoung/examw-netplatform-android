@@ -41,11 +41,8 @@ public final class MultiThreadDownload {
 	private static final String TAG = "MultiThreadDownload";
 	private static final int  NET_STATE_SUCCESS = 200, NET_STATE_RANGE = 206, BUFFER_SIZE = 1024,THREAD_SLEEP = 100;
 	private static final int THREADS = 4;//下载线程数
-	private final DownloadDao downloadDao;
-	private final DowningDao downingDao;
 	private final Download download;
 	private final Lesson lesson;
-	private final String current_user_id;
 	private final ExecutorService threadPools;
 	private boolean stop = false;
 	private OnDownloadProgressListener onDownloadProgressListener;
@@ -58,17 +55,15 @@ public final class MultiThreadDownload {
 		if(download == null || StringUtils.isBlank(download.getLessonId())) throw new RuntimeException("下载记录或课程资源ID不存在!");
 		this.download = download;
 		//初始化下载记录Dao
-		this.downloadDao = new DownloadDao(AppContext.getContext(), this.current_user_id = AppContext.getCurrentUserId());
-		if(!this.downloadDao.hasDownload(this.download.getLessonId())){
+		final DownloadDao downloadDao = new DownloadDao();
+		if(!downloadDao.hasDownload(this.download.getLessonId())){
 			throw new RuntimeException("课程资源["+this.download.getLessonId()+"]未有下载记录!");
 		}
 		//初始化课程资源Dao
-		final LessonDao lessonDao = new LessonDao(this.downloadDao);
+		final LessonDao lessonDao = new LessonDao();
 		this.lesson = lessonDao.getLesson(this.download.getLessonId()); 
 		if(this.lesson == null) throw new RuntimeException("课程资源["+this.download.getLessonName()+"]不存在!");
 		if(StringUtils.isBlank(this.lesson.getPriorityUrl())) throw new RuntimeException("课程资源URL不存在!");
-		//初始化下载线程Dao
-		this.downingDao = new DowningDao(this.downloadDao);
 		//下载线程池
 		this.threadPools = Executors.newFixedThreadPool(THREADS * 2);
 	}
@@ -87,27 +82,29 @@ public final class MultiThreadDownload {
 	public void start() throws Exception {
 		Log.d(TAG, "开始下载课程资源["+ this.lesson.getName()+"]...");
 		this.stop = false;
+		//初始化
+		final DowningDao downingDao = new DowningDao();
 		//加载下载线程
-		final List<Downing> downings =  this.downingDao.loadDowningByLesson(this.lesson.getId());
+		final List<Downing> downings =  downingDao.loadDowningByLesson(this.lesson.getId());
 		if(downings != null && downings.size() > 0){//继续下载
 			Log.d(TAG, "继续下载...");
 			//检查下载文件是否存在
 			if(download.getFilePath() == null || !(new File(download.getFilePath()).exists())){
 				Log.d(TAG, "已下载的文件不存在..." + download.getFilePath());
 				//删除下载线程记录
-				this.downingDao.deleteByLesson(this.lesson.getId());
+				downingDao.deleteByLesson(this.lesson.getId());
 				//新增现在
-				this.initStart();
+				this.initStart(downingDao);
 			}else{
 				//开始下载
 				this.start(downings);
 			}
 		}else{//新增下载
-			this.initStart();
+			this.initStart(downingDao);
 		}
 	}
 	//开始新的下载。
-	private void initStart() throws Exception{
+	private void initStart(DowningDao dao) throws Exception{
 		Log.d(TAG, "初始化开始下载...");
 		//初始化
 		final HttpClient httpClient = new DefaultHttpClient();
@@ -129,7 +126,7 @@ public final class MultiThreadDownload {
 		httpHead.abort();
 		if(this.download.getFileSize() <= 0) throw new Exception("获取下载文件["+this.lesson+"]长度失败!");
 		//初始化根路径并检查容量
-		final File root = createDownloadSaveFileDir(this.current_user_id, this.download.getFileSize());
+		final File root = createDownloadSaveFileDir(AppContext.getCurrentUserId(), this.download.getFileSize());
 		//检查路径是否存在
 		if(!root.exists()){
 			root.mkdirs();
@@ -169,7 +166,7 @@ public final class MultiThreadDownload {
 			downings.add(data);
 		}
 		//添加下载线程数据库
-		if(downingDao != null) downingDao.add(downings);
+		if(dao != null)dao.add(downings);
 		//启动下载
 		this.start(downings);
 	}
@@ -219,11 +216,10 @@ public final class MultiThreadDownload {
 		}
 		//设置下载状态
 		this.download.setState(DownloadState.DOWNING.getValue());
-		//更新下载信息到数据
-		if(this.downloadDao != null){
-			Log.d(TAG, "更新下载信息数据...");
-			this.downloadDao.update(this.download);
-		}
+		//初始化
+		final DownloadDao downloadDao = new DownloadDao();
+		//更新下载信息到数据 
+		downloadDao.update(this.download);
 		//初始化线程
 		final DownloadThreadTask[] tasks  = new DownloadThreadTask[downings.size()];
 		for(int i = 0; i < downings.size(); i++){
@@ -239,6 +235,8 @@ public final class MultiThreadDownload {
 				//下载进度统计
 				int finish_count = 0;
 				long total = 0;
+				//初始化
+				final DowningDao downingDao = new DowningDao();
 				//循环线程
 				for(DownloadThreadTask task : tasks){
 					final Downing downing;
@@ -249,7 +247,7 @@ public final class MultiThreadDownload {
 						//停止线程
 						if(this.stop)task.setStop(true);
 						//更新下载线程到数据
-						if(downingDao != null) downingDao.update(downing);
+						downingDao.update(downing);
 					}catch(Exception e){
 						Log.e(TAG, "轮询线程["+task+"]异常:" + e.getMessage(), e);
 					}finally{
@@ -264,10 +262,7 @@ public final class MultiThreadDownload {
 						//设置下载完成状态
 						this.download.setState(DownloadState.FINISH.getValue());
 						//更新到数据库
-						if(this.downloadDao != null){
-							Log.d(TAG, "更新下载完成状态到数据库...");
-							this.downloadDao.update(this.download);
-						}
+						downloadDao.update(this.download);
 					}
 				}
 				//通知监听器

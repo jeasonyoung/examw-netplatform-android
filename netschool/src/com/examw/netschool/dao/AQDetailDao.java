@@ -8,7 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.examw.netschool.model.AQDetail;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -23,23 +22,6 @@ public class AQDetailDao extends BaseDao {
 	private static final String TAG = "AQDetailDao";
 	private SQLiteDatabase db;
 	/**
-	 * 构造函数。
-	 * @param context
-	 * @param userId
-	 */
-	public AQDetailDao(Context context, String userId) {
-		super(context, userId);
-		Log.d(TAG, "初始化...");
-	}
-	/**
-	 * 构造函数。
-	 * @param dao
-	 */
-	public AQDetailDao(BaseDao dao){
-		super(dao);
-		Log.d(TAG, "初始化...");
-	}
-	/**
 	 * 是否存在明细。
 	 * @param detailId
 	 * @return
@@ -48,22 +30,23 @@ public class AQDetailDao extends BaseDao {
 		Log.d(TAG, "是否存在明细...." + detailId);
 		boolean result = false;
 		if(StringUtils.isBlank(detailId)) return result;
-		try{
-			//sql
-			final String query = "SELECT COUNT(0) FROM tbl_AQDetail WHERE id = ?;";
-			//
-			db = dbHelper.getReadableDatabase();
-			final Cursor cursor =  db.rawQuery(query, new String[]{ detailId });
-			while(cursor.moveToNext()){
-				result = cursor.getInt(0) > 0;
-				break;
+		synchronized(dbHelper){
+			try{
+				//sql
+				final String query = "SELECT COUNT(0) FROM tbl_AQDetail WHERE id = ?;";
+				//
+				db = dbHelper.getReadableDatabase();
+				final Cursor cursor =  db.rawQuery(query, new String[]{ detailId });
+				if(cursor.moveToFirst()){
+					result = cursor.getInt(0) > 0;
+				}
+				//关闭游标
+				cursor.close();
+			}catch(Exception e){
+				Log.e(TAG, "发生异常:" + e.getMessage(), e);
+			}finally{
+				if(db != null) db.close();
 			}
-			//关闭游标
-			cursor.close();
-		}catch(Exception e){
-			Log.e(TAG, "发生异常:" + e.getMessage(), e);
-		}finally{
-			if(db != null) db.close();
 		}
 		return result;
 	}
@@ -77,22 +60,23 @@ public class AQDetailDao extends BaseDao {
 		Log.d(TAG, "加载答疑明细..." + id);
 		AQDetail detail = null;
 		if(StringUtils.isBlank(id)) return detail;
-		try{
-			//sql
-			final String query = "SELECT id,topicId,content,userId,userName,createTime FROM tbl_AQDetail WHERE id = ?;";
-			//
-			db = dbHelper.getReadableDatabase();
-			final Cursor cursor =  db.rawQuery(query, new String[]{ id });
-			while(cursor.moveToNext()){
-				detail = this.read(cursor);
-				break;
+		synchronized(dbHelper){
+			try{
+				//sql
+				final String query = "SELECT id,topicId,content,userId,userName,createTime FROM tbl_AQDetail WHERE id = ?;";
+				//
+				db = dbHelper.getReadableDatabase();
+				final Cursor cursor =  db.rawQuery(query, new String[]{ id });
+				if(cursor.moveToFirst()){
+					detail = this.read(cursor);
+				}
+				//
+				cursor.close();
+			}catch(Exception e){
+				Log.e(TAG, "发生异常:" + e.getMessage(), e);
+			}finally{
+				if(db != null) db.close();
 			}
-			//
-			cursor.close();
-		}catch(Exception e){
-			Log.e(TAG, "发生异常:" + e.getMessage(), e);
-		}finally{
-			if(db != null) db.close();
 		}
 		return detail;
 	}
@@ -105,27 +89,29 @@ public class AQDetailDao extends BaseDao {
 		Log.d(TAG, "加载答疑主题["+topicId+"]下的明细集合...");
 		List<AQDetail> details = null;
 		if(StringUtils.isBlank(topicId)) return details;
-		try{
-			//sql
-			final String query = " SELECT id,topicId,content,userId,userName,createTime FROM tbl_AQDetail "
-					+ " WHERE topicId = ? ORDER BY createTime;";
-			//
-			db = dbHelper.getReadableDatabase();
-			final Cursor cursor =  db.rawQuery(query, new String[]{ topicId });
-			details = new ArrayList<AQDetail>();
-			while(cursor.moveToNext()){
+		synchronized(dbHelper){
+			try{
+				//sql
+				final String query = " SELECT id,topicId,content,userId,userName,createTime FROM tbl_AQDetail "
+						+ " WHERE topicId = ? ORDER BY createTime;";
 				//
-				final AQDetail detail = this.read(cursor);
-				if(detail != null){
-					details.add(detail);
+				db = dbHelper.getReadableDatabase();
+				final Cursor cursor =  db.rawQuery(query, new String[]{ topicId });
+				details = new ArrayList<AQDetail>();
+				while(cursor.moveToNext()){
+					//
+					final AQDetail detail = this.read(cursor);
+					if(detail != null){
+						details.add(detail);
+					}
 				}
+				//
+				cursor.close();
+			}catch(Exception e){
+				Log.e(TAG, "发生异常:" + e.getMessage(), e);
+			}finally{
+				if(db != null) db.close();
 			}
-			//
-			cursor.close();
-		}catch(Exception e){
-			Log.e(TAG, "发生异常:" + e.getMessage(), e);
-		}finally{
-			if(db != null) db.close();
 		}
 		return details;
 	}
@@ -161,7 +147,6 @@ public class AQDetailDao extends BaseDao {
 			Log.d(TAG, "所属答疑主题ID为空!");
 			return;
 		}
-		
 		synchronized(dbHelper){
 			try{
 				//主题明细ID
