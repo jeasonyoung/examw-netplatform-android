@@ -46,7 +46,6 @@ public final class MultiThreadDownload {
 	private final Download download;
 	private final Lesson lesson;
 	private final String current_user_id;
-	private final HttpClient httpClient;
 	private final ExecutorService threadPools;
 	private boolean stop = false;
 	private OnDownloadProgressListener onDownloadProgressListener;
@@ -70,8 +69,6 @@ public final class MultiThreadDownload {
 		if(StringUtils.isBlank(this.lesson.getPriorityUrl())) throw new RuntimeException("课程资源URL不存在!");
 		//初始化下载线程Dao
 		this.downingDao = new DowningDao(this.downloadDao);
-		//初始化httpClient
-		this.httpClient = new DefaultHttpClient();
 		//下载线程池
 		this.threadPools = Executors.newFixedThreadPool(THREADS * 2);
 	}
@@ -112,9 +109,11 @@ public final class MultiThreadDownload {
 	//开始新的下载。
 	private void initStart() throws Exception{
 		Log.d(TAG, "初始化开始下载...");
+		//初始化
+		final HttpClient httpClient = new DefaultHttpClient();
 		//获取下载文件大小
 		HttpHead httpHead = new HttpHead(this.lesson.getPriorityUrl());
-		HttpResponse response = this.httpClient.execute(httpHead);
+		HttpResponse response = httpClient.execute(httpHead);
 		int status = 0;
 		if((status = response.getStatusLine().getStatusCode()) != NET_STATE_SUCCESS){
 			Log.e(TAG, "网络连接状态:" + status);
@@ -142,7 +141,7 @@ public final class MultiThreadDownload {
 		boolean acceptRangs = false;
 		httpHead = new HttpHead(this.lesson.getPriorityUrl());
 		httpHead.addHeader("Range", "bytes=0-" + (this.download.getFileSize() - 1));
-		response = this.httpClient.execute(httpHead);
+		response = httpClient.execute(httpHead);
 		if((status = response.getStatusLine().getStatusCode()) == NET_STATE_RANGE){
 			acceptRangs = true;
 		}
@@ -218,14 +217,18 @@ public final class MultiThreadDownload {
 			accessFile.setLength(this.download.getFileSize());
 			accessFile.close();
 		}
-		//更新下载状态到数据库
+		//设置下载状态
 		this.download.setState(DownloadState.DOWNING.getValue());
-		this.asyncUpdateDownload(this.download);
+		//更新下载信息到数据
+		if(this.downloadDao != null){
+			Log.d(TAG, "更新下载信息数据...");
+			this.downloadDao.update(this.download);
+		}
 		//初始化线程
 		final DownloadThreadTask[] tasks  = new DownloadThreadTask[downings.size()];
 		for(int i = 0; i < downings.size(); i++){
 			//初始化下载线程任务
-			tasks[i] = new DownloadThreadTask(this.httpClient, new DowningTask(downings.get(i), this.lesson, saveFile));
+			tasks[i] = new DownloadThreadTask(new DefaultHttpClient(), new DowningTask(downings.get(i), this.lesson, saveFile));
 			//执行下载线程
 			this.threadPools.execute(tasks[i]);
 		}
@@ -257,38 +260,28 @@ public final class MultiThreadDownload {
 				isDown = !this.stop;
 				if(isDown){
 					isDown = !(finish_count == tasks.length);
-					if(!isDown) this.download.setState(DownloadState.FINISH.getValue());
+					if(!isDown){
+						//设置下载完成状态
+						this.download.setState(DownloadState.FINISH.getValue());
+						//更新到数据库
+						if(this.downloadDao != null){
+							Log.d(TAG, "更新下载完成状态到数据库...");
+							this.downloadDao.update(this.download);
+						}
+					}
 				}
 				//通知监听器
 				if(this.onDownloadProgressListener != null){
 					final long fileSize = this.download.getFileSize();
-					this.onDownloadProgressListener.onProgress(this.download, (int)(((float)total / fileSize) * 100));
+					this.onDownloadProgressListener.onProgress(this.download.getLessonId(), (int)(((float)total / fileSize) * 100));
 				}
 			}catch(Exception e){
 				Log.e(TAG, "循环等待下载时异常:" + e.getMessage(), e);
 			}finally{
-				//休眠0.8秒
-				Thread.sleep(800);
+				//休眠1秒
+				Thread.sleep(1000);
 			}
 		}
-	}
-	//异步更新下载数据
-	private void asyncUpdateDownload(final Download download){
-		Log.d(TAG, "准备异步线程更新下载数据...");
-		if(download == null) return;
-		AppContext.pools_single.execute(new Runnable() {
-			@Override
-			public void run() {
-				try{
-					Log.d(TAG, "异步线程更新下载数据...");
-					if(downloadDao != null){
-						downloadDao.update(download);
-					}
-				}catch(Exception e){
-					Log.e(TAG, "异步线程更新下载数据异常:" + e.getMessage(), e);
-				}
-			}
-		});
 	}
 	/**
 	 * 下载线程任务。
@@ -373,12 +366,14 @@ public final class MultiThreadDownload {
 				}
 				//读取请求返回数据
 				final HttpEntity entity = response.getEntity();
+				//流缓冲
+				final BufferedInputStream inputStream = new BufferedInputStream(entity.getContent());
+				
 				//存储文件随机读取操作(用于分段大文件处理)
 				final RandomAccessFile randomAccessFile = new RandomAccessFile(this.task.getSaveFile(), "rwd");
 				//设置开始写文件位置
 				randomAccessFile.seek(startPos);
-				//流缓冲
-				final BufferedInputStream inputStream = new BufferedInputStream(entity.getContent());
+				
 				//读取缓存
 				byte[] buf = new byte[BUFFER_SIZE];
 				//开始循环读取
@@ -421,9 +416,9 @@ public final class MultiThreadDownload {
 	public interface OnDownloadProgressListener{
 		/**
 		 * 下载进度。
-		 * @param download
+		 * @param lessonId
 		 * @param per
 		 */
-		void onProgress(final Download download, int per);
+		void onProgress(String lessonId, int per);
 	}
 }

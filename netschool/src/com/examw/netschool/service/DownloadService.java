@@ -122,7 +122,10 @@ public class DownloadService extends Service implements IDownloadService {
 					//设置下载中状态
 					download.setState((state = DownloadState.DOWNING).getValue());
 					//更新数据库数据
-					if(downloadDao != null) downloadDao.update(download);
+					if(downloadDao != null){
+						Log.d(TAG, "轮询时更新["+state.getName()+"]下载状态到数据库....");
+						downloadDao.update(download);
+					}
 					//发送下载状态
 					sendUpdateState(download.getLessonId(), state);
 					try{
@@ -131,7 +134,10 @@ public class DownloadService extends Service implements IDownloadService {
 						//设置下载完成状态
 						download.setState((state = DownloadState.FINISH).getValue());
 						//更新数据库数据
-						if(downloadDao != null) downloadDao.update(download);
+						if(downloadDao != null){
+							Log.d(TAG, "轮询时更新["+state.getName()+"]下载状态到数据库....");
+							downloadDao.update(download);
+						}
 						//发送下载状态
 						sendUpdateState(download.getLessonId(), state);
 					}catch(Exception e){
@@ -139,7 +145,10 @@ public class DownloadService extends Service implements IDownloadService {
 						//设置下载失败状态
 						download.setState((state = DownloadState.FAIL).getValue());
 						//更新数据
-						if(downloadDao != null) downloadDao.update(download);
+						if(downloadDao != null){
+							Log.d(TAG, "轮询时更新["+state.getName()+"]下载状态到数据库....");
+							downloadDao.update(download);
+						}
 						//发送下载状态
 						sendUpdateState(download.getLessonId(), state);
 						//发生下载消息
@@ -155,13 +164,13 @@ public class DownloadService extends Service implements IDownloadService {
 	private OnDownloadProgressListener downloadProgressListeners = new OnDownloadProgressListener(){
 		/*
 		 * 更新下载进度。
-		 * @see com.examw.netschool.downloads.MultiThreadDownload.OnDownloadProgressListener#onProgress(com.examw.netschool.model.Download, int)
+		 * @see com.examw.netschool.service.MultiThreadDownload.OnDownloadProgressListener#onProgress(java.lang.String, int)
 		 */
 		@Override
-		public void onProgress(Download download, int per) {
-			if(download == null || StringUtils.isBlank(download.getLessonId()) || per < 0) return;
-			Log.d(TAG, "更新课程["+download+"]下载进度:" + per);
-			sendProgressUpdate(download.getLessonId(), per);
+		public void onProgress(String lessonId, int per) {
+			if(StringUtils.isBlank(lessonId) || per < 0) return;
+			Log.d(TAG, "更新课程["+lessonId+"]下载进度:" + per);
+			sendProgressUpdate(lessonId, per);
 		}
 	};
 	/*
@@ -257,7 +266,10 @@ public class DownloadService extends Service implements IDownloadService {
 		//设置位置集合
 		this.downloadPosCache.put(download.getLessonId(), download);
 		//更新到数据库
-		if(downloadDao != null) downloadDao.update(download);
+		if(downloadDao != null){
+			Log.d(TAG, "更新下载状态到数据库...");
+			downloadDao.update(download);
+		}
 		//发送下载状态
 		sendUpdateState(download.getLessonId(), state);
 	}

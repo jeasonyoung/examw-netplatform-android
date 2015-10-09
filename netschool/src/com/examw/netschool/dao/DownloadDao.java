@@ -104,30 +104,32 @@ public class DownloadDao extends BaseDao {
 	public List<DownloadComplete> loadDownings(){
 		Log.d(TAG, " 加载正在的下载数据...");
 		final List<DownloadComplete> list = new ArrayList<DownloadComplete>();
-		try{
-			final String query = "SELECT a.lessonId,b.name,a.filePath,a.fileSize,a.state,IFNULL(SUM(completeSize),0) completeSize FROM tbl_Downloads a "
-					+ " INNER JOIN tbl_Lessones b ON b.id = a.lessonId "
-					+ " LEFT OUTER JOIN tbl_Downing c ON c.lessonId = a.lessonId "
-					+ " WHERE a.state <> ? "
-					+ " GROUP BY a.lessonId,b.name,a.filePath,a.fileSize,a.state";
-			Log.d(TAG, "sql:" + query);
-			//初始化
-			db = dbHelper.getReadableDatabase();
-			//查询数据
-			final Cursor cursor = db.rawQuery(query, new String[]{ String.valueOf(DownloadState.FINISH.getValue()) });
-			while(cursor.moveToNext()){
+		synchronized(dbHelper){
+			try{
+				final String query = "SELECT a.lessonId,b.name,a.filePath,a.fileSize,a.state,IFNULL(SUM(completeSize),0) completeSize FROM tbl_Downloads a "
+						+ " INNER JOIN tbl_Lessones b ON b.id = a.lessonId "
+						+ " LEFT OUTER JOIN tbl_Downing c ON c.lessonId = a.lessonId "
+						+ " WHERE a.state <> ? "
+						+ " GROUP BY a.lessonId,b.name,a.filePath,a.fileSize,a.state";
+				Log.d(TAG, "sql:" + query);
 				//初始化
-				final DownloadComplete data = new DownloadComplete(this.createDownload(cursor));
-				//设置下载量
-				data.setCompleteSize(cursor.getLong(5));
-				//添加到数据集合
-				list.add(data);
+				db = dbHelper.getReadableDatabase();
+				//查询数据
+				final Cursor cursor = db.rawQuery(query, new String[]{ String.valueOf(DownloadState.FINISH.getValue()) });
+				while(cursor.moveToNext()){
+					//初始化
+					final DownloadComplete data = new DownloadComplete(this.createDownload(cursor));
+					//设置下载量
+					data.setCompleteSize(cursor.getLong(5));
+					//添加到数据集合
+					list.add(data);
+				}
+				cursor.close();
+			}catch(Exception e){
+				Log.e(TAG, "发生异常:" + e.getMessage(),	e);
+			}finally{
+				if(db != null) db.close();
 			}
-			cursor.close();
-		}catch(Exception e){
-			Log.e(TAG, "发生异常:" + e.getMessage(),	e);
-		}finally{
-			if(db != null) db.close();
 		}
 		return list;
 	}
