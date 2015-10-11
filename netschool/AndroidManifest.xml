@@ -44,7 +44,7 @@
         <activity android:name=".MyCourseLessonActivity" android:screenOrientation="portrait" />
          
         <!-- 播放Activity-->
-        <activity android:name=".VideoPlayActivity" android:process=":vitamio"
+        <activity android:name=".VideoPlayActivity"
              android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
              android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
              android:screenOrientation="landscape"/>

@@ -11,7 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -22,14 +21,15 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.util.EntityUtils;
-
-import android.util.Log;
 
 import com.examw.netschool.app.Constant;
 import com.examw.netschool.model.JSONCallback;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import android.util.Log;
 /**
  * HTTP摘要认证客户端工具类
  * 
@@ -38,7 +38,8 @@ import com.google.gson.reflect.TypeToken;
  */
 public final class DigestClientUtil {
 	private static final String TAG = "DigestClientUtil";
-	private static final String encoding = "UTF-8";
+	private static final String ENCODING = "UTF-8", APP_JSON = "application/json";
+	private static final int TIME_OUT = 5000;
 	/**
 	 * GET请求。
 	 * @param url
@@ -65,7 +66,9 @@ public final class DigestClientUtil {
 				params.add(new BasicNameValuePair(entity.getKey(), entity.getValue()));
 			}
 			//对参数编码
-			final String param = URLEncodedUtils.format(params, encoding);
+			final String param = URLEncodedUtils.format(params, ENCODING);
+			//参数
+			Log.d(TAG, "参数:" + param);
 			//
 			getMethod = new HttpGet(url + "?" + param);
 		}else {
@@ -91,7 +94,7 @@ public final class DigestClientUtil {
 			}
 			//POST
 			final HttpPost postMethod = new HttpPost(url);
-			postMethod.setEntity(new UrlEncodedFormEntity(params, encoding));
+			postMethod.setEntity(new UrlEncodedFormEntity(params, ENCODING));
 			//Send
 			return sendDigestRequest(postMethod);
 			
@@ -118,9 +121,9 @@ public final class DigestClientUtil {
 			//POST
 			final HttpPost postMethod = new HttpPost(url);
 			//
-			final StringEntity s = new StringEntity(json_data);
-			s.setContentEncoding("UTF-8");
-			s.setContentType("application/json");
+			final StringEntity s = new StringEntity(json_data, ENCODING);
+			s.setContentEncoding(ENCODING);
+			s.setContentType(APP_JSON);
 			//
 			postMethod.setEntity(s);
 			//提交数据
@@ -142,15 +145,17 @@ public final class DigestClientUtil {
 	 */
 	private static String sendDigestRequest(HttpUriRequest method){
 		try {
-			//创建密码证书
-			final Credentials credentials = new UsernamePasswordCredentials(Constant.DOMAIN_Username, Constant.DOMAIN_Password);
-			
 			//创建认证提供者
 			final BasicCredentialsProvider bcp = new BasicCredentialsProvider();
-			bcp.setCredentials(AuthScope.ANY, credentials);
+			bcp.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(Constant.DOMAIN_Username, Constant.DOMAIN_Password));
 			
 			//初始化HTTP客户端
 			final DefaultHttpClient client = new DefaultHttpClient();
+			//连结超时
+			client.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, TIME_OUT);
+			//读取超时
+			client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, TIME_OUT);
+			//设置认证
 			client.setCredentialsProvider(bcp);
 			
 			//执行方法并返回 response
@@ -158,12 +163,12 @@ public final class DigestClientUtil {
 			
 			//返回结果
 			final int status = response.getStatusLine().getStatusCode();
-			final String result = EntityUtils.toString(response.getEntity(), encoding);
+			final String result = EntityUtils.toString(response.getEntity(), ENCODING);
+			
+			Log.d(TAG, "请求反馈["+status+"]:" + result);
 			if(status == HttpStatus.SC_OK){//200
 				return result;
-			}else {
-				Log.i(TAG, "状态["+status+"]:" + result);
-			}
+			} 
 		} catch (Exception e) {
 			Log.e(TAG, "GET请求异常:" + e.getMessage(), e);
 		}

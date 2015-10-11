@@ -29,9 +29,6 @@ public class AppContext extends Application {
 	private static Context mContext;
 	//当前用户ID
 	private static String currentUserId;
-	//当前用户登录状态
-	private static LoginState loginState = LoginState.NONE;
-	
 	//窗口管理器
 	private WindowManager windowManager;
 	//连接管理
@@ -130,24 +127,6 @@ public class AppContext extends Application {
 		return StringUtils.equals(Environment.getExternalStorageState(), Environment.MEDIA_MOUNTED);
 	}
 	/**
-	 * 获取登录状态。
-	 * @return 登录状态。
-	 */
-	public LoginState getLoginState() {
-		return loginState;
-	}
-	/**
-	 * 设置登录状态。
-	 * @param state 
-	 *	  登录状态。
-	 */
-	public synchronized void setLoginState(LoginState state) {
-		if(state != loginState){
-			Log.d(TAG, "设置登录状态...["+loginState+"]=>["+state+"]");
-			loginState = state;
-		}
-	}
-	/**
 	 * 获取当前用户ID。
 	 * @return 当前用户ID。
 	 */
@@ -238,46 +217,6 @@ public class AppContext extends Application {
 			Log.e(TAG, "发生异常:" + e.getMessage(), e);
 		}
 		return 0;
-	}
-	
-	/**
-	 * 登录状态。
-	 * 
-	 * @author jeasonyoung
-	 * @since 2015年9月2日
-	 */
-	public static enum LoginState {
-		/**
-		 * 登录失败。
-		 */
-		FAIL(-1),
-		/**
-		 * 未登录。
-		 */
-		NONE(0),
-		/**
-		 * 登录中。
-		 */
-		LOGINING(1),
-		/**
-		 * 在线登录成功.
-		 */
-		LOGINED(2),
-		/**
-		 * 本地登录成功。
-		 */
-		LOCAL(3);
-		private int value;
-		private LoginState(int value){ this.value = value; }
-		
-		public int getValue(){ return this.value; }
-		
-		public static LoginState parse(int value){
-			for(LoginState state : LoginState.values()){
-				if(state.getValue() == value) return state;
-			}
-			return NONE;
-		}
 	}
 	/**
 	 * 网络类型。

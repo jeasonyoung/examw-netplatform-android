@@ -207,7 +207,7 @@ public class PlayRecordActivity extends Activity implements OnClickListener, OnI
 				playRecords.addAll(result);
 			}
 			//没有数据
-			nodataView.setVisibility(playRecords.size() == 0 ? View.VISIBLE : View.GONE);
+			nodataView.setVisibility(playRecords.size() > 0 ? View.GONE : View.VISIBLE);
 			//通知适配器更新
 			adapter.notifyDataSetChanged();
 		}

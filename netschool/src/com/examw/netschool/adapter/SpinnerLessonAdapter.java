@@ -84,7 +84,7 @@ public class SpinnerLessonAdapter extends BaseAdapter {
 		private TextView tvTitle;
 		//
 		public ViewHolder(View convertView){
-			this.tvTitle = (TextView)convertView.findViewById(R.id.title);
+			this.tvTitle = (TextView)convertView;
 		}
 		//
 		public void loadData(Lesson lesson){

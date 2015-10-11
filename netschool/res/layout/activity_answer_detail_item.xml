@@ -2,19 +2,18 @@
 <!-- 答疑明细数据行 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/answer_detail_margin"
     android:background="@color/transparent"
     android:orientation="vertical" >
     
     <!-- 内容 -->
     <TextView android:id="@+id/answer_detail_content" 
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginEnd="5dp"
+        android:layout_margin="@dimen/answer_detail_padding"
+        android:padding="@dimen/answer_detail_padding"
+        android:background="@drawable/edit_text_bg"
         android:singleLine="false"
         android:textColor="@color/black" 
         android:textSize="@dimen/text_small_size" />
@@ -22,12 +21,11 @@
     <!-- 底部  -->
     <RelativeLayout
         android:layout_width="match_parent"
-       	android:layout_height="match_parent"
-       	android:layout_marginTop="5dp">
+       	android:layout_height="match_parent">
         
         <!-- 用户姓名 -->
         <TextView android:id="@+id/answer_detail_username"  
-            android:layout_width="match_parent" 
+            android:layout_width="wrap_content" 
             android:layout_height="wrap_content" 
             android:layout_marginRight="5dp"
             android:layout_marginEnd="5dp"

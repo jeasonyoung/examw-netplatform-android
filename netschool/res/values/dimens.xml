@@ -60,6 +60,13 @@
     <dimen name="free_experience_search_btn_height">40.0dp</dimen>
     <dimen name="free_experience_item_height">35.0dp</dimen>
     
+    <!-- 你问我答－我的提问 Activity -->
+    <dimen name="answer_submit_margin">5.0dp</dimen>
+    <dimen name="answer_submit_padding">2.0dp</dimen>
+    <dimen name="answer_submit_input_height">30.0dp</dimen>
+    <dimen name="answer_detail_margin">10.0dp</dimen>
+    <dimen name="answer_detail_padding">5.0dp</dimen>
+    
     <!-- 字体通用 -->
     <dimen name="text_medium_size">16.0sp</dimen>
     <dimen name="text_small_size">14.0sp</dimen>

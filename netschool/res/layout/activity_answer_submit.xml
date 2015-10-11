@@ -9,85 +9,108 @@
     <!-- top  -->
     <include layout="@layout/activity_header"/>
     
-    <!-- 输入 -->
-    <TableLayout
-        android:layout_width="match_parent"
+    <!-- 套餐/班级 -->
+    <LinearLayout android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginEnd="5dp">
+        android:layout_margin="@dimen/answer_submit_margin"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
         
-        <!-- 套餐/班级 -->
-        <TableRow android:gravity="center_vertical">
-            
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/answer_submit_class"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_large_size" />
-             
-            <Spinner android:id="@+id/ddl_class"
+        <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="@string/answer_submit_class"
+               android:textColor="@color/black"
+               android:textSize="@dimen/text_large_size" />
+        
+        <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.0" />
-            
-        </TableRow>
+                android:layout_height="@dimen/answer_submit_input_height"
+                android:padding="@dimen/answer_submit_padding"
+                android:background="@drawable/edit_text_bg">
+                
+                <Spinner android:id="@+id/ddl_class"
+	                style="@style/answer_spinner"
+	                android:layout_width="match_parent"
+	                android:layout_height="wrap_content"
+	                android:layout_toLeftOf="@+id/ddl_class_btn"
+	                android:layout_toStartOf="@id/ddl_class_btn"
+	                android:layout_centerVertical="true"/>
+                
+                <ImageView android:id="@+id/ddl_class_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/arrow_down"
+                    android:contentDescription="@string/answer_submit_class"/>
+                
+            </RelativeLayout>
+    </LinearLayout>
+    
+    <!-- 课程资源 -->
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/answer_submit_margin"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
         
-        <!-- 课程资源 -->
-        <TableRow android:gravity="center_vertical">
-            <TextView
+         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/answer_submit_lesson"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_large_size" />
-
-            <Spinner android:id="@+id/ddl_lesson"
+        
+        <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.0" />
+                android:layout_height="@dimen/answer_submit_input_height"
+                android:padding="@dimen/answer_submit_padding"
+                android:background="@drawable/edit_text_bg">
+                
+	            <Spinner android:id="@+id/ddl_lesson"
+	                style="@style/answer_spinner"
+	                android:layout_width="match_parent"
+	                android:layout_height="wrap_content" 
+	                android:layout_toLeftOf="@+id/ddl_lesson_btn"
+	                android:layout_toStartOf="@id/ddl_lesson_btn"
+	                android:layout_centerVertical="true"/>
+	            
+	            <ImageView android:id="@+id/ddl_lesson_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/arrow_down"
+                    android:contentDescription="@string/answer_submit_class"/>
             
-        </TableRow>
-        
-        <!-- 标题 -->
-        <TableRow android:gravity="center_vertical">
- 
-             <!-- 标题 -->
-             <EditText android:id="@+id/txt_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:layout_weight="1.0"
-                android:background="@drawable/edit_text_bg"
-                android:hint="@string/answer_submit_topic_title_desc"
-                android:inputType="textMultiLine"
-                android:singleLine="true"
-                android:textSize="@dimen/text_large_size" />
-            
-        </TableRow>
-        
-    </TableLayout>
+            </RelativeLayout>
+    </LinearLayout>
+    
+    <!-- 标题 -->
+    <EditText android:id="@+id/txt_title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/answer_submit_input_height"
+            android:layout_margin="@dimen/answer_submit_margin"
+            android:padding="@dimen/answer_submit_padding"
+            android:background="@drawable/edit_text_bg"
+            android:hint="@string/answer_submit_topic_title_desc"
+            android:singleLine="true"
+            android:textSize="@dimen/text_large_size" />
     
     <!-- 内容 -->
     <RelativeLayout 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginEnd="5dp"
-        android:background="@color/transparent">
+        android:layout_margin="@dimen/answer_submit_margin">
         
         <!-- 内容 -->
         <EditText android:id="@+id/txt_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:padding="@dimen/answer_submit_padding"
                 android:layout_above="@+id/btn_submit"
                 android:singleLine="false"             
                 android:background="@drawable/edit_text_bg"

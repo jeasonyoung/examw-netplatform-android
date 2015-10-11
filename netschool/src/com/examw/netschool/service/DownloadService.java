@@ -17,8 +17,10 @@ import com.examw.netschool.model.Download.DownloadState;
 import com.examw.netschool.service.MultiThreadDownload.OnDownloadProgressListener;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
@@ -41,6 +43,10 @@ public class DownloadService extends Service implements IDownloadService {
 	
 	 private IBinder binder;
 	 private boolean stop;
+	 /**
+	  * 服务结束广播。
+	  */
+	 public static final String BROADCAST_SERVICE_STOP = "BROADCAST_SERVICE_STOP";
 	/**
 	 * 构造函数。
 	 */
@@ -75,6 +81,20 @@ public class DownloadService extends Service implements IDownloadService {
 	@Override
 	public void onCreate() {
 		Log.d(TAG, "下载服务正在被创建...");
+		//注册广播接收
+		this.registerReceiver(new BroadcastReceiver(){
+			/*
+			 * 接收广播信息处理。
+			 * @see android.content.BroadcastReceiver#onReceive(android.content.Context, android.content.Intent)
+			 */
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				Log.d(TAG, "接收结束下载服务广播...");
+				stop = true;
+			}
+			
+		}, new IntentFilter(BROADCAST_SERVICE_STOP));
+		
 		//执行文件下载管理线程。
 		pools.execute(this.downloadThreadMgr);
 		//

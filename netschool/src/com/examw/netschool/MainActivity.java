@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.examw.netschool.app.AppContext;
-import com.examw.netschool.app.AppContext.LoginState;
 import com.examw.netschool.app.Constant;
 import com.examw.netschool.model.MainItem;
+import com.examw.netschool.service.DownloadService;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -181,8 +181,8 @@ public class MainActivity extends Activity implements OnItemClickListener{
 			 							   
 											@Override
 											public void onClick(DialogInterface dialog, int which) {
-												//注销当前用户
-												appContext.setLoginState(LoginState.NONE);
+												//注销当前用户ID
+												appContext.setCurrentUserId(null);
 												//跳转到登录activity
 												startActivity(new Intent(appContext, LoginActivity.class));
 												//关闭当前Activity
@@ -208,7 +208,7 @@ public class MainActivity extends Activity implements OnItemClickListener{
 	@Override
 	protected void onDestroy() {
 		//发广播,通知下载服务service结束所有的线程,同时结束自己
-        //this.sendBroadcast(new Intent("commandFromActivity"));//发送广播  
+        this.sendBroadcast(new Intent(DownloadService.BROADCAST_SERVICE_STOP));//发送广播  
 		//
         super.onDestroy();
 	}

@@ -10,7 +10,6 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
 import com.examw.netschool.app.AppContext;
-import com.examw.netschool.app.AppContext.LoginState;
 import com.examw.netschool.app.Constant;
 import com.examw.netschool.codec.binary.Base64;
 import com.examw.netschool.codec.digest.DigestUtils;
@@ -218,6 +217,14 @@ public class LoginActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		Log.d(TAG, "按钮点击事件...");
+		//初始化登录等待
+		if(this.progressDialog == null){
+			this.progressDialog = ProgressDialog.show(this, null, this.getResources().getText(R.string.login_progress), true, true);
+			this.progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		}
+		//实现等待
+		this.progressDialog.show();
+		//
 		switch(v.getId()){
 			case R.id.btn_login_online:{//在线登录
 				Log.d(TAG, "在线登录...");
@@ -250,33 +257,24 @@ public class LoginActivity extends Activity implements OnClickListener {
 	}
 	//在线登录
 	private void onlineLogin(){
-		//初始化上下文
-		final AppContext appContext = (AppContext)this.getApplicationContext();
-		//检查是否在登录处理中
-		if(appContext.getLoginState() == LoginState.LOGINING) return;
-		//初始化登录等待
-		if(this.progressDialog == null){
-			this.progressDialog = ProgressDialog.show(this, null, this.getResources().getText(R.string.login_progress), true, true);
-			this.progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		}
-		//实现等待
-		this.progressDialog.show();
 		//检查用户名/密码
 		if(!this.checkInput()){
 			this.progressDialog.dismiss();
 			return;
 		}
+		//初始化
+		final AppContext appContext = (AppContext)getApplicationContext();
 		//异步线程处理登录
 		new AsyncTask<String, Void, String>() {
-			
 			private String _userId,_username, _password;
-			
+			/*
+			 * 后台异步线程网络登录处理。
+			 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
+			 */
 			@Override
 			protected String doInBackground(String... params) {
 				try{
 					Log.d(TAG, "开始在线登录...");
-					//设置登录中
-					appContext.setLoginState(LoginState.LOGINING);
 					//获取参数
 					_username = params[0];
 					_password = params[1];
@@ -317,7 +315,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 					return e.getMessage();
 				}
 			}
-			
+			/*
+			 * 前台主线程更新处理。
+			 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+			 */
 			@Override
 			protected void onPostExecute(String result) {
 				Log.d(TAG, "在线登录验证完成...");
@@ -325,15 +326,11 @@ public class LoginActivity extends Activity implements OnClickListener {
 				progressDialog.dismiss();
 				//判断登录结果
 				if(StringUtils.isNotBlank(result)){
-					//登录失败
-					appContext.setLoginState(LoginState.FAIL);
 					//显示失败信息
 					Toast.makeText(appContext, result, Toast.LENGTH_SHORT).show();
 				}else{
 					//设置当前用户ID
 					appContext.setCurrentUserId(_userId);
-					//登录成功
-					appContext.setLoginState(LoginState.LOGINED);
 					//记住用户
 					rememberUserPassword(_username, _password);
 					//保存用户到本地
@@ -346,33 +343,24 @@ public class LoginActivity extends Activity implements OnClickListener {
 	}
 	//本地登录
 	private void offlineLogin(){
-		//初始化上下文
-		final AppContext appContext = (AppContext)this.getApplicationContext();
-		//检查是否在登录处理中
-		if(appContext.getLoginState() == LoginState.LOGINING) return;
-		//初始化登录等待
-		if(this.progressDialog == null){
-			this.progressDialog = ProgressDialog.show(this, null, this.getResources().getText(R.string.login_progress), true, true);
-			this.progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		}
-		//实现等待
-		this.progressDialog.show();
 		//检查用户名/密码
 		if(!this.checkInput()){
 			this.progressDialog.dismiss();
 			return;
 		}
+		//初始化
+		final AppContext appContext = (AppContext)getApplicationContext();
 		//异步线程处理登录
 		new AsyncTask<String, Void, String>() {
-			
 			private String _userId,_username, _password;
-			
+			/*
+			 * 后台异步线程本地登录处理。
+			 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
+			 */
 			@Override
 			protected String doInBackground(String... params) {
 				try{
-					Log.d(TAG, "开始在线登录...");
-					//设置登录中
-					appContext.setLoginState(LoginState.LOGINING);
+					Log.d(TAG, "开始本地登录...");
 					//获取参数
 					_username = params[0];
 					_password = params[1];
@@ -401,7 +389,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 					return e.getMessage();
 				}
 			}
-			
+			/*
+			 * 前台主线程更新处理。
+			 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+			 */
 			@Override
 			protected void onPostExecute(String result) {
 				Log.d(TAG, "离线登录验证完成...");
@@ -409,15 +400,11 @@ public class LoginActivity extends Activity implements OnClickListener {
 				progressDialog.dismiss();
 				//判断登录结果
 				if(StringUtils.isNotBlank(result)){
-					//登录失败
-					appContext.setLoginState(LoginState.FAIL);
 					//显示失败信息
 					Toast.makeText(appContext, result, Toast.LENGTH_SHORT).show();
 				}else{
 					//设置当前用户ID
 					appContext.setCurrentUserId(_userId);
-					//登录成功
-					appContext.setLoginState(LoginState.LOCAL);
 					//记住用户
 					rememberUserPassword(_username, _password);
 					//跳转
@@ -430,9 +417,12 @@ public class LoginActivity extends Activity implements OnClickListener {
  	private void rememberUserPassword(final String userName, final String password){
 		Log.d(TAG, "准备记住用户/密码操作...");
 		if(!this.chkRememeber.isChecked() || StringUtils.isBlank(userName) || StringUtils.isBlank(password)) return;
-		//异步线程保存
+		//异步线程处理
 		AppContext.pools_fixed.execute(new Runnable() {
-			
+			/*
+			 * 后台异步线程保存数据。
+			 * @see java.lang.Runnable#run()
+			 */
 			@Override
 			public void run() {
 				try{
@@ -453,9 +443,12 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private void saveUserToLocal(final String userId, final String username,final String password){
 		Log.d(TAG, "准备异步线程保存用户信息数据到本地...");
 		if(StringUtils.isBlank(userId) || StringUtils.isBlank(username) || StringUtils.isBlank(password)) return;
-		
+		//异步线程处理
 		AppContext.pools_fixed.execute(new Runnable() {
-			
+			/*
+			 * 后台异步线程保存数据。
+			 * @see java.lang.Runnable#run()
+			 */
 			@Override
 			public void run() {
 				try {

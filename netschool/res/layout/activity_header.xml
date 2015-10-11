@@ -18,13 +18,21 @@
            android:scaleType="centerCrop"
            android:src="@drawable/btn_return_bg_img" 
            android:contentDescription="@string/btn_return_bg_img_desc"/>
-        
-     <!-- 标题 -->
-     <TextView android:id="@+id/top_title"
+   	
+   	<!-- right -->
+   	<RelativeLayout 
+   	    android:layout_width="match_parent"
+   	    android:layout_height="wrap_content"
+   	    android:layout_toRightOf="@id/btn_return"
+        android:layout_toEndOf="@id/btn_return"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true">
+   	    
+   	    <!-- 标题 -->
+     	<TextView android:id="@+id/top_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/btn_return"
-            android:layout_toEndOf="@id/btn_return"
+            android:layout_centerInParent="true"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             android:fadingEdge="vertical"
@@ -33,5 +41,7 @@
             android:textColor="@color/white"
             android:textSize="@dimen/title_huge_size" 
             android:background="@color/transparent"/>
+     	
+   	</RelativeLayout>
 
 </RelativeLayout>

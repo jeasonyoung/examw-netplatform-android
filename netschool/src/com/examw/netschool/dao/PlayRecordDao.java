@@ -116,20 +116,21 @@ public class PlayRecordDao extends BaseDao {
 	 * 新增播放记录。
 	 * @param data
 	 */
-	public void add(PlayRecord  data){
+	public String add(String lessonId){
 		Log.d(TAG, "新增播放记录...");
-		if(data == null) return;
+		String new_record_id = null;
+		if(StringUtils.isBlank(lessonId)) return new_record_id;
 		synchronized(dbHelper){
 			try {
 				//初始化
 				db = dbHelper.getWritableDatabase();
 				//开启事务
 				db.beginTransaction();
-				//创建记录ID。
-				data.setId(UUID.randomUUID().toString());
+				//初始化新的播放记录ID
+				new_record_id = UUID.randomUUID().toString();
 				//新增记录
 				db.execSQL("INSERT INTO tbl_PlayRecords(id,lesson_id,playTime) values (?,?,?)", new Object[]{
-						data.getId(), data.getLessonId(), data.getPlayTime() == null ? 0 : data.getPlayTime().intValue()
+						new_record_id, lessonId, 0
 				});
 				//设置事务成功
 				db.setTransactionSuccessful();
@@ -144,6 +145,7 @@ public class PlayRecordDao extends BaseDao {
 				}
 			}
 		}
+		return new_record_id;
 	}
 	/**
 	 * 更新播放时间。
@@ -151,24 +153,37 @@ public class PlayRecordDao extends BaseDao {
 	 * @param playTime
 	 */
 	public void updatePlayTime(String recordId, Integer playTime){
-		Log.d(TAG, "更新["+recordId+"]播放时间..." + playTime);
+		Log.d(TAG, "准备更新["+recordId+"]播放时间..." + playTime);
 		if(StringUtils.isBlank(recordId) || playTime == null) return;
 		synchronized(dbHelper){
+			//是否存在播放记录
+			boolean hasExists = false;
 			try {
 				//初始化
 				db = dbHelper.getWritableDatabase();
-				//开启事务
-				db.beginTransaction();
-				//更新记录
-				db.execSQL("UPDATE tbl_PlayRecords SET playTime = ?  WHERE id = ? ", new Object[]{ playTime, recordId});
-				//设置事务成功
-				db.setTransactionSuccessful();
+				//查询是否存在
+				final Cursor cursor = db.rawQuery("SELECT COUNT(0) FROM tbl_PlayRecords WHERE id = ? ", new String[]{ recordId });
+				if(cursor.moveToFirst()){
+					hasExists = cursor.getInt(0) > 0;
+				}
+				//关闭查询
+				cursor.close();
+				//播放记录不存在
+				if(hasExists){
+					Log.d(TAG, "更新播放记录["+recordId+"]..." + playTime);
+					//开启事务
+					db.beginTransaction();
+					//更新记录
+					db.execSQL("UPDATE tbl_PlayRecords SET playTime = ?  WHERE id = ? ", new Object[]{ playTime, recordId});
+					//设置事务成功
+					db.setTransactionSuccessful();
+				}
 			}catch (Exception e) {
 				Log.e(TAG, "新增播放记录异常:" + e.getMessage(), e);
 			}finally{
 				if(db != null){
 					//结束事务
-					db.endTransaction();
+					if(hasExists) db.endTransaction();
 					//关闭连接
 					db.close();
 				}

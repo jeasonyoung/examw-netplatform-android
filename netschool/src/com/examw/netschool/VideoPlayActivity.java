@@ -394,6 +394,9 @@ public class VideoPlayActivity extends Activity /*implements OnTouchListener, On
 						//设置课程ID
 						lessonId = record.getLessonId();
 						lessonName = record.getLessonName();
+					}else{//如果不存在播放记录ID则新增播放记录
+						Log.d(TAG, "新增课程资源["+ lessonId +"]播放记录...");
+						recordId = playRecordDao.add(lessonId);
 					}
 					//课程资源ID不存在
 					if(StringUtils.isBlank(lessonId)){
@@ -652,6 +655,8 @@ public class VideoPlayActivity extends Activity /*implements OnTouchListener, On
 	//异步线程更新播放记录时间
 	private void asyncUpdatePlayRecord(){
 		if(StringUtils.isBlank(this.recordId) || this.playVideoView == null) return;
+		final int pos = (int)(playVideoView.getCurrentPosition() / 1000);
+		if(pos <= 0)return;
 		//异步线程处理返回保存数据
 		AppContext.pools_fixed.execute(new Runnable() {
 			@Override
@@ -660,9 +665,6 @@ public class VideoPlayActivity extends Activity /*implements OnTouchListener, On
 					Log.d(TAG, "异步线程更新播放记录时间...");
 					//初始化
 					final PlayRecordDao playRecordDao = new PlayRecordDao();
-					//更新播放时间
-					if(playVideoView == null) return;
-					final int pos = (int)(playVideoView.getCurrentPosition() / 1000);
 					playRecordDao.updatePlayTime(recordId,  Integer.valueOf(pos));
 				} catch (Exception e) {
 					Log.e(TAG, "更新播放记录异常:" + e.getMessage(), e);

@@ -37,6 +37,7 @@ public class SuggestActivity extends Activity implements OnClickListener{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "重载创建...");
+		
 		//加载布局文件
 		this.setContentView(R.layout.activity_suggest);
 		//加载传递数据

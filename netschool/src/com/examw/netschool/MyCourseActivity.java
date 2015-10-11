@@ -7,7 +7,6 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 import com.examw.netschool.app.AppContext;
-import com.examw.netschool.app.AppContext.LoginState;
 import com.examw.netschool.app.Constant;
 import com.examw.netschool.dao.MyCourseDao;
 import com.examw.netschool.model.JSONCallback;
@@ -260,7 +259,7 @@ public class MyCourseActivity extends Activity {
 					//初始化上下文
 					final AppContext appContext = (AppContext)getApplicationContext();
 					//检查是否从网络下载数据
-					if(appContext != null && appContext.getLoginState() == LoginState.LOGINED && appContext.isNetworkConnected()){
+					if(appContext != null && appContext.isNetworkConnected()){
 						Log.d(TAG, " 将从网络下载课程数据...");
 						final String result = DigestClientUtil.sendDigestGetRequest(Constant.DOMAIN_URL + "/api/m/courses/" + userId + ".do");
 						if(StringUtils.isNotBlank(result)){

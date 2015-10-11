@@ -135,7 +135,7 @@ public class MyCourseDao extends BaseDao {
 				//初始化
 				db = dbHelper.getReadableDatabase();
 				//查询数据
-				final Cursor cursor = db.rawQuery("SELECT DISTINCT id,name,type,orderNo FROM tbl_MyCourses WHERE type = ? ORDER BY orderNo", new String[]{  
+				final Cursor cursor = db.rawQuery("SELECT DISTINCT id,name,type FROM tbl_MyCourses WHERE type = ? ORDER BY name", new String[]{  
 						MyCourse.TYPE_CLASS
 				});
 				while(cursor.moveToNext()){
@@ -148,8 +148,6 @@ public class MyCourseDao extends BaseDao {
 					course.setName(cursor.getString(1));
 					//类型
 					course.setType(cursor.getString(2));
-					//排序
-					course.setOrderNo(Integer.valueOf(cursor.getInt(3)));
 					//添加到集合
 					courses.add(course);
 				}

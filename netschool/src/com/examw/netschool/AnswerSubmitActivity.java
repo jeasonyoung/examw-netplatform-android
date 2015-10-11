@@ -87,12 +87,33 @@ public class AnswerSubmitActivity extends Activity implements OnClickListener {
 		classSpinner.setAdapter(this.classAdapter);
 		//设置选中事件处理
 		classSpinner.setOnItemSelectedListener(this.onClassItemSelectedListener);
+		//班级下拉图片
+		final View classView = this.findViewById(R.id.ddl_class_btn);
+		//班级下拉图片点击处理
+		classView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Log.d(TAG, "点击班级下拉..." + v);
+				classSpinner.performClick();
+			}
+		});
+		
 		//所属课程资源
 		final Spinner lessonSpinner = (Spinner)this.findViewById(R.id.ddl_lesson);
 		//设置数据适配器
 		lessonSpinner.setAdapter(this.lessonAdapter);
 		//设置选中事件处理
 		lessonSpinner.setOnItemSelectedListener(this.onLessonItemSelectedListener);
+		//课程资源下拉图片
+		final View lessonView = this.findViewById(R.id.ddl_lesson_btn);
+		//课程资源下拉图片点击处理
+		lessonView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Log.d(TAG, "点击课程资源下拉..." + v);
+				lessonSpinner.performClick();
+			}
+		});
 		
 		//标题
 		this.txtTitle = (EditText)this.findViewById(R.id.txt_title);
@@ -168,14 +189,48 @@ public class AnswerSubmitActivity extends Activity implements OnClickListener {
 	 * @see android.app.Activity#onStart()
 	 */
 	@Override
-	/*
-	 * 重载开始。
-	 * @see android.app.Activity#onStart()
-	 */
 	protected void onStart() {
 		Log.d(TAG, "重载开始...");
-		//异步加载数据处理
-		new AsyncClassLoadData().execute((Void)null);
+		//异步加载班级数据处理
+		new AsyncTask<Void, Void, List<MyCourse>>(){
+			/*
+			 * 后台异步线程加载数据处理。
+			 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
+			 */
+			@Override
+			protected List<MyCourse> doInBackground(Void... params) {
+				try{
+					Log.d(TAG, "后台线程加载班级数据...");
+					//初始化
+					final MyCourseDao courseDao = new MyCourseDao();
+					//返回班级数据
+					return courseDao.loadCoursesByClass();
+				}catch(Exception e){
+					Log.e(TAG, "加载数据异常:" + e.getMessage(), e);
+				}
+				return null;
+			}
+			/*
+			 * 前端主线程更新数据。
+			 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+			 */
+			@Override
+			protected void onPostExecute(java.util.List<MyCourse> result) {
+				Log.d(TAG, "前台主线程更新数据...");
+				//清空数据
+				courses.clear();
+				lessons.clear();
+				//添加数据
+				if(result != null && result.size() > 0){
+					Log.d(TAG, "更新班级数据...");
+					courses.addAll(result);
+				}
+				//通知班级数据适配器更新数据
+				classAdapter.notifyDataSetChanged();
+				//通知课时资源数据适配器更新数据
+				lessonAdapter.notifyDataSetChanged();
+			};
+		}.execute((Void)null);
 		//
 		super.onStart();
 	}
@@ -288,47 +343,6 @@ public class AnswerSubmitActivity extends Activity implements OnClickListener {
 				}
 			};
 		}.execute((Void)null);
-	}
-	
-	//异步加载班级数据处理
-	private class AsyncClassLoadData extends AsyncTask<Void, Void, List<MyCourse>>{
-		/*
-		 * 后台线程加载班级数据。
-		 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
-		 */
-		@Override
-		protected List<MyCourse> doInBackground(Void... params) {
-			try{
-				Log.d(TAG, "后台线程加载班级数据...");
-				//初始化
-				final MyCourseDao courseDao = new MyCourseDao();
-				//返回班级数据
-				return courseDao.loadCoursesByClass();
-			}catch(Exception e){
-				Log.e(TAG, "加载数据异常:" + e.getMessage(), e);
-			}
-			return null;
-		}
-		/*
-		 * 前台主线程更新数据。
-		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
-		 */
-		@Override
-		protected void onPostExecute(List<MyCourse> result) {
-			Log.d(TAG, "前台主线程更新数据...");
-			//清空数据
-			courses.clear();
-			lessons.clear();
-			//添加数据
-			if(result != null && result.size() > 0){
-				Log.d(TAG, "更新班级数据...");
-				courses.addAll(result);
-			}
-			//通知班级数据适配器更新数据
-			classAdapter.notifyDataSetChanged();
-			//通知课时资源数据适配器更新数据
-			lessonAdapter.notifyDataSetChanged();
-		}
 	}
 	//异步加载课程资源数据处理
 	private class AyncLessonLoadData extends AsyncTask<String, Void, List<Lesson>>{

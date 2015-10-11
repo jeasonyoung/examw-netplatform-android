@@ -10,11 +10,10 @@ import com.examw.netschool.app.AppContext;
 import com.examw.netschool.app.Constant;
 import com.examw.netschool.dao.DownloadDao;
 import com.examw.netschool.dao.LessonDao;
-import com.examw.netschool.app.AppContext.LoginState;
 import com.examw.netschool.model.Download;
+import com.examw.netschool.model.Download.DownloadState;
 import com.examw.netschool.model.JSONCallback;
 import com.examw.netschool.model.Lesson;
-import com.examw.netschool.model.Download.DownloadState;
 import com.examw.netschool.util.DigestClientUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -164,8 +163,6 @@ public class MyCourseLessonActivity extends Activity {
 	@Override
 	protected void onStart() {
 		Log.d(TAG, "重载启动...");
-		//初始化
-		final AppContext appContext = (AppContext)this.getApplicationContext();
 		//异步加载数据
 		new AsyncTask<Void, Void, List<Lesson>>() {
 			/*
@@ -177,9 +174,11 @@ public class MyCourseLessonActivity extends Activity {
 				try {
 					Log.d(TAG, "后台下载加载数据...");
 					//初始化
+					final AppContext appContext = (AppContext)getApplicationContext();
+					//初始化
 					final LessonDao lessonDao = new LessonDao();
 					//检查是否从网络下载数据
-					if(StringUtils.isNotBlank(classId) && appContext != null && appContext.getLoginState() == LoginState.LOGINED && appContext.isNetworkConnected()){
+					if(StringUtils.isNotBlank(classId) && appContext != null && appContext.isNetworkConnected()){
 						//请求网络数据
 						final String result = DigestClientUtil.sendDigestGetRequest(Constant.DOMAIN_URL + "/api/m/lessons/"+ classId  +".do");
 						if(StringUtils.isNotBlank(result)){

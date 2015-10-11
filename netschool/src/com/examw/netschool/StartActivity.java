@@ -19,6 +19,7 @@ import android.util.Log;
  */
 public class StartActivity extends Activity{
 	private static final String TAG = "StartActivity";
+	private static final int THREAD_WAIT = 800;
 	/*
 	 * 重载创建。
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -46,16 +47,22 @@ public class StartActivity extends Activity{
 			 */
 			@Override
 			protected Boolean doInBackground(Void... params) {
-				Log.d(TAG, "后台线程加载数据...");
-				//初始化
-				final AppContext appContext = (AppContext)getApplicationContext();
-				//获取引导定义
-				final SharedPreferences guidefile = getSharedPreferences(Constant.PREFERENCES_CONFIG_GUIDEFILE, Context.MODE_PRIVATE);
-				if(appContext != null && guidefile != null){
-					//获取版本代码
-					final int versionCode = appContext.getVersionCode();
-					//是否为第一次。
-					return guidefile.getBoolean(Constant.PREFERENCES_CONFIG_GUIDEFILE_ISFIRST + versionCode, false);
+				try{
+					Log.d(TAG, "后台线程加载数据...");
+					//线程等待
+					Thread.sleep(THREAD_WAIT);
+					//初始化
+					final AppContext appContext = (AppContext)getApplicationContext();
+					//获取引导定义
+					final SharedPreferences guidefile = getSharedPreferences(Constant.PREFERENCES_CONFIG_GUIDEFILE, Context.MODE_PRIVATE);
+					if(appContext != null && guidefile != null){
+						//获取版本代码
+						final int versionCode = appContext.getVersionCode();
+						//是否为第一次。
+						return guidefile.getBoolean(Constant.PREFERENCES_CONFIG_GUIDEFILE_ISFIRST + versionCode, false);
+					}
+				}catch(Exception e){
+					Log.d(TAG, "线程后台处理异常:" + e.getMessage());
 				}
 				return false;
 			}
@@ -66,13 +73,13 @@ public class StartActivity extends Activity{
 			@Override
 			protected void onPostExecute(Boolean result) {
 				Log.d(TAG, "主线程处理...");
-				if(result){
+//				if(result){
 					Log.d(TAG, "登录...");
 					gotoLogin();
-				}else{
-					Log.d(TAG, "引导...");
-					gotoGuide();
-				}
+//				}else{
+//					Log.d(TAG, "引导...");
+//					gotoGuide();
+//				}
 			}
 		}.execute((Void)null);
 		//
@@ -98,12 +105,12 @@ public class StartActivity extends Activity{
 		//关闭当前
 		this.finish();
 	}
-	//引导页
-	private void gotoGuide() {
-		Log.d(TAG, "调整引导页...");
-		//启动引导
-		this.startActivity(new Intent(this, GuideActivity.class));
-		//关闭当前
-		this.finish();
-	}
+//	//引导页
+//	private void gotoGuide() {
+//		Log.d(TAG, "调整引导页...");
+//		//启动引导
+//		this.startActivity(new Intent(this, GuideActivity.class));
+//		//关闭当前
+//		this.finish();
+//	}
 }
