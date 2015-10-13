@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- 通用 -->
-    <string name="app_name">汇课网校</string>
+    <string name="app_name">汇课</string>
     <string name="btn_return_bg_img_desc">返回图标</string>
      <string name="progress_msg">努力加载中,请稍候. . .</string>
     <!-- 启动Activity -->

@@ -8,12 +8,6 @@
     <!-- 顶部返回按钮左边间距 -->
     <dimen name="top_btn_return_left">10.0dp</dimen>
     
-    <!-- 启动Activity -->
-    <dimen name="start_login_width">136.0dp</dimen><!-- 启动界面Login的宽度 -->
-    <dimen name="start_login_height">55.0dp</dimen><!-- 启动界面Login的高度 -->
-    <dimen name="start_login_top">28.0dp</dimen><!-- 启动界面Login的顶部间距 -->
-    <dimen name="start_login_left">28.0dp</dimen><!-- 启动界面Login的左边间距 -->
-    
     <!-- 登录Activity -->
     <dimen name="login_logo_top">70.0dp</dimen><!-- 登录界面login顶部间距 -->
     <dimen name="login_input_top">20.0dp</dimen><!-- 登录输入框顶部间距 -->
