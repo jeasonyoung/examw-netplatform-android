@@ -1,8 +1,9 @@
 package com.examw.netschool;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -14,9 +15,7 @@ import com.examw.netschool.model.Download;
 import com.examw.netschool.model.Download.DownloadState;
 import com.examw.netschool.model.JSONCallback;
 import com.examw.netschool.model.Lesson;
-import com.examw.netschool.util.DigestClientUtil;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.examw.netschool.util.APIUtils;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -179,21 +178,26 @@ public class MyCourseLessonActivity extends Activity {
 					final LessonDao lessonDao = new LessonDao();
 					//检查是否从网络下载数据
 					if(StringUtils.isNotBlank(classId) && appContext != null && appContext.isNetworkConnected()){
+						//初始化参数
+						final Map<String, Object> parameters = new HashMap<String, Object>();
+						//设置用户ID
+						parameters.put("randUserId", userId);
+						//设置课程ID
+						parameters.put("classId", classId);
+						//设置是否免费
+						parameters.put("free", false);
+						
 						//请求网络数据
-						final String result = DigestClientUtil.sendDigestGetRequest(Constant.DOMAIN_URL + "/api/m/lessons/"+ classId  +".do");
-						if(StringUtils.isNotBlank(result)){
-							//解析反馈JSON
-							final Gson gson = new Gson();
-							final Type type = new TypeToken<JSONCallback<Lesson[]>>(){}.getType();
-							final JSONCallback<Lesson[]> callback = gson.fromJson(result, type);
-							if(callback.getSuccess()){
-								//删除原有记录
-								lessonDao.deleteByClass(classId);
-								//新增记录
-								lessonDao.add(classId, callback.getData());
-							}else{
-								Log.e(TAG, "下载课程资源失败:" + callback.getMsg());
-							}
+						final JSONCallback<Lesson[]> callback = new APIUtils.CallbackJSON<Lesson[]>().sendGETRequest(getResources(),
+								R.string.api_lessons_url, parameters);
+						//
+						if(callback.getSuccess()){
+							//删除原有记录
+							lessonDao.deleteByClass(classId);
+							//新增记录
+							lessonDao.add(classId, callback.getData());
+						}else{
+							Log.e(TAG, "下载课程资源失败:" + callback.getMsg());
 						}
 					}
 					//加载数据库中的数据
@@ -320,15 +324,15 @@ public class MyCourseLessonActivity extends Activity {
 			//
 			this.lesson = data;
 			//课程资源名称
-			this.tvLesson.setText(this.lesson.getName());
+			this.tvLesson.setText(this.lesson.name);
 			//下载状态
-			if(StringUtils.isNotBlank(this.lesson.getId())){
+			if(StringUtils.isNotBlank(this.lesson.id)){
 				//初始化
 				final DownloadDao downloadDao = new DownloadDao();
 				//是否存在
-				if(downloadDao.hasDownload(lesson.getId())){//已下载
+				if(downloadDao.hasDownload(lesson.id)){//已下载
 					//加载下载数据
-					final Download download = downloadDao.getDownload(lesson.getId());
+					final Download download = downloadDao.getDownload(lesson.id);
 					final DownloadState state = DownloadState.parse(download.getState());
 					if(state== DownloadState.FINISH){//下载完成
 						tvState.setText(state.getName());
@@ -372,9 +376,9 @@ public class MyCourseLessonActivity extends Activity {
 				//设置用户名
 				intent.putExtra(Constant.CONST_USERNAME, userName);
 				//设置课程资源ID
-				intent.putExtra(Constant.CONST_LESSON_ID, this.lesson.getId());
+				intent.putExtra(Constant.CONST_LESSON_ID, this.lesson.id);
 				//设置课程资源名称
-				intent.putExtra(Constant.CONST_LESSON_NAME, this.lesson.getName());
+				intent.putExtra(Constant.CONST_LESSON_NAME, this.lesson.name);
 				//发送意图
 				startActivity(intent);
 			}

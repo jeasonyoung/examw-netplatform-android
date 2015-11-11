@@ -1,9 +1,10 @@
 package com.examw.netschool;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -12,9 +13,7 @@ import com.examw.netschool.app.AppContext;
 import com.examw.netschool.app.Constant;
 import com.examw.netschool.model.JSONCallback;
 import com.examw.netschool.model.Lesson;
-import com.examw.netschool.util.DigestClientUtil;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.examw.netschool.util.APIUtils;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -100,12 +99,12 @@ public class FreeExperienceFragmentByLesson extends Fragment implements OnItemCl
 		Log.d(TAG, "数据项点击事件处理..." + view);
 		if(this.lessons != null && this.lessons.size() > position){
 			final Lesson data = this.lessons.get(position);
-			if(data != null && StringUtils.isNotBlank(data.getId()) && StringUtils.isNotBlank(data.getPriorityUrl())){
+			if(data != null && StringUtils.isNotBlank(data.id) && StringUtils.isNotBlank(data.getPriorityUrl())){
 				//播放处理
 				final Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
 				intent.putExtra(Constant.CONST_USERID, userId);
-				intent.putExtra(Constant.CONST_LESSON_ID, data.getId());
-				intent.putExtra(Constant.CONST_LESSON_NAME, data.getName());
+				intent.putExtra(Constant.CONST_LESSON_ID, data.id);
+				intent.putExtra(Constant.CONST_LESSON_NAME, data.name);
 				getActivity().startActivity(intent);
 			}
 		}
@@ -138,8 +137,8 @@ public class FreeExperienceFragmentByLesson extends Fragment implements OnItemCl
 					//初始化 
 					final  List<Lesson> taget = new ArrayList<Lesson>();
 					for(Lesson data : lessons){
-						if(data == null || StringUtils.isBlank(data.getName())) continue;
-						if(data.getName().indexOf(params[0]) > -1){
+						if(data == null || StringUtils.isBlank(data.name)) continue;
+						if(data.name.indexOf(params[0]) > -1){
 							taget.add(data);
 						}
 					}
@@ -188,13 +187,18 @@ public class FreeExperienceFragmentByLesson extends Fragment implements OnItemCl
 					Log.d(TAG, "获取上线文失败或网络不可用!");
 					return null;
 				}
-				//查询数据
-			    final String result =	DigestClientUtil.sendDigestGetRequest(Constant.DOMAIN_URL + "/api/m/lessons/"+classId+"/free.do");
-			    if(StringUtils.isBlank(result)) return null;
-			    // 解析字符串
-				final Gson gson = new Gson();
-				final Type type = new TypeToken<JSONCallback<Lesson[]>>(){}.getType();
-				final JSONCallback<Lesson[]> callback = gson.fromJson(result, type);
+				//初始化参数
+				final Map<String, Object> parameters = new HashMap<String, Object>();
+				//设置用户ID
+				parameters.put("randUserId", userId);
+				//设置班级ID
+				parameters.put("classId", classId);
+				//是否免费
+				parameters.put("free", true);
+				//
+				final JSONCallback<Lesson[]> callback = new APIUtils.CallbackJSON<Lesson[]>().sendGETRequest(getResources(),
+						R.string.api_lessons_url, parameters);
+				//
 			    if(callback.getSuccess()){
 			    	return Arrays.asList(callback.getData());
 			    }else{
@@ -304,7 +308,7 @@ public class FreeExperienceFragmentByLesson extends Fragment implements OnItemCl
 		 */
 		public void loadData(Lesson data){
 			if(data != null){
-				this.tvTitle.setText(data.getName());
+				this.tvTitle.setText(data.name);
 			}
 		}
 	}

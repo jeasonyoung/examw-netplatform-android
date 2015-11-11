@@ -426,7 +426,7 @@ public class VideoPlayActivity extends Activity /*implements OnTouchListener, On
 						return null;
 					}
 					//设置课程名称
-					lessonName = lesson.getName();
+					lessonName = lesson.name;
 					//获取优先视频URL
 					final String url = lesson.getPriorityUrl();
 					Log.d(TAG, "video-url:" + url);

@@ -1,20 +1,18 @@
 package com.examw.netschool;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.examw.netschool.FreeExperienceActivity.Search;
 import com.examw.netschool.app.AppContext;
-import com.examw.netschool.app.Constant;
 import com.examw.netschool.model.Exam;
 import com.examw.netschool.model.JSONCallback;
-import com.examw.netschool.util.DigestClientUtil;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.examw.netschool.util.APIUtils;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -38,7 +36,7 @@ import android.widget.TextView;
  */
 public class FreeExperienceFragmentByExams extends Fragment implements OnItemClickListener {
 	private static final String TAG = "FreeExperienceFragmentByExams";
-	private final String userId, catagoryId;
+	private final String userId;
 	private final Search search;
 	
 	private final List<Exam> exams;
@@ -48,13 +46,11 @@ public class FreeExperienceFragmentByExams extends Fragment implements OnItemCli
 	/**
 	 * 构造函数。
 	 * @param userId
-	 * @param catagoryId
 	 * @param search
 	 */
-	public FreeExperienceFragmentByExams(String userId, String catagoryId, Search search){
+	public FreeExperienceFragmentByExams(String userId,Search search){
 		Log.d(TAG, "初始化...");
 		this.userId = userId;
-		this.catagoryId = catagoryId;
 		this.search = search;
 		this.search.setOnClickListener(this.onSearchClickListener);
 		
@@ -105,7 +101,7 @@ public class FreeExperienceFragmentByExams extends Fragment implements OnItemCli
 			getActivity().getSupportFragmentManager()
 							.beginTransaction()
 							.addToBackStack(null)
-							.replace(R.id.fragment_container, new FreeExperienceFragmentByPackages(userId, exam.getId(), this.search))
+							.replace(R.id.fragment_container, new FreeExperienceFragmentByPackages(userId, exam.id, this.search))
 							.commit();
 		}
 	}
@@ -137,8 +133,8 @@ public class FreeExperienceFragmentByExams extends Fragment implements OnItemCli
 					//初始化 
 					final  List<Exam> taget = new ArrayList<Exam>();
 					for(Exam exam : exams){
-						if(exam == null || StringUtils.isBlank(exam.getName())) continue;
-						if(exam.getName().indexOf(params[0]) > -1){
+						if(exam == null || StringUtils.isBlank(exam.name)) continue;
+						if(exam.name.indexOf(params[0]) > -1){
 							taget.add(exam);
 						}
 					}
@@ -175,24 +171,18 @@ public class FreeExperienceFragmentByExams extends Fragment implements OnItemCli
 		protected List<Exam> doInBackground(Void... params) {
 			try{
 				Log.d(TAG, "异步线程下载数据...");
-				//检查数据
-				if(StringUtils.isBlank(catagoryId)){
-					Log.d(TAG, "所属考试类别ID为空!");
-					return null;
-				}
 				//检查网络
 				final AppContext appContext = (AppContext)getActivity().getApplicationContext();
 				if(appContext == null || !appContext.isNetworkConnected()){
 					Log.d(TAG, "获取上线文失败或网络不可用!");
 					return null;
 				}
-				//查询数据
-			    final String result =	DigestClientUtil.sendDigestGetRequest(Constant.DOMAIN_URL + "/api/m/exams/"+ catagoryId +".do");
-			    if(StringUtils.isBlank(result)) return null;
-			    // 解析字符串
-				final Gson gson = new Gson();
-				final Type type = new TypeToken<JSONCallback<Exam[]>>(){}.getType();
-				final JSONCallback<Exam[]> callback = gson.fromJson(result, type);
+				//初始化参数
+				final Map<String, Object> parameters = new HashMap<String, Object>();
+				//请求数据
+				final JSONCallback<Exam[]> callback = new APIUtils.CallbackJSON<Exam[]>().sendGETRequest(getResources(),
+						R.string.api_exams_url, parameters);
+				//
 			    if(callback.getSuccess()){
 			    	return Arrays.asList(callback.getData());
 			    }else{
@@ -306,7 +296,7 @@ public class FreeExperienceFragmentByExams extends Fragment implements OnItemCli
 		public void loadData(Exam data){
 			if(data != null){
 				//设置名称
-				this.tvTitle.setText(data.getName());
+				this.tvTitle.setText(data.name);
 			}
 		}
 	}

@@ -24,9 +24,9 @@ public class Download implements Serializable {
 	 */
 	public Download(Lesson lesson){
 		//课程资源ID
-		this.setLessonId(lesson.getId());
+		this.setLessonId(lesson.id);
 		//课程资源名称
-		this.setLessonName(lesson.getName());
+		this.setLessonName(lesson.name);
 		//设置初始化状态
 		this.setState(DownloadState.NONE.value);
 	}

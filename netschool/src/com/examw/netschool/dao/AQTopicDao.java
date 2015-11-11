@@ -117,17 +117,17 @@ public class AQTopicDao extends BaseDao {
 		//初始化
 		final AQTopic topic = new AQTopic();
 		//答疑主题ID
-		topic.setId(cursor.getString(0));
+		topic.id = cursor.getString(0);
 		//所属课程资源ID
-		topic.setLessonId(cursor.getString(1));
+		topic.lesson_id = (cursor.getString(1));
 		//所属课程资源名称
-		topic.setLessonName(cursor.getString(2));
+		topic.lesson_name = (cursor.getString(2));
 		//答疑主题标题
-		topic.setTitle(cursor.getString(3));
+		topic.title = (cursor.getString(3));
 		//答疑主题内容
-		topic.setContent(cursor.getString(4));
+		topic.content = (cursor.getString(4));
 		//答疑主题时间
-		topic.setLastTime(cursor.getString(5));
+		topic.last_time = (cursor.getString(5));
 		return topic;
 	}
 	/**
@@ -139,25 +139,25 @@ public class AQTopicDao extends BaseDao {
 		Log.d(TAG, "插入答疑主题数据..." + topic);
 		if(topic == null)return;
 		//检查数据
-		if(StringUtils.isBlank(topic.getLessonId())){
+		if(StringUtils.isBlank(topic.id)){
 			Log.d(TAG, "所属课程资源ID为空!");
 			return;
 		}
 		synchronized(dbHelper){
 			try{
 				//主题ID
-				if(StringUtils.isBlank(topic.getId())) topic.setId(UUID.randomUUID().toString());
+				if(StringUtils.isBlank(topic.id)) topic.id = (UUID.randomUUID().toString());
 				//初始化
 				db = dbHelper.getWritableDatabase();
 				//开启事务
 				db.beginTransaction();
 				//执行操作
 				db.execSQL("INSERT INTO tbl_AQTopic(id,lessonId,title,content,lastTime) values(?,?,?,?,?);", new Object[]{
-						StringUtils.trimToNull(topic.getId()),
-						StringUtils.trimToNull(topic.getLessonId()),
-						StringUtils.trimToNull(topic.getTitle()),
-						StringUtils.trimToNull(topic.getContent()),
-						StringUtils.trimToNull(topic.getLastTime())
+						StringUtils.trimToNull(topic.id),
+						StringUtils.trimToNull(topic.lesson_id),
+						StringUtils.trimToNull(topic.title),
+						StringUtils.trimToNull(topic.content),
+						StringUtils.trimToNull(topic.last_time)
 				});
 				//设置事务成功
 				db.setTransactionSuccessful();
@@ -180,9 +180,9 @@ public class AQTopicDao extends BaseDao {
 	 */
 	public void update(AQTopic topic){
 		Log.d(TAG, "更新答疑主题...." + topic);
-		if(topic == null || StringUtils.isBlank(topic.getId())) return;
+		if(topic == null || StringUtils.isBlank(topic.id)) return;
 		//检查数据
-		if(StringUtils.isBlank(topic.getLessonId())){
+		if(StringUtils.isBlank(topic.lesson_id)){
 			Log.d(TAG, "所属课程资源ID为空!");
 			return;
 		}
@@ -194,11 +194,11 @@ public class AQTopicDao extends BaseDao {
 				db.beginTransaction();
 				//执行操作
 				db.execSQL("UPDATE tbl_AQTopic SET lessonId = ?,title = ?,content = ?,lastTime = ? WHERE id = ?;", new Object[]{
-						StringUtils.trimToNull(topic.getLessonId()),
-						StringUtils.trimToNull(topic.getTitle()),
-						StringUtils.trimToNull(topic.getContent()),
-						StringUtils.trimToNull(topic.getLastTime()),
-						StringUtils.trimToNull(topic.getId())
+						StringUtils.trimToNull(topic.lesson_id),
+						StringUtils.trimToNull(topic.title),
+						StringUtils.trimToNull(topic.content),
+						StringUtils.trimToNull(topic.last_time),
+						StringUtils.trimToNull(topic.id)
 				});
 				//设置事务成功
 				db.setTransactionSuccessful();

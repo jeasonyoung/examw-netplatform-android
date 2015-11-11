@@ -1,9 +1,9 @@
 package com.examw.netschool;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -12,9 +12,7 @@ import com.examw.netschool.app.Constant;
 import com.examw.netschool.dao.AQDetailDao;
 import com.examw.netschool.model.AQDetail;
 import com.examw.netschool.model.JSONCallback;
-import com.examw.netschool.util.DigestClientUtil;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.examw.netschool.util.APIUtils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -156,22 +154,29 @@ public class AnswerDetailActivity extends Activity implements OnClickListener {
 			protected AQDetail doInBackground(Void... params) {
 				try{
 					Log.d(TAG, "异步线程上传答疑反馈...");
-					//初始化回复
-					final AQDetail detail = new AQDetail();
-					//所属主题ID
-					detail.setTopicId(topicId);
-					//设置回复ID
-					detail.setId(UUID.randomUUID().toString());
-					//设置回复内容
-					detail.setContent(callback_content);
-					//设置回复用户ID
-					detail.setUserId(userId);
-					//设置回复用户姓名
-					detail.setUserName(userName);
+					//初始化参数
+					final Map<String, Object> parameters = new HashMap<String, Object>();
+					parameters.put("randUserId", userId);
+					parameters.put("topicId", topicId);
+					parameters.put("content", callback_content);
 					//上传数据
-					final JSONCallback<Object> callback = DigestClientUtil.sendDigestPOSTJSONRequest(Constant.DOMAIN_URL + "/api/m/aq/details.do", detail);
+					final JSONCallback<Object> callback = new APIUtils.CallbackJSON<Object>().sendPOSTRequest(getResources(),
+							R.string.api_detail_add_url, parameters);
 					if(callback.getSuccess()){
 						Log.d(TAG, "上传数据成功...");
+						//初始化回复
+						final AQDetail detail = new AQDetail();
+//						//所属主题ID
+//						detail.setTopicId(topicId);
+						//设置回复ID
+						detail.id = ((String)callback.getData());
+						//设置回复内容
+						detail.content = callback_content;
+						//设置回复用户ID
+						detail.user_id = userId;
+						//设置回复用户姓名
+						detail.user_name = userName;
+						//返回						
 						return detail;
 					}
 					Log.e(TAG,  callback.getSuccess() + " / " + callback.getMsg());
@@ -218,25 +223,23 @@ public class AnswerDetailActivity extends Activity implements OnClickListener {
 				//检查网络
 				final AppContext appContext = (AppContext)getApplicationContext();
 				if(appContext != null && appContext.isNetworkConnected() && StringUtils.isNotBlank(topicId)){
+					//初始化参数
+					final Map<String, Object> parameters = new HashMap<String, Object>();
+					parameters.put("topicId", topicId);
 					//网络下载数据
-					final String result = DigestClientUtil.sendDigestGetRequest(Constant.DOMAIN_URL + "/api/m/aq/details/"+topicId+".do");
-					if(StringUtils.isNotBlank(result)){
-						//解析结果数据
-						final Gson gson = new Gson();
-						final Type type = new TypeToken<JSONCallback<AQDetail[]>>(){}.getType();
-						final JSONCallback<AQDetail[]> callback = gson.fromJson(result, type);
-						//获取数据成功
-						if(callback.getSuccess() && callback.getData() != null && callback.getData().length > 0){
-							//更新数据
-							for(AQDetail detail : callback.getData()){
-								if(detail == null || StringUtils.isBlank(detail.getId()) || StringUtils.isBlank(detail.getTopicId())) continue;
-								if(detailDao.hasDetail(detail.getId())){//存在
-									Log.d(TAG, "更新数据...");
-									detailDao.update(detail);
-								}else{
-									Log.d(TAG, "新增数据...");
-									detailDao.insert(detail);
-								}
+					final JSONCallback<AQDetail[]> callback = new APIUtils.CallbackJSON<AQDetail[]>().sendGETRequest(getResources(),
+							R.string.api_details_url, parameters);
+					//获取数据成功
+					if(callback.getSuccess() && callback.getData() != null && callback.getData().length > 0){
+						//更新数据
+						for(AQDetail detail : callback.getData()){
+							if(detail == null || StringUtils.isBlank(detail.id)) continue;
+							if(detailDao.hasDetail(detail.id)){//存在
+								Log.d(TAG, "更新数据...");
+								detailDao.update(topicId, detail);
+							}else{
+								Log.d(TAG, "新增数据...");
+								detailDao.insert(topicId,detail);
 							}
 						}
 					}
@@ -350,11 +353,11 @@ public class AnswerDetailActivity extends Activity implements OnClickListener {
 		public void loadData(AQDetail detail){
 			if(detail != null){
 				//明细内容
-				this.tvContent.setText(detail.getContent());
+				this.tvContent.setText(detail.content);
 				//用户姓名
-				this.tvUsername.setText(detail.getUserName());
+				this.tvUsername.setText(detail.user_name);
 				//时间
-				this.tvTime.setText(detail.getCreateTime());
+				this.tvTime.setText(detail.create_time);
 			}
 		}
 	}

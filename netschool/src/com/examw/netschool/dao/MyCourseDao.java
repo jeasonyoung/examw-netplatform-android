@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.examw.netschool.model.MyCourse;
+import com.examw.netschool.model.PackageClass;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -50,7 +50,7 @@ public class MyCourseDao extends BaseDao {
 	 * 新增课程。
 	 * @param courses
 	 */
-	public void add(MyCourse [] courses){
+	public void add(PackageClass [] courses){
 		Log.d(TAG, " 新增课程..." + courses.length);
 		synchronized(dbHelper){
 			try {
@@ -59,14 +59,14 @@ public class MyCourseDao extends BaseDao {
 				//开启事务
 				db.beginTransaction();
 				//新增课程
-				for(MyCourse course : courses){
-					if(course == null || StringUtils.isBlank(course.getId())) continue;
+				for(PackageClass course : courses){
+					if(course == null || StringUtils.isBlank(course.id)) continue;
 					db.execSQL("INSERT INTO tbl_MyCourses(id,pid,name,type,orderNo) VALUES (?, ?, ?, ?, ?)", new Object[]{
-							StringUtils.trimToNull(course.getId()), 
-							StringUtils.trimToNull(course.getPid()),
-							StringUtils.trimToNull(course.getName()),
-							StringUtils.trimToNull(course.getType()),
-							course.getOrderNo()
+							StringUtils.trimToNull(course.id), 
+							StringUtils.trimToNull(course.pid),
+							StringUtils.trimToNull(course.name),
+							StringUtils.trimToNull(course.type),
+							course.order_no
 					});
 				}
 				//设置事务成功
@@ -87,9 +87,9 @@ public class MyCourseDao extends BaseDao {
 	 * 加载全部课程数据集合。
 	 * @return
 	 */
-	public List<MyCourse> loadCourses(String pid){
+	public List<PackageClass> loadCourses(String pid){
 		Log.d(TAG, "加载全部课程数据集合...");
-		final List<MyCourse> courses = new ArrayList<MyCourse>();
+		final List<PackageClass> courses = new ArrayList<PackageClass>();
 		synchronized(dbHelper){
 			try {
 				//初始化
@@ -99,17 +99,17 @@ public class MyCourseDao extends BaseDao {
 						StringUtils.trimToEmpty(pid)
 				});
 				while(cursor.moveToNext()){
-					final MyCourse course = new MyCourse();
+					final PackageClass course = new PackageClass();
 					//上级课程ID
-					course.setPid(StringUtils.trimToNull(cursor.getString(0)));
+					course.pid = StringUtils.trimToNull(cursor.getString(0));
 					//课程ID
-					course.setId(StringUtils.trimToNull(cursor.getString(1)));
+					course.id = StringUtils.trimToNull(cursor.getString(1));
 					//课程名称
-					course.setName(cursor.getString(2));
+					course.name = cursor.getString(2);
 					//类型
-					course.setType(cursor.getString(3));
+					course.type = cursor.getString(3);
 					//排序
-					course.setOrderNo(Integer.valueOf(cursor.getInt(4)));
+					course.order_no = Integer.valueOf(cursor.getInt(4));
 					//添加到集合
 					courses.add(course);
 				}
@@ -127,27 +127,27 @@ public class MyCourseDao extends BaseDao {
 	 * 加载班级数据。
 	 * @return
 	 */
-	public List<MyCourse> loadCoursesByClass(){
+	public List<PackageClass> loadCoursesByClass(){
 		Log.d(TAG, "加载全部的班级数据...");
-		final List<MyCourse> courses = new ArrayList<MyCourse>();
+		final List<PackageClass> courses = new ArrayList<PackageClass>();
 		synchronized(dbHelper){
 			try {
 				//初始化
 				db = dbHelper.getReadableDatabase();
 				//查询数据
 				final Cursor cursor = db.rawQuery("SELECT DISTINCT id,name,type FROM tbl_MyCourses WHERE type = ? ORDER BY name", new String[]{  
-						MyCourse.TYPE_CLASS
+						PackageClass.TYPE_CLASS
 				});
 				while(cursor.moveToNext()){
-					final MyCourse course = new MyCourse();
+					final PackageClass course = new PackageClass();
 					//上级课程ID
-					course.setPid(null);
+					course.pid = null;
 					//课程ID
-					course.setId(StringUtils.trimToNull(cursor.getString(0)));
+					course.id = StringUtils.trimToNull(cursor.getString(0));
 					//课程名称
-					course.setName(cursor.getString(1));
+					course.name = cursor.getString(1);
 					//类型
-					course.setType(cursor.getString(2));
+					course.type = cursor.getString(2);
 					//添加到集合
 					courses.add(course);
 				}

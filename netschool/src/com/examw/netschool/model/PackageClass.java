@@ -3,97 +3,129 @@ package com.examw.netschool.model;
 import java.io.Serializable;
 
 import org.apache.commons.lang3.StringUtils;
-
 /**
- * 套餐/班级。
+ * 我的课程数据模型。
  * 
  * @author jeasonyoung
- * @since 2015年9月18日
+ * @since 2015年9月5日
  */
-public class PackageClass implements Serializable {
+public class PackageClass implements Serializable,Comparable<PackageClass> {
 	private static final long serialVersionUID = 1L;
-	private String pid, id,name,type;
-	private Integer orderNo;
+	
+	public static final String TYPE_PACKAGE = "package", TYPE_CLASS = "class";
+	
 	/**
-	 * 获取上级ID。
-	 * @return 上级ID。
+	 * 父ID。
 	 */
-	public String getPid() {
-		return pid;
-	}
+	public String pid;
 	/**
-	 * 设置上级ID。
-	 * @param pid 
-	 *	  上级ID。
+	 * 当前ID。
 	 */
-	public void setPid(String pid) {
-		this.pid = pid;
-	}
+	public String id;
 	/**
-	 * 获取套餐班级ID。
-	 * @return 套餐班级ID。
+	 * 名称。
 	 */
-	public String getId() {
-		return id;
-	}
+	public String name;
 	/**
-	 * 设置套餐班级ID。
-	 * @param id 
-	 *	  套餐班级ID。
+	 * 类型(class:班级,package:套餐)。
 	 */
-	public void setId(String id) {
-		this.id = id;
-	}
+	public String type;
 	/**
-	 * 获取套餐班级名称。
-	 * @return 套餐班级名称。
+	 * 排序号。
 	 */
-	public String getName() {
-		return name;
-	}
-	/**
-	 * 设置套餐班级名称。
-	 * @param name 
-	 *	  套餐班级名称。
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-	/**
-	 * 获取套餐班级类型。
-	 * @return 套餐班级类型。
-	 */
-	public String getType() {
-		return type;
-	}
+	public Integer order_no;
+	
 	/**
 	 * 是否为班级。
 	 * @return
 	 */
 	public boolean IsClass(){
-		return StringUtils.isNotBlank(this.type) && StringUtils.equalsIgnoreCase(this.type, "class");
+		return StringUtils.isNotBlank(this.type) && StringUtils.equalsIgnoreCase(this.type, TYPE_CLASS);
 	}
-	/**
-	 * 设置套餐班级类型。
-	 * @param type 
-	 *	  套餐班级类型。
+	
+//	private String pid,id,name,type;
+//	private Integer orderNo;
+//	/**
+//	 * 获取上级课程ID。
+//	 * @return 上级课程ID。
+//	 */
+//	public String getPid() {
+//		return pid;
+//	}
+//	/**
+//	 * 设置上级课程ID。
+//	 * @param pid 
+//	 *	  上级课程ID。
+//	 */
+//	public void setPid(String pid) {
+//		this.pid = pid;
+//	}
+//	/**
+//	 * 获取课程ID。
+//	 * @return 课程ID。
+//	 */
+//	public String getId() {
+//		return id;
+//	}
+//	/**
+//	 * 设置课程ID。
+//	 * @param id 
+//	 *	  课程ID。
+//	 */
+//	public void setId(String id) {
+//		this.id = id;
+//	}
+//	/**
+//	 * 获取课程名称。
+//	 * @return 课程名称。
+//	 */
+//	public String getName() {
+//		return name;
+//	}
+//	/**
+//	 * 设置课程名称。
+//	 * @param name 
+//	 *	  课程名称。
+//	 */
+//	public void setName(String name) {
+//		this.name = name;
+//	}
+//	/**
+//	 * 获取课程类型。
+//	 * @return 课程类型。
+//	 */
+//	public String getType() {
+//		return type;
+//	}
+//	/**
+//	 * 设置课程类型。
+//	 * @param type 
+//	 *	  课程类型。
+//	 */
+//	public void setType(String type) {
+//		this.type = type;
+//	}
+//	/**
+//	 * 获取排序号。
+//	 * @return 排序号。
+//	 */
+//	public Integer getOrderNo() {
+//		return orderNo;
+//	}
+//	/**
+//	 * 设置排序号。
+//	 * @param orderNo 
+//	 *	  排序号。
+//	 */
+//	public void setOrderNo(Integer orderNo) {
+//		this.orderNo = orderNo;
+//	}
+	/*
+	 * 排序比较。
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
-	public void setType(String type) {
-		this.type = type;
-	}
-	/**
-	 * 获取排序号。
-	 * @return 排序号。
-	 */
-	public Integer getOrderNo() {
-		return orderNo;
-	}
-	/**
-	 * 设置排序号。
-	 * @param orderNo 
-	 *	  排序号。
-	 */
-	public void setOrderNo(Integer orderNo) {
-		this.orderNo = orderNo;
+	@Override
+	public int compareTo(PackageClass o) {
+		return this.order_no - o.order_no;
 	}
 }

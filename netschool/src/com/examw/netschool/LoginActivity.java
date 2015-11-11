@@ -1,6 +1,5 @@
 package com.examw.netschool;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,9 +13,8 @@ import com.examw.netschool.app.Constant;
 import com.examw.netschool.codec.binary.Base64;
 import com.examw.netschool.codec.digest.DigestUtils;
 import com.examw.netschool.model.JSONCallback;
-import com.examw.netschool.util.DigestClientUtil;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.examw.netschool.model.LoginResult;
+import com.examw.netschool.util.APIUtils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -284,26 +282,21 @@ public class LoginActivity extends Activity implements OnClickListener {
 						return getResources().getText(R.string.login_fail_net).toString();
 					}
 					//参数处理
-					final String pwd = DigestUtils.md5Hex(DigestUtils.md5Hex(Constant.DOMAIN_AGENCY_ID + _username) + _password);
-					final Map<String, String> parameters = new HashMap<String, String>();
-					parameters.put("agencyId", Constant.DOMAIN_AGENCY_ID);
+					final String pwd = DigestUtils.md5Hex( _username + _password);
+					final Map<String, Object> parameters = new HashMap<String, Object>();
 					parameters.put("username", _username);
 					parameters.put("pwd", pwd);
+					parameters.put("terminal", Constant.TERMINAL);
 					//验证用户
-					final String result = DigestClientUtil.sendDigestPOSTRequest( Constant.DOMAIN_URL + "/api/m/login.do", parameters);
-					Log.d(TAG, "登录反馈:" + result);
-					if(StringUtils.isBlank(result)){
-						Log.e(TAG, "服务器无响应!");
-						return getResources().getText(R.string.login_fail_server).toString();
-					}
-					//反馈解析
-					final Gson gson = new Gson();
-					final Type type = new TypeToken<JSONCallback<String>>(){}.getType();
-					final JSONCallback<String> callback = gson.fromJson(result, type);
-					//
+					final JSONCallback<LoginResult> callback = new APIUtils.CallbackJSON<LoginResult>().sendPOSTRequest(getResources(), 
+							R.string.api_user_login_url, parameters);
+//					if(callback == null){
+//						Log.e(TAG, "服务器无响应!");
+//						return getResources().getText(R.string.login_fail_server).toString();
+//					}
 					if(callback.getSuccess()){
 						//获取用户ID
-						_userId = callback.getData();
+						_userId = callback.getData().rand_user_id; 
 						//返回
 						return null;
 					}
@@ -352,7 +345,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		final AppContext appContext = (AppContext)getApplicationContext();
 		//异步线程处理登录
 		new AsyncTask<String, Void, String>() {
-			private String _userId,_username, _password;
+			private String  _userId,_username, _password;
 			/*
 			 * 后台异步线程本地登录处理。
 			 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])

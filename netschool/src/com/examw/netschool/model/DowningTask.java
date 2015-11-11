@@ -48,7 +48,7 @@ public class DowningTask extends Downing {
 	 * @param lesson
 	 */
 	public void setLesson(Lesson lesson){
-		if(lesson != null && StringUtils.equalsIgnoreCase(lesson.getId(), this.getLessonId())){
+		if(lesson != null && StringUtils.equalsIgnoreCase(lesson.id, this.getLessonId())){
 			this.url = lesson.getPriorityUrl();
 		}
 	}

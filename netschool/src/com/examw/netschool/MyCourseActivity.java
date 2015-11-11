@@ -1,8 +1,9 @@
 package com.examw.netschool;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -10,10 +11,8 @@ import com.examw.netschool.app.AppContext;
 import com.examw.netschool.app.Constant;
 import com.examw.netschool.dao.MyCourseDao;
 import com.examw.netschool.model.JSONCallback;
-import com.examw.netschool.model.MyCourse;
-import com.examw.netschool.util.DigestClientUtil;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.examw.netschool.model.PackageClass;
+import com.examw.netschool.util.APIUtils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -47,14 +46,14 @@ public class MyCourseActivity extends Activity {
 	private LinearLayout nodataView;
 	private ProgressDialog progressDialog;
 	
-	private final List<MyCourse> courses;
+	private final List<PackageClass> courses;
 	private final MyCourseAdapter adapter;
 	/**
 	 * 构造函数。
 	 */
 	public MyCourseActivity(){
 		Log.d(TAG, "初始化...");
-		this.courses = new ArrayList<MyCourse>();
+		this.courses = new ArrayList<PackageClass>();
 		this.adapter = new MyCourseAdapter(this.courses);
 	}
 	/*
@@ -176,13 +175,13 @@ public class MyCourseActivity extends Activity {
 			// 如果没有子类了,表示是单独的课程
 			if(parent.getExpandableListAdapter().getChildrenCount(groupPosition) == 0){
 				//我的课程
-				final MyCourse course = (MyCourse)adapter.getGroup(groupPosition);
+				final PackageClass course = (PackageClass)adapter.getGroup(groupPosition);
 				if(course == null){
 					Log.d(TAG, "获取分组["+groupPosition+"]数据失败!");
 					return false;
 				}
 				//判断是否为班级
-				if(StringUtils.equalsIgnoreCase(course.getType(), MyCourse.TYPE_CLASS)){
+				if(StringUtils.equalsIgnoreCase(course.type, PackageClass.TYPE_CLASS)){
 					//班级
 					gotoActivity(course);
 					
@@ -203,13 +202,13 @@ public class MyCourseActivity extends Activity {
 		public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 			Log.d(TAG, "分组["+groupPosition+"]下节点["+childPosition+"]点击事件处理...");
 			//我的课程
-			final MyCourse course = (MyCourse)adapter.getChild(groupPosition, childPosition);
+			final PackageClass course = (PackageClass)adapter.getChild(groupPosition, childPosition);
 			if(course == null){
 				Log.d(TAG, "获取分组["+groupPosition+"]下节点["+childPosition+"]数据失败!");
 				return false;
 			}
 			//判断是否为班级
-			if(StringUtils.equalsIgnoreCase(course.getType(), MyCourse.TYPE_CLASS)){
+			if(StringUtils.equalsIgnoreCase(course.type, PackageClass.TYPE_CLASS)){
 				//
 				gotoActivity(course);
 				return true;
@@ -219,14 +218,14 @@ public class MyCourseActivity extends Activity {
 		
 	};
 	//跳转到Activity。
-	private void gotoActivity(final MyCourse course){
+	private void gotoActivity(final PackageClass course){
 		if(course == null) return;
 		//我的课程－班级处理
 		final Intent intent = new Intent(this, MyCourseLessonActivity.class);
 		intent.putExtra(Constant.CONST_USERID, userId);
 		intent.putExtra(Constant.CONST_USERNAME, userName);
-		intent.putExtra(Constant.CONST_CLASS_ID, course.getId());
-		intent.putExtra(Constant.CONST_CLASS_NAME, course.getName());
+		intent.putExtra(Constant.CONST_CLASS_ID, course.id);
+		intent.putExtra(Constant.CONST_CLASS_NAME, course.name);
 		//跳转
 		this.startActivity(intent);
 	}
@@ -245,13 +244,13 @@ public class MyCourseActivity extends Activity {
 		//显示等待
 		this.progressDialog.show();
 		//异步线程加载数据
-		new AsyncTask<Void, Void, List<MyCourse>>() {
+		new AsyncTask<Void, Void, List<PackageClass>>() {
 			/*
 			 * 后台线程加载数据。
 			 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
 			 */
 			@Override
-			protected List<MyCourse> doInBackground(Void... params) {
+			protected List<PackageClass> doInBackground(Void... params) {
 				try{
 					Log.d(TAG, "后台线程加载数据...");
 					//初始化
@@ -261,21 +260,23 @@ public class MyCourseActivity extends Activity {
 					//检查是否从网络下载数据
 					if(appContext != null && appContext.isNetworkConnected()){
 						Log.d(TAG, " 将从网络下载课程数据...");
-						final String result = DigestClientUtil.sendDigestGetRequest(Constant.DOMAIN_URL + "/api/m/courses/" + userId + ".do");
-						if(StringUtils.isNotBlank(result)){
-							//解析数据
-							final Gson gson = new Gson();
-							final Type type = new TypeToken<JSONCallback<MyCourse[]>>(){}.getType();
-							final JSONCallback<MyCourse[]> callback = gson.fromJson(result, type);
-							if(callback.getSuccess()){
-								//清空数据
-								courseDao.deleteAll();
-								//新增数据
-								courseDao.add(callback.getData());
-							}else{
-								Log.e(TAG, callback.getMsg());
-							}
+						//初始化参数
+						final Map<String, Object> parameters = new HashMap<String, Object>();
+						//设置用户ID
+						parameters.put("randUserId", userId);
+						//发送请求
+						final JSONCallback<PackageClass[]> callback = new APIUtils.CallbackJSON<PackageClass[]>().sendGETRequest(getResources(),
+								R.string.api_courses_url, parameters);
+						//
+						if(callback.getSuccess()){
+							//清空数据
+							courseDao.deleteAll();
+							//新增数据
+							courseDao.add(callback.getData());
+						}else{
+							Log.e(TAG, callback.getMsg());
 						}
+						
 					}
 					//查询数据
 					return courseDao.loadCourses(null);
@@ -289,7 +290,7 @@ public class MyCourseActivity extends Activity {
 			 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
 			 */
 			@Override
-			protected void onPostExecute(List<MyCourse> result) {
+			protected void onPostExecute(List<PackageClass> result) {
 				Log.d(TAG, "前台主线程处理...");
 				//关闭等待动画
 				if(progressDialog != null) progressDialog.dismiss();
@@ -312,16 +313,16 @@ public class MyCourseActivity extends Activity {
 	//数据适配器
 	private class MyCourseAdapter extends BaseExpandableListAdapter{
 		private static final String TAG = "MyCourseAdapter";
-		private final List<MyCourse> groups;
-		private final SparseArray<MyCourse[]> childCourses;
+		private final List<PackageClass> groups;
+		private final SparseArray<PackageClass[]> childCourses;
 		/**
 		 * 构造函数。
 		 * @param courses
 		 */
-		public MyCourseAdapter(List<MyCourse> courses){
+		public MyCourseAdapter(List<PackageClass> courses){
 			Log.d(TAG, "初始化...");
 			this.groups = courses;
-			this.childCourses = new SparseArray<MyCourse[]>();
+			this.childCourses = new SparseArray<PackageClass[]>();
 		}
 		/*
 		 * 获取分组数据总数。
@@ -338,9 +339,9 @@ public class MyCourseActivity extends Activity {
 		@Override
 		public int getChildrenCount(int groupPosition) {
 			Log.d(TAG, "获取分组["+groupPosition+"]下子节点总数...");
-			MyCourse[] childs = this.childCourses.get(groupPosition, null);
+			PackageClass[] childs = this.childCourses.get(groupPosition, null);
 			if(childs == null || childs.length == 0){
-				final MyCourse parent = this.groups.get(groupPosition);
+				final PackageClass parent = this.groups.get(groupPosition);
 				if(parent == null){
 					Log.d(TAG, "加载分组["+groupPosition+"]课程数据失败!");
 					return 0;
@@ -348,9 +349,9 @@ public class MyCourseActivity extends Activity {
 				//初始化
 				final MyCourseDao courseDao = new MyCourseDao();
 				//加载数据
-				final List<MyCourse> list = courseDao.loadCourses(parent.getId());
+				final List<PackageClass> list = courseDao.loadCourses(parent.id);
 				if(list != null && list.size() > 0){
-					childs = list.toArray(new MyCourse[0]);
+					childs = list.toArray(new PackageClass[0]);
 					this.childCourses.put(groupPosition, childs);
 				}
 			}
@@ -372,7 +373,7 @@ public class MyCourseActivity extends Activity {
 		@Override
 		public Object getChild(int groupPosition, int childPosition) {
 			Log.d(TAG, "获取分组["+groupPosition+"]下子节点["+childPosition+"]数据...");
-			final MyCourse[] courses = this.childCourses.get(groupPosition, null);
+			final PackageClass[] courses = this.childCourses.get(groupPosition, null);
 			if(courses != null && courses.length > childPosition){
 				return courses[childPosition];
 			}
@@ -425,7 +426,7 @@ public class MyCourseActivity extends Activity {
 				viewHolder = (GroupViewHolder)convertView.getTag();
 			}
 			//加载数据
-			viewHolder.loadData((MyCourse)this.getGroup(groupPosition));
+			viewHolder.loadData((PackageClass)this.getGroup(groupPosition));
 			//返回视图
 			return convertView;
 		}
@@ -450,7 +451,7 @@ public class MyCourseActivity extends Activity {
 				viewHolder = (ChildViewHolder)convertView.getTag();
 			}
 			//加载数据
-			viewHolder.loadData((MyCourse)this.getChild(groupPosition, childPosition));
+			viewHolder.loadData((PackageClass)this.getChild(groupPosition, childPosition));
 			//返回视图
 			return convertView;
 		}
@@ -478,9 +479,9 @@ public class MyCourseActivity extends Activity {
 		 * 加载数据。
 		 * @param data
 		 */
-		public void loadData(MyCourse data){
+		public void loadData(PackageClass data){
 			if(data != null && this.tvTitle != null){
-				this.tvTitle.setText(data.getName());
+				this.tvTitle.setText(data.name);
 			}
 		}
 	}
@@ -498,9 +499,9 @@ public class MyCourseActivity extends Activity {
 		 * 加载数据。
 		 * @param data
 		 */
-		public void loadData(MyCourse data){
+		public void loadData(PackageClass data){
 			if(data != null && this.tvTitle != null){
-				this.tvTitle.setText(data.getName());
+				this.tvTitle.setText(data.name);
 			}
 		}
 	}

@@ -1,8 +1,9 @@
 package com.examw.netschool;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -11,9 +12,7 @@ import com.examw.netschool.app.Constant;
 import com.examw.netschool.dao.AQTopicDao;
 import com.examw.netschool.model.AQTopic;
 import com.examw.netschool.model.JSONCallback;
-import com.examw.netschool.util.DigestClientUtil;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.examw.netschool.util.APIUtils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -171,11 +170,11 @@ public class AnswerActivity extends Activity implements OnClickListener,OnItemCl
 			//用户姓名
 			intent.putExtra(Constant.CONST_USERNAME, userName);
 			//主题ID
-			intent.putExtra(CONST_TOPIC_ID, topic.getId());
+			intent.putExtra(CONST_TOPIC_ID, topic.id);
 			//主题标题
-			intent.putExtra(CONST_TOPIC_TITLE, topic.getTitle());
+			intent.putExtra(CONST_TOPIC_TITLE, topic.title);
 			//主题内容
-			intent.putExtra(CONST_TOPIC_CONTENT, topic.getContent());
+			intent.putExtra(CONST_TOPIC_CONTENT, topic.content);
 			//启动
 			this.startActivity(intent);
 		}
@@ -195,25 +194,23 @@ public class AnswerActivity extends Activity implements OnClickListener,OnItemCl
 				//检查网络
 				final AppContext appContext = (AppContext)getApplicationContext();
 				if(appContext != null && appContext.isNetworkConnected() && StringUtils.isNotBlank(userId)){
+					//初始化参数
+					final Map<String, Object> parameters = new HashMap<String, Object>();
+					parameters.put("randUserId", userId);					
 					//网络下载数据
-					final String result = DigestClientUtil.sendDigestGetRequest(Constant.DOMAIN_URL + "/api/m/aq/topic/"+Constant.DOMAIN_AGENCY_ID+"/" + userId + ".do");
-					if(StringUtils.isNotBlank(result)){
-						//解析结果数据
-						final Gson gson = new Gson();
-						final Type type = new TypeToken<JSONCallback<AQTopic[]>>(){}.getType();
-						final JSONCallback<AQTopic[]> callback = gson.fromJson(result, type);
-						//获取数据成功
-						if(callback.getSuccess() && callback.getData() != null && callback.getData().length > 0){
-							//更新数据
-							for(AQTopic topic : callback.getData()){
-								if(topic == null || StringUtils.isBlank(topic.getId())) continue;
-								if(topicDao.hasTopic(topic.getId())){//存在
-									Log.d(TAG, "更新数据...");
-									topicDao.update(topic);
-								}else{
-									Log.d(TAG, "新增数据...");
-									topicDao.insert(topic);
-								}
+					final JSONCallback<AQTopic[]> callback = new APIUtils.CallbackJSON<AQTopic[]>().sendGETRequest(getResources(),
+							R.string.api_topics_url, parameters);
+					//获取数据成功
+					if(callback.getSuccess() && callback.getData() != null && callback.getData().length > 0){
+						//更新数据
+						for(AQTopic topic : callback.getData()){
+							if(topic == null || StringUtils.isBlank(topic.id)) continue;
+							if(topicDao.hasTopic(topic.id)){//存在
+								Log.d(TAG, "更新数据...");
+								topicDao.update(topic);
+							}else{
+								Log.d(TAG, "新增数据...");
+								topicDao.insert(topic);
 							}
 						}
 					}
@@ -333,13 +330,13 @@ public class AnswerActivity extends Activity implements OnClickListener,OnItemCl
 		public void loadData(AQTopic topic){
 			if(topic != null){
 				//标题
-				this.tvTitle.setText(topic.getTitle());
+				this.tvTitle.setText(topic.title);
 				//课程资源
-				this.tvLesson.setText("课程资源:" + topic.getLessonName());
+				this.tvLesson.setText("课程资源:" + topic.lesson_name);
 				//内容
-				this.tvContent.setText(topic.getContent());
+				this.tvContent.setText(topic.content);
 				//时间
-				this.tvTime.setText(topic.getLastTime());
+				this.tvTime.setText(topic.last_time);
 			}
 		}
 	}

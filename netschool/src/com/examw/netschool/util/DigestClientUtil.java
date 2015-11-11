@@ -10,8 +10,6 @@ import java.util.Map.Entry;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -24,7 +22,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.util.EntityUtils;
 
-import com.examw.netschool.app.Constant;
 import com.examw.netschool.model.JSONCallback;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -147,7 +144,7 @@ public final class DigestClientUtil {
 		try {
 			//创建认证提供者
 			final BasicCredentialsProvider bcp = new BasicCredentialsProvider();
-			bcp.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(Constant.DOMAIN_Username, Constant.DOMAIN_Password));
+		//	bcp.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(Constant.DOMAIN_Username, Constant.DOMAIN_Password));
 			
 			//初始化HTTP客户端
 			final DefaultHttpClient client = new DefaultHttpClient();
@@ -155,6 +152,7 @@ public final class DigestClientUtil {
 			client.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, TIME_OUT);
 			//读取超时
 			client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, TIME_OUT);
+			
 			//设置认证
 			client.setCredentialsProvider(bcp);
 			

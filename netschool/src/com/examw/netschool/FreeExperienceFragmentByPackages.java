@@ -1,20 +1,18 @@
 package com.examw.netschool;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.examw.netschool.FreeExperienceActivity.Search;
 import com.examw.netschool.app.AppContext;
-import com.examw.netschool.app.Constant;
 import com.examw.netschool.model.JSONCallback;
 import com.examw.netschool.model.PackageClass;
-import com.examw.netschool.util.DigestClientUtil;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.examw.netschool.util.APIUtils;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -122,9 +120,9 @@ public class FreeExperienceFragmentByPackages extends Fragment {
 					//初始化 
 					final  List<PackageClass> taget = new ArrayList<PackageClass>();
 					for(PackageClass data : packageClasses){
-						if(data == null || StringUtils.isBlank(data.getName()) || !data.IsClass()) continue;
-						if(data.getName().indexOf(params[0]) > -1){
-							data.setPid(null);
+						if(data == null || StringUtils.isBlank(data.name) || !data.IsClass()) continue;
+						if(data.name.indexOf(params[0]) > -1){
+							data.pid = (null);
 							taget.add(data);
 						}
 					}
@@ -207,12 +205,12 @@ public class FreeExperienceFragmentByPackages extends Fragment {
 	};
 	//
 	private void gotoLessonFragment(PackageClass data){
-		if(data == null || StringUtils.isBlank(data.getId()) || !data.IsClass()) return;
+		if(data == null || StringUtils.isBlank(data.id) || !data.IsClass()) return;
 		//替换Frame
 		getActivity().getSupportFragmentManager()
 						.beginTransaction()
 						.addToBackStack(null)
-						.replace(R.id.fragment_container, new FreeExperienceFragmentByLesson(userId, data.getId(), this.search))
+						.replace(R.id.fragment_container, new FreeExperienceFragmentByLesson(userId, data.id, this.search))
 						.commit();
 	}
 	//异步加载数据。
@@ -236,13 +234,14 @@ public class FreeExperienceFragmentByPackages extends Fragment {
 					Log.d(TAG, "获取上线文失败或网络不可用!");
 					return null;
 				}
-				//查询数据
-			    final String result =	DigestClientUtil.sendDigestGetRequest(Constant.DOMAIN_URL + "/api/m/packages/"+Constant.DOMAIN_AGENCY_ID+"/"+examId+".do");
-			    if(StringUtils.isBlank(result)) return null;
-			    // 解析字符串
-				final Gson gson = new Gson();
-				final Type type = new TypeToken<JSONCallback<PackageClass[]>>(){}.getType();
-				final JSONCallback<PackageClass[]> callback = gson.fromJson(result, type);
+				//初始化参数
+				final Map<String, Object> parameters = new HashMap<String, Object>();
+				//设置考试ID
+				parameters.put("examId", examId);
+				//请求数据
+				final JSONCallback<PackageClass[]> callback = new APIUtils.CallbackJSON<PackageClass[]>().sendGETRequest(getResources(),
+						R.string.api_packages_url, parameters);
+				 //
 			    if(callback.getSuccess()){
 			    	return Arrays.asList(callback.getData());
 			    }else{
@@ -296,7 +295,7 @@ public class FreeExperienceFragmentByPackages extends Fragment {
 			this.groups = new ArrayList<PackageClass>();
 			if(this.list != null && this.list.size() > 0){
 				for(PackageClass data : this.list){
-					if(data != null && StringUtils.isBlank(data.getPid())){
+					if(data != null && StringUtils.isBlank(data.pid)){
 						this.groups.add(data);
 					}
 				}
@@ -312,10 +311,10 @@ public class FreeExperienceFragmentByPackages extends Fragment {
 			this.childArrays = new SparseArray<PackageClass[]>();
 			if(this.list != null && this.groups != null && this.groups.size() > groupPosition){
 				final PackageClass group = this.groups.get(groupPosition);
-				if(group != null && StringUtils.isNotBlank(group.getId())){
+				if(group != null && StringUtils.isNotBlank(group.id)){
 					final List<PackageClass> childs = new ArrayList<PackageClass>();
 					for(PackageClass data : this.list){
-						if(data != null && StringUtils.equalsIgnoreCase(data.getPid(), group.getId())){
+						if(data != null && StringUtils.equalsIgnoreCase(data.pid, group.id)){
 							childs.add(data);
 						}
 					}
@@ -448,7 +447,7 @@ public class FreeExperienceFragmentByPackages extends Fragment {
 		 */
 		public void loadData(PackageClass data){
 			if(data != null){
-				this.tvTitle.setText(data.getName());
+				this.tvTitle.setText(data.name);
 			}
 		}
 	}
@@ -468,7 +467,7 @@ public class FreeExperienceFragmentByPackages extends Fragment {
 		 */
 		public void loadData(PackageClass data){
 			if(data != null){
-				this.tvTitle.setText(data.getName());
+				this.tvTitle.setText(data.name);
 			}
 		}
 	}

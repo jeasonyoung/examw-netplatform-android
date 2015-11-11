@@ -2,7 +2,6 @@ package com.examw.netschool.dao;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -120,17 +119,17 @@ public class AQDetailDao extends BaseDao {
 		//初始化
 		final AQDetail detail = new AQDetail();
 		//答疑明细ID
-		detail.setId(cursor.getString(0));
+		detail.id = (cursor.getString(0));
 		//所属答疑主题ID
-		detail.setTopicId(cursor.getString(1));
+		//detail.setTopicId(cursor.getString(1));
 		//明细数据
-		detail.setContent(cursor.getString(2));
+		detail.content = (cursor.getString(2));
 		//用户ID
-		detail.setUserId(cursor.getString(3));
+		detail.user_id = (cursor.getString(3));
 		//用户姓名
-		detail.setUserName(cursor.getString(4));
+		detail.user_name = (cursor.getString(4));
 		//时间
-		detail.setCreateTime(cursor.getString(5));
+		detail.create_time = (cursor.getString(5));
 		//返回
 		return detail;
 	}
@@ -139,18 +138,18 @@ public class AQDetailDao extends BaseDao {
 	 * @param detail
 	 * 答疑主题明细。
 	 */
-	public void insert(AQDetail detail){
+	public void insert(String topicId, AQDetail detail){
 		Log.d(TAG, "插入答疑主题...");
 		if(detail == null) return;
 		//检查数据
-		if(StringUtils.isBlank(detail.getTopicId())){
+		if(StringUtils.isBlank(topicId)){
 			Log.d(TAG, "所属答疑主题ID为空!");
 			return;
 		}
 		synchronized(dbHelper){
 			try{
 				//主题明细ID
-				if(StringUtils.isBlank(detail.getId())) detail.setId(UUID.randomUUID().toString());
+				if(StringUtils.isBlank(detail.id)) return;
 				//初始化
 				db = dbHelper.getWritableDatabase();
 				//开启事务
@@ -158,17 +157,17 @@ public class AQDetailDao extends BaseDao {
 				//执行操作
 				db.execSQL("INSERT INTO tbl_AQDetail(id,topicId,content,userId,userName,createTime) values(?,?,?,?,?,?);", new Object[]{
 					//明细ID
-					StringUtils.trimToNull(detail.getId()),
+					StringUtils.trimToNull(detail.id),
 					//所属主题ID
-					StringUtils.trimToNull(detail.getTopicId()),
+					StringUtils.trimToNull(topicId),
 					//明细内容
-					StringUtils.trimToNull(detail.getContent()),
+					StringUtils.trimToNull(detail.content),
 					//用户ID
-					StringUtils.trimToNull(detail.getUserId()),
+					StringUtils.trimToNull(detail.user_id),
 					//用户姓名
-					StringUtils.trimToNull(detail.getUserName()),
+					StringUtils.trimToNull(detail.user_name),
 					//时间
-					StringUtils.trimToNull(detail.getCreateTime())
+					StringUtils.trimToNull(detail.create_time)
 				});
 				//设置事务成功
 				db.setTransactionSuccessful();
@@ -188,11 +187,11 @@ public class AQDetailDao extends BaseDao {
 	 * 更新答疑主题明细。
 	 * @param detail
 	 */
-	public void update(AQDetail detail){
+	public void update(String topicId, AQDetail detail){
 		Log.d(TAG, "更新答疑主题明细...");
 		if(detail == null) return;
 		//检查数据
-		if(StringUtils.isBlank(detail.getTopicId())){
+		if(StringUtils.isBlank(topicId)){
 			Log.d(TAG, "所属答疑主题ID为空!");
 			return;
 		}
@@ -205,17 +204,17 @@ public class AQDetailDao extends BaseDao {
 				//执行操作
 				db.execSQL("UPDATE tbl_AQDetail SET topicId= ?,content = ?, userId= ?, userName = ?, createTime = ? WHERE id = ?;", new Object[]{
 					//所属主题ID
-					StringUtils.trimToNull(detail.getTopicId()),
+					StringUtils.trimToNull(topicId),
 					//明细内容
-					StringUtils.trimToNull(detail.getContent()),
+					StringUtils.trimToNull(detail.content),
 					//用户ID
-					StringUtils.trimToNull(detail.getUserId()),
+					StringUtils.trimToNull(detail.user_id),
 					//用户姓名
-					StringUtils.trimToNull(detail.getUserName()),
+					StringUtils.trimToNull(detail.user_name),
 					//时间
-					StringUtils.trimToNull(detail.getCreateTime()),
+					StringUtils.trimToNull(detail.create_time),
 					//明细ID
-					StringUtils.trimToNull(detail.getId())
+					StringUtils.trimToNull(detail.id)
 				});
 				//设置事务成功
 				db.setTransactionSuccessful();

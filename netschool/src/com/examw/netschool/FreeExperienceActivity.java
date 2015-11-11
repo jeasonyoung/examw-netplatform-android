@@ -76,7 +76,7 @@ public class FreeExperienceActivity extends FragmentActivity implements OnClickL
 	private void loadFirstFragment(){
 		this.getSupportFragmentManager().beginTransaction()
 		.addToBackStack(null)
-		.add(R.id.fragment_container, new FreeExperienceFragmentByCategory(this.userId, this.search))
+		.add(R.id.fragment_container, new FreeExperienceFragmentByExams(this.userId, this.search))
 		.commit();
 	}
 	/*

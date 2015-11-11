@@ -1,7 +1,9 @@
 package com.examw.netschool;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -11,11 +13,10 @@ import com.examw.netschool.app.AppContext;
 import com.examw.netschool.app.Constant;
 import com.examw.netschool.dao.LessonDao;
 import com.examw.netschool.dao.MyCourseDao;
-import com.examw.netschool.model.AQTopicAdd;
 import com.examw.netschool.model.JSONCallback;
 import com.examw.netschool.model.Lesson;
-import com.examw.netschool.model.MyCourse;
-import com.examw.netschool.util.DigestClientUtil;
+import com.examw.netschool.model.PackageClass;
+import com.examw.netschool.util.APIUtils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -44,7 +45,7 @@ public class AnswerSubmitActivity extends Activity implements OnClickListener {
 	private ProgressDialog progressDialog;
 	private String userId,lessonId;
 	
-	private final List<MyCourse> courses;
+	private final List<PackageClass> courses;
 	private final List<Lesson> lessons;
 	private final SpinnerClassAdapter classAdapter;
 	private final SpinnerLessonAdapter lessonAdapter;
@@ -53,7 +54,7 @@ public class AnswerSubmitActivity extends Activity implements OnClickListener {
 	 */
 	public AnswerSubmitActivity(){
 		Log.d(TAG, "初始化...");
-		this.courses = new ArrayList<MyCourse>();
+		this.courses = new ArrayList<PackageClass>();
 		this.classAdapter = new SpinnerClassAdapter(this.courses);
 		
 		this.lessons = new ArrayList<Lesson>();
@@ -136,12 +137,12 @@ public class AnswerSubmitActivity extends Activity implements OnClickListener {
 		public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 			Log.d(TAG, "班级下拉选中事件处理...");
 			if(courses != null && courses.size() >  position){
-				final MyCourse course = courses.get(position);
+				final PackageClass course = courses.get(position);
 				if(course == null) return;
 				//清空课程资源ID
 				lessonId = null;
 				//异步加载数据
-				new AyncLessonLoadData().execute(course.getId());
+				new AyncLessonLoadData().execute(course.id);
 			}
 		}
 		/*
@@ -171,7 +172,7 @@ public class AnswerSubmitActivity extends Activity implements OnClickListener {
 			if(lessons != null && lessons.size() > position){
 				final Lesson lesson = lessons.get(position);
 				if(lesson == null) return;
-				lessonId = lesson.getId();
+				lessonId = lesson.id;
 			}
 		}
 		/*
@@ -192,13 +193,13 @@ public class AnswerSubmitActivity extends Activity implements OnClickListener {
 	protected void onStart() {
 		Log.d(TAG, "重载开始...");
 		//异步加载班级数据处理
-		new AsyncTask<Void, Void, List<MyCourse>>(){
+		new AsyncTask<Void, Void, List<PackageClass>>(){
 			/*
 			 * 后台异步线程加载数据处理。
 			 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
 			 */
 			@Override
-			protected List<MyCourse> doInBackground(Void... params) {
+			protected List<PackageClass> doInBackground(Void... params) {
 				try{
 					Log.d(TAG, "后台线程加载班级数据...");
 					//初始化
@@ -215,7 +216,7 @@ public class AnswerSubmitActivity extends Activity implements OnClickListener {
 			 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
 			 */
 			@Override
-			protected void onPostExecute(java.util.List<MyCourse> result) {
+			protected void onPostExecute(java.util.List<PackageClass> result) {
 				Log.d(TAG, "前台主线程更新数据...");
 				//清空数据
 				courses.clear();
@@ -295,25 +296,27 @@ public class AnswerSubmitActivity extends Activity implements OnClickListener {
 			protected String doInBackground(Void... params) {
 				try{
 					Log.d(TAG, "向服务器提交疑问数据...");
-					//初始化数据
-					final AQTopicAdd topic = new AQTopicAdd();
-					//设置标题
-					topic.setTitle(title);
-					//设置内容
-					topic.setContent(content);
-					//设置课程资源ID
-					topic.setLessonId(lessonId);
-					//设置所属机构ID
-					topic.setAgencyId(Constant.DOMAIN_AGENCY_ID);
-					//设置所属学员ID
-					topic.setStudentId(userId);
 					//检查网络连接
 					if(!appContext.isNetworkConnected()){
 						Log.d(TAG, "没有网络!");
 						return "没有网络!";
 					}
+					
+					//初始化参数
+					final Map<String, Object> parameters = new HashMap<String, Object>();
+					//设置用户ID
+					parameters.put("randUserId", userId);
+					//设置课程资源ID
+					parameters.put("lessonId", lessonId);
+					//设置标题
+					parameters.put("title", title);
+					//设置内容
+					parameters.put("content", content);
+					
 					//上传数据
-					final JSONCallback<Object> callback = DigestClientUtil.sendDigestPOSTJSONRequest(Constant.DOMAIN_URL + "/api/m/aq/topic.do", topic);
+					final JSONCallback<Object> callback = new APIUtils.CallbackJSON<Object>().sendPOSTRequest(getResources(),
+							R.string.api_topic_add_url, parameters);
+					
 					if(callback.getSuccess()){
 						Log.d(TAG, "上传数据成功...");
 						return null;

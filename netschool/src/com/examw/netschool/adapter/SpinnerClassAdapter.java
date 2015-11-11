@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.examw.netschool.R;
 import com.examw.netschool.app.AppContext;
-import com.examw.netschool.model.MyCourse;
+import com.examw.netschool.model.PackageClass;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,12 +21,12 @@ import android.widget.TextView;
  */
 public class SpinnerClassAdapter extends BaseAdapter {
 	private static final String TAG = "SpinnerClassAdapter";
-	private final List<MyCourse> list;
+	private final List<PackageClass> list;
 	/**
 	 * 构造函数。
 	 * @param courses
 	 */
-	public SpinnerClassAdapter(List<MyCourse> courses){
+	public SpinnerClassAdapter(List<PackageClass> courses){
 		Log.d(TAG, "初始化...");
 		this.list = courses;
 	}
@@ -75,7 +75,7 @@ public class SpinnerClassAdapter extends BaseAdapter {
 			viewHolder = (ViewHolder)convertView.getTag();
 		}
 		//加载数据
-		viewHolder.loadData((MyCourse)this.getItem(position));
+		viewHolder.loadData((PackageClass)this.getItem(position));
 		//返回
 		return convertView;
 	}
@@ -88,9 +88,9 @@ public class SpinnerClassAdapter extends BaseAdapter {
 			this.tvTitle = (TextView)convertView;
 		}
 		//
-		public void loadData(MyCourse course){
+		public void loadData(PackageClass course){
 			if(course != null){
-				this.tvTitle.setText(course.getName());
+				this.tvTitle.setText(course.name);
 			}
 		}
 	}

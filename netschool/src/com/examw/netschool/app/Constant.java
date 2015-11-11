@@ -7,6 +7,11 @@ package com.examw.netschool.app;
  */
 public final class Constant {
 	/**
+	 * 终端类型(2-苹果,3-安卓,4-其他)。
+	 */
+	public static final int TERMINAL = 3;
+	
+	/**
 	 * 用户ID/用户姓名。
 	 */
 	public static final String CONST_USERID = "user_id", CONST_USERNAME = "user_name";
@@ -36,23 +41,27 @@ public final class Constant {
 	 */
 	public static final int HANLDER_WHAT_STATE = 2;
 	
-	/**
-	 * HOST API ROOT URL。
-	 */
-	public static final String DOMAIN_URL = "http://demo.examw.com/examw-netplatform";
+//	/**
+//	 * HOST API ROOT URL。
+//	 */
+//	public static final String DOMAIN_URL = "http://192.168.1.112/huike/api.php";
+//	
+//	/**
+//	 * API 身份验证用户名。
+//	 */
+//	public static final String DOMAIN_TOKEN = "examw";
+//	/**
+//	 * API 身份验证用户密码。
+//	 */
+//	public static final String DOMAIN_Key = "12345";
 	
-	/**
-	 * API 身份验证用户名。
-	 */
-	public static final String DOMAIN_Username = "hk@test";
-	/**
-	 * API 身份验证用户密码。
-	 */
-	public static final String DOMAIN_Password = "test";
-	/**
-	 * 所属培训机构ID。
-	 */
-	public static final String DOMAIN_AGENCY_ID = "9bc380e2-4fc7-11e5-bfe6-000d609a8169";
+//	/**
+//	 * 用户登录URL
+//	 */
+//	public static final String LOGIN_URL = DOMAIN_URL + "/api/m/login";
+	
+	
+	
 	
 	
 	/**

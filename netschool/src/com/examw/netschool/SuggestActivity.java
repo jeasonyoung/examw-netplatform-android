@@ -1,12 +1,14 @@
 package com.examw.netschool;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.examw.netschool.app.AppContext;
 import com.examw.netschool.app.Constant;
 import com.examw.netschool.model.JSONCallback;
-import com.examw.netschool.model.Suggest;
-import com.examw.netschool.util.DigestClientUtil;
+import com.examw.netschool.util.APIUtils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -116,16 +118,16 @@ public class SuggestActivity extends Activity implements OnClickListener{
 						Log.d(TAG, "没有网络!");
 						return "没有网路!";
 					}
-					//初始化数据
-					final Suggest suggest = new Suggest();
-					//设置机构ID
-					suggest.setAgencyId(Constant.DOMAIN_AGENCY_ID);
-					//设置建议内容
-					suggest.setContent(content);
-					//设置当前用户ID
-					suggest.setStudentId(userId);
+					//初始化参数
+					final Map<String, Object> parameters = new HashMap<String, Object>();
+					//添加当前用户ID
+					parameters.put("randUserId", userId);
+					//添加建议内容
+					parameters.put("content", content);
+					
 					//上传数据
-					final JSONCallback<Object> callback = DigestClientUtil.sendDigestPOSTJSONRequest(Constant.DOMAIN_URL + "/api/m/aq/suggest.do", suggest);
+					final JSONCallback<Object> callback = new APIUtils.CallbackJSON<Object>().sendPOSTRequest(getResources(),
+							R.string.api_suggest_add_url, parameters);
 					if(callback.getSuccess()){
 						Log.d(TAG, "上传数据成功...");
 						return null;
