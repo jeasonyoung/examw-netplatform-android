@@ -6,13 +6,11 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
 import com.examw.netschool.app.AppContext;
-import com.examw.netschool.app.Constant;
 import com.examw.netschool.model.JSONCallback;
 import com.examw.netschool.util.APIUtils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,7 +29,6 @@ public class SuggestActivity extends Activity implements OnClickListener{
 	private static final String TAG = "SuggestActivity";
 	private EditText txtContent;
 	private ProgressDialog progressDialog;
-	private String userId,userName;
 	/*
 	 * 重载创建。
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -39,17 +36,8 @@ public class SuggestActivity extends Activity implements OnClickListener{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "重载创建...");
-		
 		//加载布局文件
 		this.setContentView(R.layout.activity_suggest);
-		//加载传递数据
-		final Intent intent = this.getIntent();
-		if(intent != null){
-			//当前用户ID
-			userId = intent.getStringExtra(Constant.CONST_USERID);
-			//当前用户姓名
-			userName = intent.getStringExtra(Constant.CONST_USERNAME);
-		}
 		//返回按钮
 		final View btnReturn = this.findViewById(R.id.btn_return);
 		btnReturn.setOnClickListener(this);
@@ -58,7 +46,7 @@ public class SuggestActivity extends Activity implements OnClickListener{
 		tvTopTitle.setText(R.string.suggest_title);
 		//学员名称
 		final TextView txtStudentName = (TextView)this.findViewById(R.id.txt_suggest_student_name);
-		txtStudentName.setText(userName);
+		txtStudentName.setText(AppContext.getCurrentUsername());
 		//建议内容
 		this.txtContent = (EditText)this.findViewById(R.id.txt_suggest_content);
 		//提交按钮
@@ -121,13 +109,13 @@ public class SuggestActivity extends Activity implements OnClickListener{
 					//初始化参数
 					final Map<String, Object> parameters = new HashMap<String, Object>();
 					//添加当前用户ID
-					parameters.put("randUserId", userId);
+					parameters.put("randUserId", AppContext.getCurrentUserId());
 					//添加建议内容
 					parameters.put("content", content);
 					
 					//上传数据
-					final JSONCallback<Object> callback = new APIUtils.CallbackJSON<Object>().sendPOSTRequest(getResources(),
-							R.string.api_suggest_add_url, parameters);
+					final JSONCallback<Object> callback = new APIUtils.CallbackJSON<Object>(Object.class)
+							.sendPOSTRequest(getResources(),R.string.api_suggest_add_url, parameters);
 					if(callback.getSuccess()){
 						Log.d(TAG, "上传数据成功...");
 						return null;

@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import com.examw.netschool.adapter.SpinnerClassAdapter;
 import com.examw.netschool.adapter.SpinnerLessonAdapter;
 import com.examw.netschool.app.AppContext;
-import com.examw.netschool.app.Constant;
 import com.examw.netschool.dao.LessonDao;
 import com.examw.netschool.dao.MyCourseDao;
 import com.examw.netschool.model.JSONCallback;
@@ -20,7 +19,6 @@ import com.examw.netschool.util.APIUtils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -43,7 +41,7 @@ public class AnswerSubmitActivity extends Activity implements OnClickListener {
 	private static final String TAG = "AnswerSubmitActivity";
 	private EditText txtTitle,txtContent;
 	private ProgressDialog progressDialog;
-	private String userId,lessonId;
+	private String lessonId;
 	
 	private final List<PackageClass> courses;
 	private final List<Lesson> lessons;
@@ -69,12 +67,6 @@ public class AnswerSubmitActivity extends Activity implements OnClickListener {
 		Log.d(TAG, "重载创建...");
 		//加载布局文件
 		this.setContentView(R.layout.activity_answer_submit);
-		//获取传递数据
-		final Intent intent = this.getIntent();
-		if(intent != null){
-			//用户ID
-			this.userId = intent.getStringExtra(Constant.CONST_USERID);
-		}
 		//返回按钮处理
 		final View btnBack = this.findViewById(R.id.btn_return);
 		btnBack.setOnClickListener(this);
@@ -142,7 +134,7 @@ public class AnswerSubmitActivity extends Activity implements OnClickListener {
 				//清空课程资源ID
 				lessonId = null;
 				//异步加载数据
-				new AyncLessonLoadData().execute(course.id);
+				new AyncLessonLoadData().execute(course.getId());
 			}
 		}
 		/*
@@ -172,7 +164,7 @@ public class AnswerSubmitActivity extends Activity implements OnClickListener {
 			if(lessons != null && lessons.size() > position){
 				final Lesson lesson = lessons.get(position);
 				if(lesson == null) return;
-				lessonId = lesson.id;
+				lessonId = lesson.getId();
 			}
 		}
 		/*
@@ -301,11 +293,10 @@ public class AnswerSubmitActivity extends Activity implements OnClickListener {
 						Log.d(TAG, "没有网络!");
 						return "没有网络!";
 					}
-					
 					//初始化参数
 					final Map<String, Object> parameters = new HashMap<String, Object>();
 					//设置用户ID
-					parameters.put("randUserId", userId);
+					parameters.put("randUserId", AppContext.getCurrentUserId());
 					//设置课程资源ID
 					parameters.put("lessonId", lessonId);
 					//设置标题
@@ -314,9 +305,8 @@ public class AnswerSubmitActivity extends Activity implements OnClickListener {
 					parameters.put("content", content);
 					
 					//上传数据
-					final JSONCallback<Object> callback = new APIUtils.CallbackJSON<Object>().sendPOSTRequest(getResources(),
-							R.string.api_topic_add_url, parameters);
-					
+					final JSONCallback<Object> callback = new APIUtils.CallbackJSON<Object>(Object.class)
+							.sendPOSTRequest(getResources(), R.string.api_topic_add_url, parameters);
 					if(callback.getSuccess()){
 						Log.d(TAG, "上传数据成功...");
 						return null;

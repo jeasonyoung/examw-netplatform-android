@@ -90,7 +90,7 @@ public class SpinnerClassAdapter extends BaseAdapter {
 		//
 		public void loadData(PackageClass course){
 			if(course != null){
-				this.tvTitle.setText(course.name);
+				this.tvTitle.setText(course.getName());
 			}
 		}
 	}

@@ -10,16 +10,65 @@ import java.io.Serializable;
  */
 public class LoginResult implements Serializable {
 	private static final long serialVersionUID = 1L;
+	private String agencyId,randUserId,realName;
 	/**
-	 * 所属机构ID。
+	 * 获取agencyId
+	 * @return agencyId
 	 */
-	public String agency_id;
+	public String getAgencyId() {
+		return agencyId;
+	}
 	/**
-	 * 随机用户ID。
+	 * 设置 agencyId
+	 * @param agencyId 
+	 *	  agencyId
 	 */
-	public String rand_user_id;
+	public void setAgencyId(String agencyId) {
+		this.agencyId = agencyId;
+	}
 	/**
-	 * 真实姓名。
+	 * 获取randUserId
+	 * @return randUserId
 	 */
-	public String real_name;
+	public String getRandUserId() {
+		return randUserId;
+	}
+	/**
+	 * 设置 randUserId
+	 * @param randUserId 
+	 *	  randUserId
+	 */
+	public void setRandUserId(String randUserId) {
+		this.randUserId = randUserId;
+	}
+	/**
+	 * 获取realName
+	 * @return realName
+	 */
+	public String getRealName() {
+		return realName;
+	}
+	/**
+	 * 设置 realName
+	 * @param realName 
+	 *	  realName
+	 */
+	public void setRealName(String realName) {
+		this.realName = realName;
+	}
+	
+	
+	
+//	/**
+//	 * 所属机构ID。
+//	 */
+//	public String agency_id;
+//	/**
+//	 * 随机用户ID。
+//	 */
+//	public String rand_user_id;
+//	/**
+//	 * 真实姓名。
+//	 */
+//	public String real_name;
 }

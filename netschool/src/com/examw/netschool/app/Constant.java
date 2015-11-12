@@ -11,10 +11,10 @@ public final class Constant {
 	 */
 	public static final int TERMINAL = 3;
 	
-	/**
-	 * 用户ID/用户姓名。
-	 */
-	public static final String CONST_USERID = "user_id", CONST_USERNAME = "user_name";
+//	/**
+//	 * 用户ID/用户姓名。
+//	 */
+//	public static final String CONST_USERID = "user_id", CONST_USERNAME = "user_name";
 	/**
 	 * 班级ID/班级名称。
 	 */
@@ -41,25 +41,6 @@ public final class Constant {
 	 */
 	public static final int HANLDER_WHAT_STATE = 2;
 	
-//	/**
-//	 * HOST API ROOT URL。
-//	 */
-//	public static final String DOMAIN_URL = "http://192.168.1.112/huike/api.php";
-//	
-//	/**
-//	 * API 身份验证用户名。
-//	 */
-//	public static final String DOMAIN_TOKEN = "examw";
-//	/**
-//	 * API 身份验证用户密码。
-//	 */
-//	public static final String DOMAIN_Key = "12345";
-	
-//	/**
-//	 * 用户登录URL
-//	 */
-//	public static final String LOGIN_URL = DOMAIN_URL + "/api/m/login";
-	
 	
 	
 	
@@ -81,22 +62,25 @@ public final class Constant {
 	 * 用户密码存储配置-用户ID。
 	 */
 	public static final String PREFERENCES_CONFIG_USERPWD_USERID = "id_";
-	
+	/**
+	 * 用户密码存储配置-用户机构。
+	 */
+	public static final String PREFERENCES_CONFIG_USERPWD_AGENCYID = "agency_";
 	/**
 	 * 共享用户名。
 	 */
 	public static final String PREFERENCES_CONFIG_SHARE_USER = "share_username";
 	
-	/**
-	 * 当前用户。
-	 */
-	public static final String PREFERENCES_CONFIG_CURRENT_USER = "current_user";
-	/**
-	 * 当前用户-用户ID。
-	 */
-	public static final String PREFERENCES_CONFIG_CURRENT_USER_ID = "current_user_id";
-	/**
-	 * 当前用户-用户姓名。
-	 */
-	public static final String PREFERENCES_CONFIG_CURRENT_USER_NAME = "current_user_name";
+//	/**
+//	 * 当前用户。
+//	 */
+//	public static final String PREFERENCES_CONFIG_CURRENT_USER = "current_user";
+//	/**
+//	 * 当前用户-用户ID。
+//	 */
+//	public static final String PREFERENCES_CONFIG_CURRENT_USER_ID = "current_user_id";
+//	/**
+//	 * 当前用户-用户姓名。
+//	 */
+//	public static final String PREFERENCES_CONFIG_CURRENT_USER_NAME = "current_user_name";
 }

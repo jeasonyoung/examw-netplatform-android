@@ -28,7 +28,7 @@ public class AppContext extends Application {
 	//全局上下文	
 	private static Context mContext;
 	//当前用户ID
-	private static String currentUserId;
+	private static String currentyAgencyId,currentUserId,currentUsername;
 	//窗口管理器
 	private WindowManager windowManager;
 	//连接管理
@@ -127,6 +127,13 @@ public class AppContext extends Application {
 		return StringUtils.equals(Environment.getExternalStorageState(), Environment.MEDIA_MOUNTED);
 	}
 	/**
+	 *  获取当前机构ID。
+	 * @return 机构ID。
+	 */
+	public static String getCurrentyAgencyId(){
+		return currentyAgencyId;
+	}
+	/**
 	 * 获取当前用户ID。
 	 * @return 当前用户ID。
 	 */
@@ -134,15 +141,29 @@ public class AppContext extends Application {
 		return currentUserId;
 	}
 	/**
-	 * 设置当前用户ID。
-	 * @param  userId 
-	 *	  当前用户ID。
+	 * 获取当前用户名。
+	 * @return 用户名。
 	 */
-	public synchronized void setCurrentUserId(String userId) {
-		if(!StringUtils.equalsIgnoreCase(currentUserId, userId)){
-			Log.d(TAG, "设置当前用户ID...["+ currentUserId+"]=>["+userId+"]");
-			currentUserId = userId;
-		}
+	public static String getCurrentUsername(){
+		return currentUsername;
+	}
+	/**
+	 * 设置当前用户信息。
+	 * @param agencyId
+	 * 机构ID。
+	 * @param userId
+	 * 用户ID。
+	 * @param userName
+	 * 用户名。
+	 */
+	public synchronized static void setCurrentUserInfo(String agencyId, String userId, String userName) {
+		Log.d(TAG, "设置当前用户信息:" + StringUtils.join(new String[]{agencyId, userId, userName}, "#"));
+		//设置当前机构ID
+		currentyAgencyId = agencyId;
+		//设置当前用户ID
+		currentUserId = userId;
+		//设置当前用户名
+		currentUsername = userName;
 	}
 	/**
 	 * 获取当前网络类型。

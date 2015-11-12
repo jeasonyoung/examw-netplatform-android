@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.examw.netschool.app.AppContext;
 import com.examw.netschool.app.Constant;
 import com.examw.netschool.dao.MyCourseDao;
@@ -41,7 +39,6 @@ import android.widget.TextView;
  */
 public class MyCourseActivity extends Activity {
 	private static final String TAG = "MyCourseActivity";
-	private String userId,userName;
 	
 	private LinearLayout nodataView;
 	private ProgressDialog progressDialog;
@@ -65,14 +62,6 @@ public class MyCourseActivity extends Activity {
 		Log.d(TAG, " 重载创建...");
 		//设置布局文件
 		this.setContentView(R.layout.activity_my_courses);
-		//加载传递数据
-		final Intent intent = this.getIntent();
-		if(intent != null){
-			//设置用户ID
-			this.userId = intent.getStringExtra(Constant.CONST_USERID);
-			//设置用户名
-			this.userName = intent.getStringExtra(Constant.CONST_CLASS_NAME);
-		}
 		//返回按钮处理
 		final View btnReturn = this.findViewById(R.id.btn_return);
 		//设置返回按钮事件处理
@@ -129,10 +118,6 @@ public class MyCourseActivity extends Activity {
 				Log.d(TAG, "离线课程点击事件... " + v);
 				//初始化意图
 				final Intent intent = new Intent(MyCourseActivity.this, DownloadActivity.class);
-				//设置用户ID
-				intent.putExtra(Constant.CONST_USERID, userId);
-				//设置用户名
-				intent.putExtra(Constant.CONST_USERNAME, userName);
 				//设置离线课程索引
 				intent.putExtra(DownloadActivity.CONST_FRAGMENT_INDEX, DownloadActivity.CONST_FRAGMENT_FINISH);
 				//发送意图
@@ -148,14 +133,8 @@ public class MyCourseActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Log.d(TAG, "播放记录点击处理...");
-				//初始化意图
-				final Intent intent = new Intent(MyCourseActivity.this, PlayRecordActivity.class);
-				//设置用户ID
-				intent.putExtra(Constant.CONST_USERID,  userId);
-				//设置用户名
-				intent.putExtra(Constant.CONST_USERNAME, userName);
 				//发送意图
-				startActivity(intent);
+				startActivity(new Intent(MyCourseActivity.this, PlayRecordActivity.class));
 				//关闭当前
 				finish();
 			}
@@ -181,7 +160,7 @@ public class MyCourseActivity extends Activity {
 					return false;
 				}
 				//判断是否为班级
-				if(StringUtils.equalsIgnoreCase(course.type, PackageClass.TYPE_CLASS)){
+				if(course.IsClass()){
 					//班级
 					gotoActivity(course);
 					
@@ -208,7 +187,7 @@ public class MyCourseActivity extends Activity {
 				return false;
 			}
 			//判断是否为班级
-			if(StringUtils.equalsIgnoreCase(course.type, PackageClass.TYPE_CLASS)){
+			if(course.IsClass()){
 				//
 				gotoActivity(course);
 				return true;
@@ -222,10 +201,8 @@ public class MyCourseActivity extends Activity {
 		if(course == null) return;
 		//我的课程－班级处理
 		final Intent intent = new Intent(this, MyCourseLessonActivity.class);
-		intent.putExtra(Constant.CONST_USERID, userId);
-		intent.putExtra(Constant.CONST_USERNAME, userName);
-		intent.putExtra(Constant.CONST_CLASS_ID, course.id);
-		intent.putExtra(Constant.CONST_CLASS_NAME, course.name);
+		intent.putExtra(Constant.CONST_CLASS_ID, course.getId());
+		intent.putExtra(Constant.CONST_CLASS_NAME, course.getName());
 		//跳转
 		this.startActivity(intent);
 	}
@@ -263,10 +240,10 @@ public class MyCourseActivity extends Activity {
 						//初始化参数
 						final Map<String, Object> parameters = new HashMap<String, Object>();
 						//设置用户ID
-						parameters.put("randUserId", userId);
+						parameters.put("randUserId", AppContext.getCurrentUserId());
 						//发送请求
-						final JSONCallback<PackageClass[]> callback = new APIUtils.CallbackJSON<PackageClass[]>().sendGETRequest(getResources(),
-								R.string.api_courses_url, parameters);
+						final JSONCallback<PackageClass[]> callback = new APIUtils.CallbackJSON<PackageClass[]>(PackageClass[].class)
+								.sendGETRequest(getResources(), R.string.api_courses_url, parameters);
 						//
 						if(callback.getSuccess()){
 							//清空数据
@@ -349,7 +326,7 @@ public class MyCourseActivity extends Activity {
 				//初始化
 				final MyCourseDao courseDao = new MyCourseDao();
 				//加载数据
-				final List<PackageClass> list = courseDao.loadCourses(parent.id);
+				final List<PackageClass> list = courseDao.loadCourses(parent.getId());
 				if(list != null && list.size() > 0){
 					childs = list.toArray(new PackageClass[0]);
 					this.childCourses.put(groupPosition, childs);
@@ -481,7 +458,7 @@ public class MyCourseActivity extends Activity {
 		 */
 		public void loadData(PackageClass data){
 			if(data != null && this.tvTitle != null){
-				this.tvTitle.setText(data.name);
+				this.tvTitle.setText(data.getName());
 			}
 		}
 	}
@@ -501,7 +478,7 @@ public class MyCourseActivity extends Activity {
 		 */
 		public void loadData(PackageClass data){
 			if(data != null && this.tvTitle != null){
-				this.tvTitle.setText(data.name);
+				this.tvTitle.setText(data.getName());
 			}
 		}
 	}

@@ -28,7 +28,7 @@ import android.widget.TextView;
  */
 public class DownloadActivity extends FragmentActivity implements OnCheckedChangeListener {
 	private static final String TAG = "DownloadActivity";
-	private String userId,lessonId;
+	private String lessonId;
 	
 	private int index = 0;
 	private ViewPager viewPager;
@@ -58,8 +58,6 @@ public class DownloadActivity extends FragmentActivity implements OnCheckedChang
 		//加载传递数据
 		final Intent intent = this.getIntent();
 		if(intent != null){
-			//当前用户ID
-			this.userId = intent.getStringExtra(Constant.CONST_USERID);
 			//课程资源ID
 			this.lessonId = intent.getStringExtra(Constant.CONST_LESSON_ID);
 			//页面索引
@@ -186,11 +184,11 @@ public class DownloadActivity extends FragmentActivity implements OnCheckedChang
 			Fragment result = null;
 			switch(pos){
 				 case 0:{//下载中
-					 result = new DownloadByFragmentDowning(userId);
+					 result = new DownloadByFragmentDowning();
 					 break;
 				 }
 				 case 1:{//下载完成
-					 result = new DownloadByFragmentFinish(userId);
+					 result = new DownloadByFragmentFinish();
 					 break;
 				 }
 			}

@@ -38,8 +38,6 @@ public class PlayRecordActivity extends Activity implements OnClickListener, OnI
 	private final PlayRecordAdapter adapter;
 	
 	private LinearLayout nodataView;
-	
-	private String userId;
 	/**
 	 * 构造函数。
 	 */
@@ -57,9 +55,6 @@ public class PlayRecordActivity extends Activity implements OnClickListener, OnI
 		Log.d(TAG, "重载创建...");
 		//加载布局文件
 		this.setContentView(R.layout.activity_play_record);
-		//加载数据传递
-		final Intent intent = this.getIntent();
-		this.userId = intent.getStringExtra(Constant.CONST_USERID);
 		//返回按钮
 		final View btnReturn = this.findViewById(R.id.btn_return);
 		btnReturn.setOnClickListener(this);
@@ -119,7 +114,6 @@ public class PlayRecordActivity extends Activity implements OnClickListener, OnI
 			if(record != null && StringUtils.isNotBlank(record.getId())){
 				//播放处理
 				final Intent intent = new Intent(this, VideoPlayActivity.class);
-				intent.putExtra(Constant.CONST_USERID, userId);
 				intent.putExtra(Constant.CONST_LESSON_RECORD_ID, record.getId());
 				//
 				startActivity(intent);

@@ -1,6 +1,6 @@
 package com.examw.netschool.dao;
 
-import org.apache.commons.lang3.StringUtils;
+import com.examw.netschool.codec.digest.DigestUtils;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -19,9 +19,9 @@ public class MyDBHelper extends SQLiteOpenHelper {
 	 * @param context
 	 * @param userId
 	 */
-	public MyDBHelper(Context context, String userId){
-		super(context, "eschool_" + (StringUtils.isBlank(userId) ? "_" :  userId) + ".db", null, VERSION);
-		Log.d(TAG, "初始化数据库操作:eschool_" +(StringUtils.isBlank(userId) ? "_" :  userId) + ".db...");
+	public MyDBHelper(Context context, String agencyId,  String userName){
+		super(context, "eschool_" + DigestUtils.md5Hex(agencyId + userName) + ".db", null, VERSION);
+		Log.d(TAG, "初始化数据库操作:eschool_" +DigestUtils.md5Hex(agencyId + userName) + ".db...");
 	}
 	/*
 	 * 重载创建数据库时创建表结构。

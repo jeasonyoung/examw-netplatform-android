@@ -24,6 +24,8 @@ public abstract class BaseDao {
 			Log.e(TAG, "初始化数据操作基础类上下文不存在!");
 			throw new RuntimeException("上下文不存在!");
 		}
-		this.dbHelper = new MyDBHelper(context, AppContext.getCurrentUserId());
+		this.dbHelper = new MyDBHelper(context, 
+																 AppContext.getCurrentyAgencyId(),
+																 AppContext.getCurrentUsername());
 	}
 }

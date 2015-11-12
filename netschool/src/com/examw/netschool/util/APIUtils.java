@@ -1,5 +1,6 @@
 package com.examw.netschool.util;
 
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,7 +27,6 @@ import com.examw.netschool.R;
 import com.examw.netschool.codec.digest.DigestUtils;
 import com.examw.netschool.model.JSONCallback;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import android.content.res.Resources;
 import android.util.Log;
@@ -203,6 +203,7 @@ public final class APIUtils {
 			//设置读取超时
 			client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, TIME_OUT);
 			
+			method.addHeader("Accept", "application/json");
 			//执行方法并返回 response
 			final HttpResponse response = client.execute(method);
 			
@@ -228,6 +229,15 @@ public final class APIUtils {
 	 * @since 2015年11月11日
 	 */
 	public static class CallbackJSON<T>{
+		private Class<T> clazz;
+		/**
+		 * 构造函数。
+		 * @param clazz
+		 */
+		public CallbackJSON(Class<T> clazz){
+			this.clazz = clazz;
+		}
+		
 		/**
 		 * 数据转换。
 		 * @param json
@@ -240,12 +250,34 @@ public final class APIUtils {
 				return new JSONCallback<T>(false, "服务器未响应!");
 			}
 			//返回类型处理
-			final Type type = new TypeToken<JSONCallback<T>>(){}.getType();
+			final Type type = type(JSONCallback.class, this.clazz);
 			//初始化JSON对象转换
 			final Gson gson = new Gson();
 			//返回结果
 			return gson.fromJson(json, type);
 		}	
+		
+		//类型转换
+		private static ParameterizedType type(final Class<?> raw, final Type ...args){
+			return new ParameterizedType() {
+				
+				@Override
+				public Type getRawType() {
+					return raw;
+				}
+				 
+				@Override
+				public Type getOwnerType() {
+					return null;
+				}
+				
+				@Override
+				public Type[] getActualTypeArguments() {
+					return args;
+				}
+			};
+		}
+		
 		/**
 		 * 发送POST请求。
 		 * @param resources

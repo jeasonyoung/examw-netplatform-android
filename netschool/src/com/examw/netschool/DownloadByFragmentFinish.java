@@ -37,7 +37,6 @@ import android.widget.TextView;
 public class DownloadByFragmentFinish extends Fragment {
 	private static final String TAG = "DownloadByFragmentFinish";
 	private LinearLayout nodataView;
-	private final String userId;
 
 	private final List<Download> dataSource;
 	private final FinishAdapter adapter;
@@ -45,9 +44,8 @@ public class DownloadByFragmentFinish extends Fragment {
 	 * 构造函数。
 	 * @param userId
 	 */
-	public DownloadByFragmentFinish(String userId){
+	public DownloadByFragmentFinish(){
 		Log.d(TAG, "初始化...");
-		this.userId = userId;
 		this.dataSource = new ArrayList<Download>();
 		this.adapter = new FinishAdapter(this.dataSource);
 	}
@@ -281,7 +279,6 @@ public class DownloadByFragmentFinish extends Fragment {
 			if(StringUtils.isBlank(this.lessonId)) return;
 			//
 			final Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
-			intent.putExtra(Constant.CONST_USERID, userId);
 			intent.putExtra(Constant.CONST_LESSON_ID, this.lessonId);
 			getActivity().startActivity(intent);
 			

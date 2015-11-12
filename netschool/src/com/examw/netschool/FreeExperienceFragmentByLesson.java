@@ -38,7 +38,7 @@ import android.widget.TextView;
  */
 public class FreeExperienceFragmentByLesson extends Fragment implements OnItemClickListener {
 	private static final String TAG = "FreeExperienceFragmentByLesson";
-	private final String userId, classId;
+	private final String classId;
 	private final Search search;
 	
 	private final List<Lesson> lessons;
@@ -47,13 +47,11 @@ public class FreeExperienceFragmentByLesson extends Fragment implements OnItemCl
 	private View nodataView;
 	/**
 	 * 构造函数。
-	 * @param userId
 	 * @param classId
 	 * @param search
 	 */
-	public FreeExperienceFragmentByLesson(String userId,String classId, Search search){
+	public FreeExperienceFragmentByLesson(String classId, Search search){
 		Log.d(TAG, "初始化...");
-		this.userId = userId;
 		this.classId = classId;
 		this.search = search;
 		this.search.setOnClickListener(this.onSearchClickListener);
@@ -99,12 +97,11 @@ public class FreeExperienceFragmentByLesson extends Fragment implements OnItemCl
 		Log.d(TAG, "数据项点击事件处理..." + view);
 		if(this.lessons != null && this.lessons.size() > position){
 			final Lesson data = this.lessons.get(position);
-			if(data != null && StringUtils.isNotBlank(data.id) && StringUtils.isNotBlank(data.getPriorityUrl())){
+			if(data != null && StringUtils.isNotBlank(data.getId()) && StringUtils.isNotBlank(data.getPriorityUrl())){
 				//播放处理
 				final Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
-				intent.putExtra(Constant.CONST_USERID, userId);
-				intent.putExtra(Constant.CONST_LESSON_ID, data.id);
-				intent.putExtra(Constant.CONST_LESSON_NAME, data.name);
+				intent.putExtra(Constant.CONST_LESSON_ID, data.getId());
+				intent.putExtra(Constant.CONST_LESSON_NAME, data.getName());
 				getActivity().startActivity(intent);
 			}
 		}
@@ -137,8 +134,8 @@ public class FreeExperienceFragmentByLesson extends Fragment implements OnItemCl
 					//初始化 
 					final  List<Lesson> taget = new ArrayList<Lesson>();
 					for(Lesson data : lessons){
-						if(data == null || StringUtils.isBlank(data.name)) continue;
-						if(data.name.indexOf(params[0]) > -1){
+						if(data == null || StringUtils.isBlank(data.getName())) continue;
+						if(data.getName().indexOf(params[0]) > -1){
 							taget.add(data);
 						}
 					}
@@ -190,14 +187,14 @@ public class FreeExperienceFragmentByLesson extends Fragment implements OnItemCl
 				//初始化参数
 				final Map<String, Object> parameters = new HashMap<String, Object>();
 				//设置用户ID
-				parameters.put("randUserId", userId);
+				parameters.put("randUserId", AppContext.getCurrentUserId());
 				//设置班级ID
 				parameters.put("classId", classId);
 				//是否免费
 				parameters.put("free", true);
 				//
-				final JSONCallback<Lesson[]> callback = new APIUtils.CallbackJSON<Lesson[]>().sendGETRequest(getResources(),
-						R.string.api_lessons_url, parameters);
+				final JSONCallback<Lesson[]> callback = new APIUtils.CallbackJSON<Lesson[]>(Lesson[].class)
+						.sendGETRequest(getResources(), R.string.api_lessons_url, parameters);
 				//
 			    if(callback.getSuccess()){
 			    	return Arrays.asList(callback.getData());
@@ -308,7 +305,7 @@ public class FreeExperienceFragmentByLesson extends Fragment implements OnItemCl
 		 */
 		public void loadData(Lesson data){
 			if(data != null){
-				this.tvTitle.setText(data.name);
+				this.tvTitle.setText(data.getName());
 			}
 		}
 	}

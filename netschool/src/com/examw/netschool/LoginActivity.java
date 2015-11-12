@@ -264,7 +264,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		final AppContext appContext = (AppContext)getApplicationContext();
 		//异步线程处理登录
 		new AsyncTask<String, Void, String>() {
-			private String _userId,_username, _password;
+			private String _agencyId, _userId,_username, _password;
 			/*
 			 * 后台异步线程网络登录处理。
 			 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
@@ -282,21 +282,23 @@ public class LoginActivity extends Activity implements OnClickListener {
 						return getResources().getText(R.string.login_fail_net).toString();
 					}
 					//参数处理
-					final String pwd = DigestUtils.md5Hex( _username + _password);
+					final String pwd_source = _username + DigestUtils.md5Hex(_password);
+					Log.d(TAG, "加密密码原文:" +pwd_source);
 					final Map<String, Object> parameters = new HashMap<String, Object>();
 					parameters.put("username", _username);
-					parameters.put("pwd", pwd);
+					parameters.put("pwd", DigestUtils.md5Hex(pwd_source));
 					parameters.put("terminal", Constant.TERMINAL);
 					//验证用户
-					final JSONCallback<LoginResult> callback = new APIUtils.CallbackJSON<LoginResult>().sendPOSTRequest(getResources(), 
-							R.string.api_user_login_url, parameters);
-//					if(callback == null){
-//						Log.e(TAG, "服务器无响应!");
-//						return getResources().getText(R.string.login_fail_server).toString();
-//					}
+					final JSONCallback<LoginResult> callback = new APIUtils.CallbackJSON<LoginResult>(LoginResult.class)
+							.sendPOSTRequest( getResources(), R.string.api_user_login_url, parameters);
 					if(callback.getSuccess()){
+						final LoginResult result = callback.getData();
+						//获取当前机构ID
+						_agencyId = result.getAgencyId();
 						//获取用户ID
-						_userId = callback.getData().rand_user_id; 
+						_userId = result.getRandUserId(); 
+						//设置登录用户信息。
+						AppContext.setCurrentUserInfo(_agencyId, _userId, _username);
 						//返回
 						return null;
 					}
@@ -322,14 +324,12 @@ public class LoginActivity extends Activity implements OnClickListener {
 					//显示失败信息
 					Toast.makeText(appContext, result, Toast.LENGTH_SHORT).show();
 				}else{
-					//设置当前用户ID
-					appContext.setCurrentUserId(_userId);
 					//记住用户
 					rememberUserPassword(_username, _password);
 					//保存用户到本地
-					saveUserToLocal(_userId, _username,  _password);
+					saveUserToLocal(_agencyId, _userId, _username,  _password);
 					//跳转
-					gotoMain(_userId, _username);
+					gotoMain();
 				}
 			}
 		}.execute(this.userName, this.userPassword);
@@ -376,6 +376,15 @@ public class LoginActivity extends Activity implements OnClickListener {
 						Log.e(TAG, "存储的用户ID实效，须在线登录!");
 						return getResources().getText(R.string.login_fail_local_none).toString();
 					}
+					//获取用户机构
+					final String agencyId = userPwdShared.getString(Constant.PREFERENCES_CONFIG_USERPWD_AGENCYID + enpwd, "");
+					if(StringUtils.isBlank(agencyId)){
+						Log.e(TAG, "存储的用户机构ID实效，须在线登录!");
+						return getResources().getText(R.string.login_fail_local_none).toString();
+					}
+					//设置用户信息
+					AppContext.setCurrentUserInfo(agencyId, _userId, _username);
+					//
 					return null;
 				}catch(Exception e){
 					Log.e(TAG, "在线登录异常:" + e.getMessage(), e);
@@ -396,12 +405,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 					//显示失败信息
 					Toast.makeText(appContext, result, Toast.LENGTH_SHORT).show();
 				}else{
-					//设置当前用户ID
-					appContext.setCurrentUserId(_userId);
 					//记住用户
 					rememberUserPassword(_username, _password);
 					//跳转
-					gotoMain(_userId, _username);
+					gotoMain();
 				}
 			}
 		}.execute(this.userName, this.userPassword);
@@ -433,7 +440,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		});
 	}
 	//异步保存用户信息到本地
-	private void saveUserToLocal(final String userId, final String username,final String password){
+	private void saveUserToLocal(final String agencyId, final String userId, final String username,final String password){
 		Log.d(TAG, "准备异步线程保存用户信息数据到本地...");
 		if(StringUtils.isBlank(userId) || StringUtils.isBlank(username) || StringUtils.isBlank(password)) return;
 		//异步线程处理
@@ -449,19 +456,14 @@ public class LoginActivity extends Activity implements OnClickListener {
 					//初始化保存用户/密码
 					final SharedPreferences userPwdSharedPreferences = getSharedPreferences(Constant.PREFERENCES_CONFIG_USERPWD, Context.MODE_PRIVATE);
 					if(userPwdSharedPreferences != null){
+						//用户密码加密存储
+						final String user_pwd =  DigestUtils.md5Hex(username + password);
 						//记住用户密码
 						userPwdSharedPreferences.edit()
 																	 .putString(Constant.PREFERENCES_CONFIG_USERPWD_USERID + DigestUtils.md5Hex(username), userId)
-																	 .putString(username, DigestUtils.md5Hex(username + password))
+																	 .putString(username, user_pwd)
+																	 .putString(Constant.PREFERENCES_CONFIG_USERPWD_AGENCYID + user_pwd, agencyId)
 																	 .commit();
-					}
-					//初始化保存当前用户
-					final SharedPreferences currentUserPreferences = getSharedPreferences(Constant.PREFERENCES_CONFIG_CURRENT_USER, Context.MODE_PRIVATE);
-					if(currentUserPreferences != null){
-						currentUserPreferences.edit()
-															  .putString(Constant.PREFERENCES_CONFIG_CURRENT_USER_ID, userId)
-															  .putString(Constant.PREFERENCES_CONFIG_CURRENT_USER_NAME, username)
-															  .commit();
 					}
 				} catch (Exception e) {
 					Log.e(TAG, "异步保存用户异常:" + e.getMessage(), e);
@@ -471,16 +473,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 		});
 	}
 	//跳转到主Activity。
-	private void gotoMain(String userId, String userName){
-		Log.d(TAG, "跳转到主界面..." + userName + "[" + userId+"]");
-		if(StringUtils.isNotBlank(userId) && StringUtils.isNotBlank(userName)){
-			//初始化意图
-			final Intent intent = new Intent(this, MainActivity.class);
-			intent.putExtra(Constant.CONST_USERID, userId);
-			intent.putExtra(Constant.CONST_USERNAME, userName);
-			//启动意图
-			this.startActivity(intent);
-		}
+	private void gotoMain(){
+		Log.d(TAG, "跳转到主界面..." );
+		//启动意图
+		this.startActivity(new Intent(this, MainActivity.class));
 		//关闭
 		this.finish();
 	}

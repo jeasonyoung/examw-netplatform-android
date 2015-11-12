@@ -40,7 +40,7 @@ import android.widget.TextView;
 public class MyCourseLessonActivity extends Activity {
 	private static final String TAG = "MyCourseLessonActivity";
 	
-	private String userId,userName,classId,className;
+	private String classId,className;
 	private LinearLayout nodataView;
 	
 	private final List<Lesson> lessons;
@@ -65,10 +65,6 @@ public class MyCourseLessonActivity extends Activity {
 		//获取传递数据
 		final Intent intent = this.getIntent();
 		if(intent != null){
-			//设置用户ID
-			this.userId = intent.getStringExtra(Constant.CONST_USERID);
-			//设置用户名
-			this.userName = intent.getStringExtra(Constant.CONST_USERNAME);
 			//设置班级ID
 			this.classId = intent.getStringExtra(Constant.CONST_CLASS_ID);
 			//设置班级名称
@@ -106,10 +102,6 @@ public class MyCourseLessonActivity extends Activity {
 				Log.d(TAG, "下载课程点击处理..." + v);
 				//初始化意图
 				final Intent intent = new Intent(MyCourseLessonActivity.this, DownloadActivity.class);
-				//设置用户ID
-				intent.putExtra(Constant.CONST_USERID, userId);
-				//设置用户名
-				intent.putExtra(Constant.CONST_USERNAME, userName);
 				//设置索引
 				intent.putExtra(DownloadActivity.CONST_FRAGMENT_INDEX, DownloadActivity.CONST_FRAGMENT_DOWNING);
 				//发送意图
@@ -125,10 +117,6 @@ public class MyCourseLessonActivity extends Activity {
 				Log.d(TAG, "离线课程点击处理..." + v);
 				//初始化意图
 				final Intent intent = new Intent(MyCourseLessonActivity.this, DownloadActivity.class);
-				//设置用户ID
-				intent.putExtra(Constant.CONST_USERID, userId);
-				//设置用户名
-				intent.putExtra(Constant.CONST_USERNAME, userName);
 				//设置索引
 				intent.putExtra(DownloadActivity.CONST_FRAGMENT_INDEX, DownloadActivity.CONST_FRAGMENT_FINISH);
 				//发送意图
@@ -142,14 +130,8 @@ public class MyCourseLessonActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Log.d(TAG, "播放记录点击处理..." + v);
-				//初始化意图
-				final Intent intent = new Intent(MyCourseLessonActivity.this, PlayRecordActivity.class);
-				//设置用户ID
-				intent.putExtra(Constant.CONST_USERID, userId);
-				//设置用户名
-				intent.putExtra(Constant.CONST_USERNAME, userName);
 				//发送意图
-				startActivity(intent);
+				startActivity(new Intent(MyCourseLessonActivity.this, PlayRecordActivity.class));
 			}
 		});
 		//
@@ -181,16 +163,15 @@ public class MyCourseLessonActivity extends Activity {
 						//初始化参数
 						final Map<String, Object> parameters = new HashMap<String, Object>();
 						//设置用户ID
-						parameters.put("randUserId", userId);
+						parameters.put("randUserId", AppContext.getCurrentUserId());
 						//设置课程ID
 						parameters.put("classId", classId);
 						//设置是否免费
 						parameters.put("free", false);
 						
 						//请求网络数据
-						final JSONCallback<Lesson[]> callback = new APIUtils.CallbackJSON<Lesson[]>().sendGETRequest(getResources(),
-								R.string.api_lessons_url, parameters);
-						//
+						final JSONCallback<Lesson[]> callback = new APIUtils.CallbackJSON<Lesson[]>(Lesson[].class)
+								.sendGETRequest(getResources(), R.string.api_lessons_url, parameters);
 						if(callback.getSuccess()){
 							//删除原有记录
 							lessonDao.deleteByClass(classId);
@@ -324,15 +305,15 @@ public class MyCourseLessonActivity extends Activity {
 			//
 			this.lesson = data;
 			//课程资源名称
-			this.tvLesson.setText(this.lesson.name);
+			this.tvLesson.setText(this.lesson.getName());
 			//下载状态
-			if(StringUtils.isNotBlank(this.lesson.id)){
+			if(StringUtils.isNotBlank(this.lesson.getId())){
 				//初始化
 				final DownloadDao downloadDao = new DownloadDao();
 				//是否存在
-				if(downloadDao.hasDownload(lesson.id)){//已下载
+				if(downloadDao.hasDownload(lesson.getId())){//已下载
 					//加载下载数据
-					final Download download = downloadDao.getDownload(lesson.id);
+					final Download download = downloadDao.getDownload(lesson.getId());
 					final DownloadState state = DownloadState.parse(download.getState());
 					if(state== DownloadState.FINISH){//下载完成
 						tvState.setText(state.getName());
@@ -371,14 +352,10 @@ public class MyCourseLessonActivity extends Activity {
 			}
 			//发送意图
 			if(intent != null){
-				//设置用户ID
-				intent.putExtra(Constant.CONST_USERID, userId);
-				//设置用户名
-				intent.putExtra(Constant.CONST_USERNAME, userName);
 				//设置课程资源ID
-				intent.putExtra(Constant.CONST_LESSON_ID, this.lesson.id);
+				intent.putExtra(Constant.CONST_LESSON_ID, this.lesson.getId());
 				//设置课程资源名称
-				intent.putExtra(Constant.CONST_LESSON_NAME, this.lesson.name);
+				intent.putExtra(Constant.CONST_LESSON_NAME, this.lesson.getName());
 				//发送意图
 				startActivity(intent);
 			}

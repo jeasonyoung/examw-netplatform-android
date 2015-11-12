@@ -64,11 +64,16 @@ public class LessonDao extends BaseDao {
 				db.beginTransaction();
 				//新增数据
 				for(Lesson lesson : lessons){
-					if(lesson == null || StringUtils.isBlank(lesson.id)) continue;
+					if(lesson == null || StringUtils.isBlank(lesson.getId())) continue;
 					db.execSQL("INSERT INTO tbl_Lessones(id,class_id,name,videoUrl,highVideoUrl,superVideoUrl,time,orderNo) values (?,?,?,?,?,?,?,?)", new Object[]{
-							StringUtils.trimToEmpty(lesson.id), StringUtils.trimToEmpty(classId), StringUtils.trimToEmpty(lesson.name),
-							StringUtils.trimToEmpty(lesson.video_url), StringUtils.trimToEmpty(lesson.high_video_url), StringUtils.trimToEmpty(lesson.super_video_url),
-							lesson.time, lesson.order_no
+							StringUtils.trimToEmpty(lesson.getId()), 
+							StringUtils.trimToEmpty(classId), 
+							StringUtils.trimToEmpty(lesson.getName()),
+							StringUtils.trimToEmpty(lesson.getVideoUrl()),
+							StringUtils.trimToEmpty(lesson.getHighVideoUrl()),
+							StringUtils.trimToEmpty(lesson.getSuperVideoUrl()),
+							lesson.getTime(),
+							lesson.getOrderNo()
 					});
 				}
 				//设置事务成功
@@ -106,19 +111,19 @@ public class LessonDao extends BaseDao {
 				while(cursor.moveToNext()){
 					final Lesson lesson = new Lesson();
 					//课程资源ID
-					lesson.id = (StringUtils.trimToNull(cursor.getString(0)));
+					lesson.setId(StringUtils.trimToNull(cursor.getString(0)));
 					//课程资源名称
-					lesson.name = (StringUtils.trimToNull(cursor.getString(1)));
+					lesson.setName(StringUtils.trimToNull(cursor.getString(1)));
 					//课程资源视频URL
-					lesson.video_url = (StringUtils.trimToNull(cursor.getString(2)));
+					lesson.setVideoUrl(StringUtils.trimToNull(cursor.getString(2)));
 					//课程资源高清视频URL
-					lesson.high_video_url = (StringUtils.trimToNull(cursor.getString(3)));
+					lesson.setHighVideoUrl(StringUtils.trimToNull(cursor.getString(3)));
 					//课程资源超清视频URL
-					lesson.super_video_url = (StringUtils.trimToNull(cursor.getString(4)));
+					lesson.setSuperVideoUrl(StringUtils.trimToNull(cursor.getString(4)));
 					//考试时长
-					lesson.time = (Integer.valueOf(cursor.getInt(5)));
+					lesson.setTime(Integer.valueOf(cursor.getInt(5)));
 					//排序号
-					lesson.order_no = (Integer.valueOf(cursor.getInt(6)));
+					lesson.setOrderNo(Integer.valueOf(cursor.getInt(6)));
 					//添加到集合
 					lessons.add(lesson);
 				}
@@ -154,19 +159,19 @@ public class LessonDao extends BaseDao {
 				if(cursor.moveToFirst()){
 					lesson = new Lesson();
 					//课程资源ID
-					lesson.id = (StringUtils.trimToNull(cursor.getString(0)));
+					lesson.setId(StringUtils.trimToNull(cursor.getString(0)));
 					//课程资源名称
-					lesson.name = (StringUtils.trimToNull(cursor.getString(1)));
+					lesson.setName(StringUtils.trimToNull(cursor.getString(1)));
 					//课程资源视频URL
-					lesson.video_url = (StringUtils.trimToNull(cursor.getString(2)));
+					lesson.setVideoUrl(StringUtils.trimToNull(cursor.getString(2)));
 					//课程资源高清视频URL
-					lesson.high_video_url = (StringUtils.trimToNull(cursor.getString(3)));
+					lesson.setHighVideoUrl(StringUtils.trimToNull(cursor.getString(3)));
 					//课程资源超清视频URL
-					lesson.super_video_url = (StringUtils.trimToNull(cursor.getString(4)));
+					lesson.setSuperVideoUrl(StringUtils.trimToNull(cursor.getString(4)));
 					//考试时长
-					lesson.time = (Integer.valueOf(cursor.getInt(5)));
+					lesson.setTime(Integer.valueOf(cursor.getInt(5)));
 					//排序号
-					lesson.order_no = (Integer.valueOf(cursor.getInt(6)));
+					lesson.setOrderNo(Integer.valueOf(cursor.getInt(6)));
 				}
 				cursor.close();
 			} catch (Exception e) {

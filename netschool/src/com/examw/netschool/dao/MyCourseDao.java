@@ -60,13 +60,13 @@ public class MyCourseDao extends BaseDao {
 				db.beginTransaction();
 				//新增课程
 				for(PackageClass course : courses){
-					if(course == null || StringUtils.isBlank(course.id)) continue;
+					if(course == null || StringUtils.isBlank(course.getId())) continue;
 					db.execSQL("INSERT INTO tbl_MyCourses(id,pid,name,type,orderNo) VALUES (?, ?, ?, ?, ?)", new Object[]{
-							StringUtils.trimToNull(course.id), 
-							StringUtils.trimToNull(course.pid),
-							StringUtils.trimToNull(course.name),
-							StringUtils.trimToNull(course.type),
-							course.order_no
+							StringUtils.trimToNull(course.getId()), 
+							StringUtils.trimToNull(course.getPid()),
+							StringUtils.trimToNull(course.getName()),
+							StringUtils.trimToNull(course.getType()),
+							course.getOrderNo()
 					});
 				}
 				//设置事务成功
@@ -101,15 +101,15 @@ public class MyCourseDao extends BaseDao {
 				while(cursor.moveToNext()){
 					final PackageClass course = new PackageClass();
 					//上级课程ID
-					course.pid = StringUtils.trimToNull(cursor.getString(0));
+					course.setPid(StringUtils.trimToNull(cursor.getString(0)));
 					//课程ID
-					course.id = StringUtils.trimToNull(cursor.getString(1));
+					course.setId(StringUtils.trimToNull(cursor.getString(1)));
 					//课程名称
-					course.name = cursor.getString(2);
+					course.setName(cursor.getString(2));
 					//类型
-					course.type = cursor.getString(3);
+					course.setType(cursor.getString(3));
 					//排序
-					course.order_no = Integer.valueOf(cursor.getInt(4));
+					course.setOrderNo(Integer.valueOf(cursor.getInt(4)));
 					//添加到集合
 					courses.add(course);
 				}
@@ -141,13 +141,13 @@ public class MyCourseDao extends BaseDao {
 				while(cursor.moveToNext()){
 					final PackageClass course = new PackageClass();
 					//上级课程ID
-					course.pid = null;
+					course.setPid(null);
 					//课程ID
-					course.id = StringUtils.trimToNull(cursor.getString(0));
+					course.setId(StringUtils.trimToNull(cursor.getString(0)));
 					//课程名称
-					course.name = cursor.getString(1);
+					course.setName(cursor.getString(1));
 					//类型
-					course.type = cursor.getString(2);
+					course.setType(cursor.getString(2));
 					//添加到集合
 					courses.add(course);
 				}

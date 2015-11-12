@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.examw.netschool.app.AppContext;
-import com.examw.netschool.app.Constant;
 import com.examw.netschool.model.MainItem;
 import com.examw.netschool.service.DownloadService;
 
@@ -34,8 +33,6 @@ import android.widget.TextView;
  */
 public class MainActivity extends Activity implements OnItemClickListener{
 	private static final String TAG = "MainActivity";
-	
-	private String userId,username;
 	private final List<MainItem> items;
 	private final MainAdapter adapter;
 	/**
@@ -55,14 +52,6 @@ public class MainActivity extends Activity implements OnItemClickListener{
 		Log.d(TAG, "重载创建...");
 		//设置布局文件
 		this.setContentView(R.layout.activity_main);
-		//获取传递数据
-		final Intent intent = this.getIntent();
-		if(intent != null){
-			//设置用户ID
-			this.userId = intent.getStringExtra(Constant.CONST_USERID);
-			//设置用账号
-			this.username = intent.getStringExtra(Constant.CONST_USERNAME);
-		}
 		//GridView
 		final GridView gridView = (GridView)this.findViewById(R.id.main_gridview);
 		//设置数据适配器
@@ -82,14 +71,8 @@ public class MainActivity extends Activity implements OnItemClickListener{
 		if(this.items != null && this.items.size() >  position){
 			final MainItem item = this.items.get(position);
 			if(item == null || item.getActivityClass() == null) return;
-			//初始化意图
-			final Intent intent = new Intent(this, item.getActivityClass());
-			//设置用户ID
-			intent.putExtra(Constant.CONST_USERID, userId);
-			//设置用户名
-			intent.putExtra(Constant.CONST_USERNAME, username);
 			//启动意图
-			this.startActivity(intent);
+			this.startActivity(new Intent(this, item.getActivityClass()));
 		}
 	}
 	/*
@@ -181,8 +164,6 @@ public class MainActivity extends Activity implements OnItemClickListener{
 			 							   
 											@Override
 											public void onClick(DialogInterface dialog, int which) {
-												//注销当前用户ID
-												appContext.setCurrentUserId(null);
 												//跳转到登录activity
 												startActivity(new Intent(appContext, LoginActivity.class));
 												//关闭当前Activity

@@ -8,7 +8,6 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
 import com.examw.netschool.app.AppContext;
-import com.examw.netschool.app.Constant;
 import com.examw.netschool.dao.AQTopicDao;
 import com.examw.netschool.model.AQTopic;
 import com.examw.netschool.model.JSONCallback;
@@ -50,8 +49,6 @@ public class AnswerActivity extends Activity implements OnClickListener,OnItemCl
 	
 	private final List<AQTopic> topics;
 	private final AnswerAdapter adapter;
-	
-	private String userId,userName;
 	/**
 	 * 构造函数。
 	 */
@@ -70,14 +67,6 @@ public class AnswerActivity extends Activity implements OnClickListener,OnItemCl
 		Log.d(TAG, "重载创建...");
 		//加载布局XML文件。
 		this.setContentView(R.layout.activity_answer_main);
-		//加载数据
-		final Intent intent = this.getIntent();
-		if(intent != null){
-			//用户ID
-			this.userId = intent.getStringExtra(Constant.CONST_USERID);
-			//用户姓名。
-			this.userName = intent.getStringExtra(Constant.CONST_USERNAME);
-		}
 		//返回按钮
 		final View btnReturn = this.findViewById(R.id.btn_return);
 		btnReturn.setOnClickListener(this);
@@ -142,13 +131,8 @@ public class AnswerActivity extends Activity implements OnClickListener,OnItemCl
 			}
 			case R.id.btn_answer:{//提问按钮事件处理
 				Log.d(TAG, "提问按钮事件处理...");
-				final Intent intent = new Intent(this, AnswerSubmitActivity.class);
-				//用户ID
-				intent.putExtra(Constant.CONST_USERID, userId);
-				//用户姓名
-				intent.putExtra(Constant.CONST_USERNAME, userName);
 				//启动
-				this.startActivity(intent);
+				this.startActivity(new Intent(this, AnswerSubmitActivity.class));
 				break;
 			}
 		}
@@ -165,16 +149,12 @@ public class AnswerActivity extends Activity implements OnClickListener,OnItemCl
 			if(topic == null)return;
 			//明细
 			final Intent intent = new Intent(this, AnswerDetailActivity.class);
-			//用户ID
-			intent.putExtra(Constant.CONST_USERID, userId);
-			//用户姓名
-			intent.putExtra(Constant.CONST_USERNAME, userName);
 			//主题ID
-			intent.putExtra(CONST_TOPIC_ID, topic.id);
+			intent.putExtra(CONST_TOPIC_ID, topic.getId());
 			//主题标题
-			intent.putExtra(CONST_TOPIC_TITLE, topic.title);
+			intent.putExtra(CONST_TOPIC_TITLE, topic.getTitle());
 			//主题内容
-			intent.putExtra(CONST_TOPIC_CONTENT, topic.content);
+			intent.putExtra(CONST_TOPIC_CONTENT, topic.getContent());
 			//启动
 			this.startActivity(intent);
 		}
@@ -193,19 +173,19 @@ public class AnswerActivity extends Activity implements OnClickListener,OnItemCl
 				final AQTopicDao topicDao = new AQTopicDao();
 				//检查网络
 				final AppContext appContext = (AppContext)getApplicationContext();
-				if(appContext != null && appContext.isNetworkConnected() && StringUtils.isNotBlank(userId)){
+				if(appContext != null && appContext.isNetworkConnected()){
 					//初始化参数
 					final Map<String, Object> parameters = new HashMap<String, Object>();
-					parameters.put("randUserId", userId);					
+					parameters.put("randUserId", AppContext.getCurrentUserId());					
 					//网络下载数据
-					final JSONCallback<AQTopic[]> callback = new APIUtils.CallbackJSON<AQTopic[]>().sendGETRequest(getResources(),
+					final JSONCallback<AQTopic[]> callback = new APIUtils.CallbackJSON<AQTopic[]>(AQTopic[].class).sendGETRequest(getResources(),
 							R.string.api_topics_url, parameters);
 					//获取数据成功
 					if(callback.getSuccess() && callback.getData() != null && callback.getData().length > 0){
 						//更新数据
 						for(AQTopic topic : callback.getData()){
-							if(topic == null || StringUtils.isBlank(topic.id)) continue;
-							if(topicDao.hasTopic(topic.id)){//存在
+							if(topic == null || StringUtils.isBlank(topic.getId())) continue;
+							if(topicDao.hasTopic(topic.getId())){//存在
 								Log.d(TAG, "更新数据...");
 								topicDao.update(topic);
 							}else{
@@ -330,13 +310,13 @@ public class AnswerActivity extends Activity implements OnClickListener,OnItemCl
 		public void loadData(AQTopic topic){
 			if(topic != null){
 				//标题
-				this.tvTitle.setText(topic.title);
+				this.tvTitle.setText(topic.getTitle());
 				//课程资源
-				this.tvLesson.setText("课程资源:" + topic.lesson_name);
+				this.tvLesson.setText("课程资源:" + topic.getLessonName());
 				//内容
-				this.tvContent.setText(topic.content);
+				this.tvContent.setText(topic.getContent());
 				//时间
-				this.tvTime.setText(topic.last_time);
+				this.tvTime.setText(topic.getLastTime());
 			}
 		}
 	}

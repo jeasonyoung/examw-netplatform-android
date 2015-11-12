@@ -36,7 +36,6 @@ import android.widget.TextView;
  */
 public class FreeExperienceFragmentByExams extends Fragment implements OnItemClickListener {
 	private static final String TAG = "FreeExperienceFragmentByExams";
-	private final String userId;
 	private final Search search;
 	
 	private final List<Exam> exams;
@@ -48,9 +47,8 @@ public class FreeExperienceFragmentByExams extends Fragment implements OnItemCli
 	 * @param userId
 	 * @param search
 	 */
-	public FreeExperienceFragmentByExams(String userId,Search search){
+	public FreeExperienceFragmentByExams(Search search){
 		Log.d(TAG, "初始化...");
-		this.userId = userId;
 		this.search = search;
 		this.search.setOnClickListener(this.onSearchClickListener);
 		
@@ -101,7 +99,7 @@ public class FreeExperienceFragmentByExams extends Fragment implements OnItemCli
 			getActivity().getSupportFragmentManager()
 							.beginTransaction()
 							.addToBackStack(null)
-							.replace(R.id.fragment_container, new FreeExperienceFragmentByPackages(userId, exam.id, this.search))
+							.replace(R.id.fragment_container, new FreeExperienceFragmentByPackages(exam.getId(), this.search))
 							.commit();
 		}
 	}
@@ -133,8 +131,8 @@ public class FreeExperienceFragmentByExams extends Fragment implements OnItemCli
 					//初始化 
 					final  List<Exam> taget = new ArrayList<Exam>();
 					for(Exam exam : exams){
-						if(exam == null || StringUtils.isBlank(exam.name)) continue;
-						if(exam.name.indexOf(params[0]) > -1){
+						if(exam == null || StringUtils.isBlank(exam.getName())) continue;
+						if(exam.getName().indexOf(params[0]) > -1){
 							taget.add(exam);
 						}
 					}
@@ -180,8 +178,8 @@ public class FreeExperienceFragmentByExams extends Fragment implements OnItemCli
 				//初始化参数
 				final Map<String, Object> parameters = new HashMap<String, Object>();
 				//请求数据
-				final JSONCallback<Exam[]> callback = new APIUtils.CallbackJSON<Exam[]>().sendGETRequest(getResources(),
-						R.string.api_exams_url, parameters);
+				final JSONCallback<Exam[]> callback = new APIUtils.CallbackJSON<Exam[]>(Exam[].class)
+						.sendGETRequest(getResources(), R.string.api_exams_url, parameters);
 				//
 			    if(callback.getSuccess()){
 			    	return Arrays.asList(callback.getData());
@@ -296,7 +294,7 @@ public class FreeExperienceFragmentByExams extends Fragment implements OnItemCli
 		public void loadData(Exam data){
 			if(data != null){
 				//设置名称
-				this.tvTitle.setText(data.name);
+				this.tvTitle.setText(data.getName());
 			}
 		}
 	}

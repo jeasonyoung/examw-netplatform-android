@@ -1,7 +1,5 @@
 package com.examw.netschool;
 
-import com.examw.netschool.app.Constant;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,7 +19,6 @@ import android.widget.TextView;
  */
 public class FreeExperienceActivity extends FragmentActivity implements OnClickListener{
 	private static final String TAG = "FreeExperienceActivity";
-	private String userId,userName;
 	private Search search;
 	/*
 	 * 重载创建。
@@ -33,14 +30,6 @@ public class FreeExperienceActivity extends FragmentActivity implements OnClickL
 		super.onCreate(savedInstanceState);
 		//加载布局XML
 		this.setContentView(R.layout.activity_free_experience);
-		//
-		final Intent intent = this.getIntent();
-		if(intent != null){
-			//用户ID
-			this.userId = intent.getStringExtra(Constant.CONST_USERID);
-			//用户名称
-			this.userName = intent.getStringExtra(Constant.CONST_USERNAME);
-		}
 		//返回按钮
 		final View btnReturn = this.findViewById(R.id.btn_return);
 		btnReturn.setOnClickListener(this);
@@ -76,7 +65,7 @@ public class FreeExperienceActivity extends FragmentActivity implements OnClickL
 	private void loadFirstFragment(){
 		this.getSupportFragmentManager().beginTransaction()
 		.addToBackStack(null)
-		.add(R.id.fragment_container, new FreeExperienceFragmentByExams(this.userId, this.search))
+		.add(R.id.fragment_container, new FreeExperienceFragmentByExams(this.search))
 		.commit();
 	}
 	/*
@@ -101,19 +90,13 @@ public class FreeExperienceActivity extends FragmentActivity implements OnClickL
 				break;
 			}
 			case R.id.btn_my_course:{//我的课程
-				 final Intent intent = new Intent(this, MyCourseActivity.class);
-				 intent.putExtra(Constant.CONST_USERID, userId);
-				 intent.putExtra(Constant.CONST_USERNAME, userName);
-				 this.startActivity(intent);
+				 this.startActivity(new Intent(this, MyCourseActivity.class));
 				 //关闭当前
 				 this.finish();
 				break;
 			}
 			case R.id.btn_play_record:{//播放记录
-				 final Intent intent = new Intent(this, PlayRecordActivity.class);
-				 intent.putExtra(Constant.CONST_USERID, userId);
-				 intent.putExtra(Constant.CONST_USERNAME, userName);
-				 this.startActivity(intent);
+				 this.startActivity(new Intent(this, PlayRecordActivity.class));
 				 //关闭当前
 				 this.finish();
 				break;

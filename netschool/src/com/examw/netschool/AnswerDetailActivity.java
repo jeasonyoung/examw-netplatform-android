@@ -8,7 +8,6 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
 import com.examw.netschool.app.AppContext;
-import com.examw.netschool.app.Constant;
 import com.examw.netschool.dao.AQDetailDao;
 import com.examw.netschool.model.AQDetail;
 import com.examw.netschool.model.JSONCallback;
@@ -40,7 +39,7 @@ public class AnswerDetailActivity extends Activity implements OnClickListener {
 	private EditText txtCallback;
 	private ProgressDialog progressDialog;
 	
-	private String userId,userName,topicId;
+	private String topicId;
 	
 	private final List<AQDetail> details;
 	private final DetailsAdapter adapter;
@@ -64,10 +63,6 @@ public class AnswerDetailActivity extends Activity implements OnClickListener {
 		//获取传递数据
 		final Intent intent = this.getIntent();
 		if(intent != null){
-			//用户ID
-			this.userId = intent.getStringExtra(Constant.CONST_USERID);
-			//用户姓名
-			this.userName = intent.getStringExtra(Constant.CONST_USERNAME);
 			//主题ID
 			this.topicId = intent.getStringExtra(AnswerActivity.CONST_TOPIC_ID);
 		}
@@ -129,7 +124,7 @@ public class AnswerDetailActivity extends Activity implements OnClickListener {
 	}
 	//上传到服务器。
 	private void pushCallbackToServer(){
-		if(StringUtils.isBlank(userId) || StringUtils.isBlank(topicId)) return;
+		if(StringUtils.isBlank(topicId)) return;
 		//回复数据
 		final String callback_content =  this.txtCallback.getText().toString();
 		if(StringUtils.isBlank(callback_content)) return;
@@ -156,26 +151,24 @@ public class AnswerDetailActivity extends Activity implements OnClickListener {
 					Log.d(TAG, "异步线程上传答疑反馈...");
 					//初始化参数
 					final Map<String, Object> parameters = new HashMap<String, Object>();
-					parameters.put("randUserId", userId);
+					parameters.put("randUserId", AppContext.getCurrentUserId());
 					parameters.put("topicId", topicId);
 					parameters.put("content", callback_content);
 					//上传数据
-					final JSONCallback<Object> callback = new APIUtils.CallbackJSON<Object>().sendPOSTRequest(getResources(),
-							R.string.api_detail_add_url, parameters);
+					final JSONCallback<Object> callback = new APIUtils.CallbackJSON<Object>(Object.class)
+							.sendPOSTRequest(getResources(),R.string.api_detail_add_url, parameters);
 					if(callback.getSuccess()){
 						Log.d(TAG, "上传数据成功...");
 						//初始化回复
 						final AQDetail detail = new AQDetail();
-//						//所属主题ID
-//						detail.setTopicId(topicId);
 						//设置回复ID
-						detail.id = ((String)callback.getData());
+						detail.setId(((String)callback.getData()));
 						//设置回复内容
-						detail.content = callback_content;
+						detail.setContent(callback_content);
 						//设置回复用户ID
-						detail.user_id = userId;
+						detail.setUserId(AppContext.getCurrentUserId());
 						//设置回复用户姓名
-						detail.user_name = userName;
+						detail.setUserName(AppContext.getCurrentUsername());
 						//返回						
 						return detail;
 					}
@@ -227,14 +220,14 @@ public class AnswerDetailActivity extends Activity implements OnClickListener {
 					final Map<String, Object> parameters = new HashMap<String, Object>();
 					parameters.put("topicId", topicId);
 					//网络下载数据
-					final JSONCallback<AQDetail[]> callback = new APIUtils.CallbackJSON<AQDetail[]>().sendGETRequest(getResources(),
-							R.string.api_details_url, parameters);
+					final JSONCallback<AQDetail[]> callback = new APIUtils.CallbackJSON<AQDetail[]>(AQDetail[].class)
+							.sendGETRequest(getResources(),R.string.api_details_url, parameters);
 					//获取数据成功
 					if(callback.getSuccess() && callback.getData() != null && callback.getData().length > 0){
 						//更新数据
 						for(AQDetail detail : callback.getData()){
-							if(detail == null || StringUtils.isBlank(detail.id)) continue;
-							if(detailDao.hasDetail(detail.id)){//存在
+							if(detail == null || StringUtils.isBlank(detail.getId())) continue;
+							if(detailDao.hasDetail(detail.getId())){//存在
 								Log.d(TAG, "更新数据...");
 								detailDao.update(topicId, detail);
 							}else{
@@ -353,11 +346,11 @@ public class AnswerDetailActivity extends Activity implements OnClickListener {
 		public void loadData(AQDetail detail){
 			if(detail != null){
 				//明细内容
-				this.tvContent.setText(detail.content);
+				this.tvContent.setText(detail.getContent());
 				//用户姓名
-				this.tvUsername.setText(detail.user_name);
+				this.tvUsername.setText(detail.getUserName());
 				//时间
-				this.tvTime.setText(detail.create_time);
+				this.tvTime.setText(detail.getCreateTime());
 			}
 		}
 	}

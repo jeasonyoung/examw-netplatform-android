@@ -95,8 +95,6 @@ public class VideoPlayActivity extends Activity /*implements OnTouchListener, On
 		//加载传递的数据
 		final Intent intent = this.getIntent();
 		if(intent != null){
-			//当前用户ID
-			//this.userId = intent.getStringExtra(Constant.CONST_USERID);
 			//当前课程资源ID
 			this.lessonId = intent.getStringExtra(Constant.CONST_LESSON_ID);
 			//当前课程资源名称
@@ -426,7 +424,7 @@ public class VideoPlayActivity extends Activity /*implements OnTouchListener, On
 						return null;
 					}
 					//设置课程名称
-					lessonName = lesson.name;
+					lessonName = lesson.getName();
 					//获取优先视频URL
 					final String url = lesson.getPriorityUrl();
 					Log.d(TAG, "video-url:" + url);

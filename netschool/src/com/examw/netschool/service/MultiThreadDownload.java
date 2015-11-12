@@ -80,19 +80,19 @@ public final class MultiThreadDownload {
 	 * 开始下载。
 	 */
 	public void start() throws Exception {
-		Log.d(TAG, "开始下载课程资源["+ this.lesson.name+"]...");
+		Log.d(TAG, "开始下载课程资源["+ this.lesson.getName()+"]...");
 		this.stop = false;
 		//初始化
 		final DowningDao downingDao = new DowningDao();
 		//加载下载线程
-		final List<Downing> downings =  downingDao.loadDowningByLesson(this.lesson.id);
+		final List<Downing> downings =  downingDao.loadDowningByLesson(this.lesson.getId());
 		if(downings != null && downings.size() > 0){//继续下载
 			Log.d(TAG, "继续下载...");
 			//检查下载文件是否存在
 			if(download.getFilePath() == null || !(new File(download.getFilePath()).exists())){
 				Log.d(TAG, "已下载的文件不存在..." + download.getFilePath());
 				//删除下载线程记录
-				downingDao.deleteByLesson(this.lesson.id);
+				downingDao.deleteByLesson(this.lesson.getId());
 				//新增现在
 				this.initStart(downingDao);
 			}else{

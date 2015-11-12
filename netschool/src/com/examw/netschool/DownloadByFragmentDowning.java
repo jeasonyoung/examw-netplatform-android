@@ -61,7 +61,7 @@ public class DownloadByFragmentDowning extends Fragment implements ServiceConnec
 	 * 构造函数。
 	 * @param userId
 	 */
-	public DownloadByFragmentDowning(String userId){
+	public DownloadByFragmentDowning(){
 		Log.d(TAG, "初始化...");
 		//绑定文件下载服务
 		final Context context = AppContext.getContext();

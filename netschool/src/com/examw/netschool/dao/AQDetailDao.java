@@ -119,17 +119,15 @@ public class AQDetailDao extends BaseDao {
 		//初始化
 		final AQDetail detail = new AQDetail();
 		//答疑明细ID
-		detail.id = (cursor.getString(0));
-		//所属答疑主题ID
-		//detail.setTopicId(cursor.getString(1));
+		detail.setId(cursor.getString(0));
 		//明细数据
-		detail.content = (cursor.getString(2));
+		detail.setContent(cursor.getString(2));
 		//用户ID
-		detail.user_id = (cursor.getString(3));
+		detail.setUserId(cursor.getString(3));
 		//用户姓名
-		detail.user_name = (cursor.getString(4));
+		detail.setUserName(cursor.getString(4));
 		//时间
-		detail.create_time = (cursor.getString(5));
+		detail.setCreateTime(cursor.getString(5));
 		//返回
 		return detail;
 	}
@@ -149,7 +147,7 @@ public class AQDetailDao extends BaseDao {
 		synchronized(dbHelper){
 			try{
 				//主题明细ID
-				if(StringUtils.isBlank(detail.id)) return;
+				if(StringUtils.isBlank(detail.getId())) return;
 				//初始化
 				db = dbHelper.getWritableDatabase();
 				//开启事务
@@ -157,17 +155,17 @@ public class AQDetailDao extends BaseDao {
 				//执行操作
 				db.execSQL("INSERT INTO tbl_AQDetail(id,topicId,content,userId,userName,createTime) values(?,?,?,?,?,?);", new Object[]{
 					//明细ID
-					StringUtils.trimToNull(detail.id),
+					StringUtils.trimToNull(detail.getId()),
 					//所属主题ID
 					StringUtils.trimToNull(topicId),
 					//明细内容
-					StringUtils.trimToNull(detail.content),
+					StringUtils.trimToNull(detail.getContent()),
 					//用户ID
-					StringUtils.trimToNull(detail.user_id),
+					StringUtils.trimToNull(detail.getUserId()),
 					//用户姓名
-					StringUtils.trimToNull(detail.user_name),
+					StringUtils.trimToNull(detail.getUserName()),
 					//时间
-					StringUtils.trimToNull(detail.create_time)
+					StringUtils.trimToNull(detail.getCreateTime())
 				});
 				//设置事务成功
 				db.setTransactionSuccessful();
@@ -206,15 +204,15 @@ public class AQDetailDao extends BaseDao {
 					//所属主题ID
 					StringUtils.trimToNull(topicId),
 					//明细内容
-					StringUtils.trimToNull(detail.content),
+					StringUtils.trimToNull(detail.getContent()),
 					//用户ID
-					StringUtils.trimToNull(detail.user_id),
+					StringUtils.trimToNull(detail.getUserId()),
 					//用户姓名
-					StringUtils.trimToNull(detail.user_name),
+					StringUtils.trimToNull(detail.getUserName()),
 					//时间
-					StringUtils.trimToNull(detail.create_time),
+					StringUtils.trimToNull(detail.getCreateTime()),
 					//明细ID
-					StringUtils.trimToNull(detail.id)
+					StringUtils.trimToNull(detail.getId())
 				});
 				//设置事务成功
 				db.setTransactionSuccessful();
