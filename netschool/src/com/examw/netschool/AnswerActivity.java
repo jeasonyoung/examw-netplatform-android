@@ -178,8 +178,8 @@ public class AnswerActivity extends Activity implements OnClickListener,OnItemCl
 					final Map<String, Object> parameters = new HashMap<String, Object>();
 					parameters.put("randUserId", AppContext.getCurrentUserId());					
 					//网络下载数据
-					final JSONCallback<AQTopic[]> callback = new APIUtils.CallbackJSON<AQTopic[]>(AQTopic[].class).sendGETRequest(getResources(),
-							R.string.api_topics_url, parameters);
+					final JSONCallback<AQTopic[]> callback = new APIUtils.CallbackJSON<AQTopic[]>(AnswerActivity.this,  AQTopic[].class)
+							.sendGETRequest(getResources(), R.string.api_topics_url, parameters);
 					//获取数据成功
 					if(callback.getSuccess()){
 						//更新数据

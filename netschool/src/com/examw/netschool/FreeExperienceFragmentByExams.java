@@ -180,7 +180,7 @@ public class FreeExperienceFragmentByExams extends Fragment implements OnItemCli
 				//初始化参数
 				final Map<String, Object> parameters = new HashMap<String, Object>();
 				//请求数据
-				final JSONCallback<Exam[]> callback = new APIUtils.CallbackJSON<Exam[]>(Exam[].class)
+				final JSONCallback<Exam[]> callback = new APIUtils.CallbackJSON<Exam[]>(getActivity(), Exam[].class)
 						.sendGETRequest(getResources(), R.string.api_exams_url, parameters);
 				//
 			    if(callback.getSuccess()){

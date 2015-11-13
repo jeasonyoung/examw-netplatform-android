@@ -246,7 +246,7 @@ public class MyCourseActivity extends Activity {
 						//设置用户ID
 						parameters.put("randUserId", AppContext.getCurrentUserId());
 						//发送请求
-						final JSONCallback<PackageClass[]> callback = new APIUtils.CallbackJSON<PackageClass[]>(PackageClass[].class)
+						final JSONCallback<PackageClass[]> callback = new APIUtils.CallbackJSON<PackageClass[]>(MyCourseActivity.this, PackageClass[].class)
 								.sendGETRequest(getResources(), R.string.api_courses_url, parameters);
 						//
 						if(callback.getSuccess()){

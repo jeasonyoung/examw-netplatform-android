@@ -239,7 +239,7 @@ public class FreeExperienceFragmentByPackages extends Fragment {
 				//设置考试ID
 				parameters.put("examId", examId);
 				//请求数据
-				final JSONCallback<PackageClass[]> callback = new APIUtils.CallbackJSON<PackageClass[]>(PackageClass[].class)
+				final JSONCallback<PackageClass[]> callback = new APIUtils.CallbackJSON<PackageClass[]>(getActivity(), PackageClass[].class)
 						.sendGETRequest(getResources(), R.string.api_packages_url, parameters);
 				 //
 			    if(callback.getSuccess()){

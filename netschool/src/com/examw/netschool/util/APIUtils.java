@@ -23,12 +23,17 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.util.EntityUtils;
 
+import com.examw.netschool.LoginActivity;
 import com.examw.netschool.R;
 import com.examw.netschool.codec.digest.DigestUtils;
 import com.examw.netschool.model.JSONCallback;
 import com.google.gson.Gson;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 /**
@@ -47,6 +52,8 @@ public final class APIUtils {
 	private static final String TOKEN_PARAM_NAME = "token";
 	//签名参数名。
 	private static final String SIGN_PARAM_NAME = "sign"; 
+	
+	private static final int ERROR_CODE = -9;
 	
 	/**
 	 * 发送POST请求。
@@ -230,11 +237,15 @@ public final class APIUtils {
 	 */
 	public static class CallbackJSON<T>{
 		private Class<T> clazz;
+		private Context context;
 		/**
 		 * 构造函数。
+		 * @param context
+		 * 当前上下文。
 		 * @param clazz
 		 */
-		public CallbackJSON(Class<T> clazz){
+		public CallbackJSON(Context context, Class<T> clazz){
+			this.context = context;
 			this.clazz = clazz;
 		}
 		
@@ -255,12 +266,9 @@ public final class APIUtils {
 			final Gson gson = new Gson();
 			//返回结果
 			final JSONCallback<T> result = gson.fromJson(json, type);
-			if(!result.getSuccess() && result.getCode() != null && result.getCode() == -9){
+			if(!result.getSuccess() && result.getCode() != null && result.getCode() == ERROR_CODE && this.context != null){
 				Log.d(TAG, "返回结果:" + result.getCode() + "-" + result.getMsg());
-//				final Context context = AppContext.getContext();
-//				if(context != null){
-//					context.startActivity(new Intent(context, LoginActivity.class));
-//				}
+				new CallReLoginHandler(this.context).sendEmptyMessage(result.getCode());
 			}
 			return result;
 		}	
@@ -313,6 +321,28 @@ public final class APIUtils {
 		 */
 		public JSONCallback<T> sendGETRequest(final Resources resources, final  int resUrl, final  Map<String, Object> parameters){
 			return this.convert(sendGET(resources, resUrl, parameters));
+		}
+	}
+	//
+	private static class CallReLoginHandler extends Handler{
+		private Context context;
+		/**
+		 * 构造函数。
+		 * @param context
+		 */
+		public CallReLoginHandler(Context context){
+			super(context.getMainLooper());
+			this.context = context;
+		}
+		
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			//
+			if(msg.what == ERROR_CODE && context != null){ 
+				//重新启动登录界面
+				context.startActivity(new Intent(context, LoginActivity.class));
+			}
 		}
 	}
 }

@@ -287,7 +287,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 					parameters.put("pwd", DigestUtils.md5Hex(pwd_source));
 					parameters.put("terminal", Constant.TERMINAL);
 					//验证用户
-					final JSONCallback<LoginResult> callback = new APIUtils.CallbackJSON<LoginResult>(LoginResult.class)
+					final JSONCallback<LoginResult> callback = new APIUtils.CallbackJSON<LoginResult>(null, LoginResult.class)
 							.sendPOSTRequest( getResources(), R.string.api_user_login_url, parameters);
 					if(callback.getSuccess()){
 						final LoginResult result = callback.getData();

@@ -303,7 +303,7 @@ public class AnswerSubmitActivity extends Activity implements OnClickListener {
 					parameters.put("content", content);
 					
 					//上传数据
-					final JSONCallback<Object> callback = new APIUtils.CallbackJSON<Object>(Object.class)
+					final JSONCallback<Object> callback = new APIUtils.CallbackJSON<Object>(AnswerSubmitActivity.this, Object.class)
 							.sendPOSTRequest(getResources(), R.string.api_topic_add_url, parameters);
 					if(callback.getSuccess()){
 						Log.d(TAG, "上传数据成功...");

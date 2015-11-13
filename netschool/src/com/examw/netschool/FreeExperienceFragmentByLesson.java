@@ -194,7 +194,7 @@ public class FreeExperienceFragmentByLesson extends Fragment implements OnItemCl
 				//是否免费
 				parameters.put("free", true);
 				//
-				final JSONCallback<Lesson[]> callback = new APIUtils.CallbackJSON<Lesson[]>(Lesson[].class)
+				final JSONCallback<Lesson[]> callback = new APIUtils.CallbackJSON<Lesson[]>(getActivity(), Lesson[].class)
 						.sendGETRequest(getResources(), R.string.api_lessons_url, parameters);
 				//
 			    if(callback.getSuccess()){

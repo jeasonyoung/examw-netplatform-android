@@ -172,7 +172,7 @@ public class MyCourseLessonActivity extends Activity {
 						parameters.put("free", false);
 						
 						//请求网络数据
-						final JSONCallback<Lesson[]> callback = new APIUtils.CallbackJSON<Lesson[]>(Lesson[].class)
+						final JSONCallback<Lesson[]> callback = new APIUtils.CallbackJSON<Lesson[]>(MyCourseLessonActivity.this, Lesson[].class)
 								.sendGETRequest(getResources(), R.string.api_lessons_url, parameters);
 						if(callback.getSuccess()){
 							//删除原有记录

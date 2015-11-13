@@ -155,7 +155,7 @@ public class AnswerDetailActivity extends Activity implements OnClickListener {
 					parameters.put("topicId", topicId);
 					parameters.put("content", callback_content);
 					//上传数据
-					final JSONCallback<Object> callback = new APIUtils.CallbackJSON<Object>(Object.class)
+					final JSONCallback<Object> callback = new APIUtils.CallbackJSON<Object>(AnswerDetailActivity.this, Object.class)
 							.sendPOSTRequest(getResources(),R.string.api_detail_add_url, parameters);
 					if(callback.getSuccess()){
 						Log.d(TAG, "上传数据成功...");
@@ -225,7 +225,7 @@ public class AnswerDetailActivity extends Activity implements OnClickListener {
 					final Map<String, Object> parameters = new HashMap<String, Object>();
 					parameters.put("topicId", topicId);
 					//网络下载数据
-					final JSONCallback<AQDetail[]> callback = new APIUtils.CallbackJSON<AQDetail[]>(AQDetail[].class)
+					final JSONCallback<AQDetail[]> callback = new APIUtils.CallbackJSON<AQDetail[]>(AnswerDetailActivity.this, AQDetail[].class)
 							.sendGETRequest(getResources(),R.string.api_details_url, parameters);
 					//获取数据成功
 					if(callback.getSuccess() && callback.getData() != null && callback.getData().length > 0){

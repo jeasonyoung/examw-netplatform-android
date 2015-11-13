@@ -113,7 +113,7 @@ public class SuggestActivity extends Activity implements OnClickListener{
 					parameters.put("content", content);
 					
 					//上传数据
-					final JSONCallback<Object> callback = new APIUtils.CallbackJSON<Object>(Object.class)
+					final JSONCallback<Object> callback = new APIUtils.CallbackJSON<Object>(SuggestActivity.this, Object.class)
 							.sendPOSTRequest(getResources(),R.string.api_suggest_add_url, parameters);
 					if(callback.getSuccess()){
 						Log.d(TAG, "上传数据成功...");
