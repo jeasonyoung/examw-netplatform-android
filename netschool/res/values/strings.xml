@@ -7,7 +7,7 @@
     <!-- API密钥 -->
     <string name="api_secretkey">12345</string>
     <!-- 0.API URL根路径 -->
-    <string name="api_url_root">http://192.168.1.110/huike/api.php</string>
+    <string name="api_url_root">http://www.52huike.com/api.php</string>
     <!-- 1.用户登录 -->
     <string name="api_user_login_url">/api/m/login</string>
     <!-- 2. 我的课程(套餐/班级集合)-->
