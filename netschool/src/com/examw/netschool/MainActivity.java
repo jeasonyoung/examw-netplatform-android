@@ -49,6 +49,7 @@ public class MainActivity extends Activity implements OnItemClickListener{
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		Log.d(TAG, "重载创建...");
 		//设置布局文件
 		this.setContentView(R.layout.activity_main);
@@ -58,8 +59,6 @@ public class MainActivity extends Activity implements OnItemClickListener{
 		gridView.setAdapter(this.adapter);
 		//设置选中事件处理。
 		gridView.setOnItemClickListener(this);
-		//
-		super.onCreate(savedInstanceState);
 	}
 	/*
 	 * 数据项点击事件处理。
@@ -81,6 +80,7 @@ public class MainActivity extends Activity implements OnItemClickListener{
 	 */
 	 @Override
 	 protected void onStart() {
+		 super.onStart();
 		 Log.d(TAG, "重载启动...");
 		 //异步线程加载数据
 		 new AsyncTask<Void, Void, List<MainItem>>() {
@@ -140,8 +140,6 @@ public class MainActivity extends Activity implements OnItemClickListener{
 			}
 			
 		}.execute((Void)null);
-		 //
-		 super.onStart();
 	 }
 	 /*
 	  * 重载按钮事件处理。

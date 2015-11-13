@@ -55,6 +55,7 @@ public class DownloadByFragmentFinish extends Fragment {
 	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		//super.onCreateView(inflater, container, savedInstanceState);
 		Log.d(TAG, "重载创建View...");
 		//加载列表布局文件
 		final View view = inflater.inflate(R.layout.activity_download_finish, container, false);
@@ -76,11 +77,10 @@ public class DownloadByFragmentFinish extends Fragment {
 	 */
 	@Override
 	public void onStart() {
+		super.onStart();
 		Log.d(TAG, "重载启动，异步加载数据...");
 		//异步加载数据
 		new AsyncLoadData().execute((Void)null);
-		//
-		super.onStart();
 	}
 	//长按删除下载
 	private OnItemLongClickListener onItemLongClickListener = new OnItemLongClickListener() {

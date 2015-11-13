@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.examw.netschool.app.AppContext;
 import com.examw.netschool.app.Constant;
 import com.examw.netschool.dao.MyCourseDao;
@@ -30,6 +32,7 @@ import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * 我的课程Activity。
@@ -59,6 +62,7 @@ public class MyCourseActivity extends Activity {
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		Log.d(TAG, " 重载创建...");
 		//设置布局文件
 		this.setContentView(R.layout.activity_my_courses);
@@ -139,8 +143,6 @@ public class MyCourseActivity extends Activity {
 				finish();
 			}
 		});
-		//
-		super.onCreate(savedInstanceState);
 	}
 	//分组点击事件处理
 	private OnGroupClickListener onGroupClickListener = new OnGroupClickListener(){
@@ -212,6 +214,7 @@ public class MyCourseActivity extends Activity {
 	 */
 	@Override
 	protected void onStart() {
+		super.onStart();
 		Log.d(TAG, "重载开始...");
 		//数据加载等待
 		if(this.progressDialog == null){
@@ -222,6 +225,7 @@ public class MyCourseActivity extends Activity {
 		this.progressDialog.show();
 		//异步线程加载数据
 		new AsyncTask<Void, Void, List<PackageClass>>() {
+			private String msg;
 			/*
 			 * 后台线程加载数据。
 			 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
@@ -251,9 +255,9 @@ public class MyCourseActivity extends Activity {
 							//新增数据
 							courseDao.add(callback.getData());
 						}else{
-							Log.e(TAG, callback.getMsg());
+							this.msg = callback.getMsg();
+							Log.e(TAG, this.msg);
 						}
-						
 					}
 					//查询数据
 					return courseDao.loadCourses(null);
@@ -271,6 +275,10 @@ public class MyCourseActivity extends Activity {
 				Log.d(TAG, "前台主线程处理...");
 				//关闭等待动画
 				if(progressDialog != null) progressDialog.dismiss();
+				//
+				if(StringUtils.isNotBlank(this.msg)){
+					Toast.makeText(getApplicationContext(), this.msg, Toast.LENGTH_LONG).show();
+				}
 				//清空数据
 				courses.clear();
 				//更新数据
@@ -282,10 +290,11 @@ public class MyCourseActivity extends Activity {
 				nodataView.setVisibility(courses.size() > 0 ? View.GONE : View.VISIBLE);
 				//通知数据适配器更新数据
 				adapter.notifyDataSetChanged();
+				
 			}
 		}.execute((Void)null);
 		//
-		super.onStart();
+		
 	}
 	//数据适配器
 	private class MyCourseAdapter extends BaseExpandableListAdapter{

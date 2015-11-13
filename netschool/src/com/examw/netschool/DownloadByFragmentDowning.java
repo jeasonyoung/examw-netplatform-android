@@ -77,6 +77,7 @@ public class DownloadByFragmentDowning extends Fragment implements ServiceConnec
 	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		//super.onCreateView(inflater, container, savedInstanceState);
 		Log.d(TAG, "重载创建视图....");
 		//加载视图
 		final View view = inflater.inflate(R.layout.activity_download_downing, container, false);
@@ -99,11 +100,10 @@ public class DownloadByFragmentDowning extends Fragment implements ServiceConnec
 	 */
 	@Override
 	public void onStart() {
+		super.onStart();
 		Log.d(TAG, "重载启动...");
 		//异步加载数据
 		this.reloadData();
-		//
-		super.onStart();
 	}
 	//异步加载数据。
 	private void reloadData(){

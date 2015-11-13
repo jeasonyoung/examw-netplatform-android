@@ -26,8 +26,8 @@ public class FreeExperienceActivity extends FragmentActivity implements OnClickL
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		Log.d(TAG, "初始化...");
 		super.onCreate(savedInstanceState);
+		Log.d(TAG, "初始化...");
 		//加载布局XML
 		this.setContentView(R.layout.activity_free_experience);
 		//返回按钮
@@ -55,11 +55,10 @@ public class FreeExperienceActivity extends FragmentActivity implements OnClickL
 	 */
 	@Override
 	protected void onStart() {
+		super.onStart();
 		Log.d(TAG, "重载启动...");
 		//
 		this.loadFirstFragment();
-		//
-		super.onStart();
 	}
 	//加载第一个Fragment
 	private void loadFirstFragment(){

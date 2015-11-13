@@ -27,6 +27,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * 考试类别下的考试Fragment。
@@ -61,6 +62,7 @@ public class FreeExperienceFragmentByExams extends Fragment implements OnItemCli
 	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		//super.onCreateView(inflater, container, savedInstanceState);
 		Log.d(TAG, "加载布局文件...");
 		final View view = inflater.inflate(R.layout.activity_free_experience_exams, container, false);
 		//无数据View
@@ -78,11 +80,10 @@ public class FreeExperienceFragmentByExams extends Fragment implements OnItemCli
 	 */
 	@Override
 	public void onStart() {
+		super.onStart();
 		Log.d(TAG, "异步加载数据...");
 		//异步加载数据
 		new AsyncLoadData().execute((Void)null);
-		//
-		super.onStart();
 	}
 	/*
 	 * 点击事件处理。
@@ -161,6 +162,7 @@ public class FreeExperienceFragmentByExams extends Fragment implements OnItemCli
 	//异步加载数据
 	private class AsyncLoadData extends AsyncTask<Void, Void, List<Exam>>{
 		private static final String TAG = "AsyncLoadData";
+		private String msg;
 		/*
 		 * 后台线程加载数据。
 		 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
@@ -184,6 +186,7 @@ public class FreeExperienceFragmentByExams extends Fragment implements OnItemCli
 			    if(callback.getSuccess()){
 			    	return Arrays.asList(callback.getData());
 			    }else{
+			    	this.msg = callback.getMsg();
 			    	Log.e(TAG, "下载网络异常:" + callback.getMsg());
 			    }
 			}catch(Exception e){
@@ -198,6 +201,9 @@ public class FreeExperienceFragmentByExams extends Fragment implements OnItemCli
 		@Override
 		protected void onPostExecute(List<Exam> result) {
 			Log.d(TAG, "前台数据处理...");
+			if(StringUtils.isNotBlank(this.msg)){
+				Toast.makeText(getActivity(), this.msg, Toast.LENGTH_LONG).show();
+			}
 			//清空数据源
 			exams.clear();
 			//填充结果数据

@@ -27,6 +27,7 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * 答疑明细Activity.
@@ -57,6 +58,7 @@ public class AnswerDetailActivity extends Activity implements OnClickListener {
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		Log.d(TAG, "重载创建...");
 		//加载布局
 		this.setContentView(R.layout.activity_answer_detail);
@@ -87,8 +89,6 @@ public class AnswerDetailActivity extends Activity implements OnClickListener {
 		//回复按钮
 		final View btnCallback = this.findViewById(R.id.btn_callback);
 		btnCallback.setOnClickListener(this);
-		//
-		super.onCreate(savedInstanceState);
 	}
 	/*
 	 * 重载启动。
@@ -96,11 +96,10 @@ public class AnswerDetailActivity extends Activity implements OnClickListener {
 	 */
 	@Override
 	protected void onStart() {
+		super.onStart();
 		Log.d(TAG, "重载启动...");
 		//异步加载数据
 		new AsyncLoadData().execute((Void)null);
-		//
-		super.onStart();
 	}
 	/*
 	 * 按钮事件处理。
@@ -141,6 +140,7 @@ public class AnswerDetailActivity extends Activity implements OnClickListener {
 		this.progressDialog.show();
 		//后台线程上传处理
 		new AsyncTask<Void, Void, AQDetail>(){
+			private String msg;
 			/*
 			 * 后台线程上传处理。
 			 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
@@ -171,6 +171,8 @@ public class AnswerDetailActivity extends Activity implements OnClickListener {
 						detail.setUserName(AppContext.getCurrentUsername());
 						//返回						
 						return detail;
+					}else{
+						this.msg = callback.getMsg();
 					}
 					Log.e(TAG,  callback.getSuccess() + " / " + callback.getMsg());
 				}catch(Exception e){
@@ -187,6 +189,9 @@ public class AnswerDetailActivity extends Activity implements OnClickListener {
 				//关闭等待动画
 				if(progressDialog != null){
 					progressDialog.dismiss();
+				}
+				if(StringUtils.isNotBlank(this.msg)){
+					Toast.makeText(getApplicationContext(), this.msg, Toast.LENGTH_LONG).show();
 				}
 				//清除回复
 				txtCallback.setText(null);

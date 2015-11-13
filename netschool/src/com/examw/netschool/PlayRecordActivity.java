@@ -52,6 +52,7 @@ public class PlayRecordActivity extends Activity implements OnClickListener, OnI
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		Log.d(TAG, "重载创建...");
 		//加载布局文件
 		this.setContentView(R.layout.activity_play_record);
@@ -72,8 +73,6 @@ public class PlayRecordActivity extends Activity implements OnClickListener, OnI
 		listView.setOnItemClickListener(this);
 		//设置长按删除
 		listView.setOnItemLongClickListener(this);
-		//
-		super.onCreate(savedInstanceState);
 	}
 	/*
 	 * 重载启动。
@@ -81,11 +80,10 @@ public class PlayRecordActivity extends Activity implements OnClickListener, OnI
 	 */
 	@Override
 	protected void onStart() {
+		super.onStart();
 		Log.d(TAG, "重载启动...");
 		//异步线程加载数据
 		new AsyncLoadData().execute((Void)null);
-		//
-		super.onStart();
 	}
 	/*
 	 * 按钮点击事件处理。

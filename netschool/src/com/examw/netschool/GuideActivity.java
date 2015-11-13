@@ -47,6 +47,7 @@ public class GuideActivity extends Activity {
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		Log.d(TAG, "重载创建...");
 		//设置布局文件
 		this.setContentView(R.layout.activity_guide);
@@ -61,8 +62,6 @@ public class GuideActivity extends Activity {
 		this.btnStartView = this.findViewById(R.id.btn_guide_start);
 		//设置事件处理
 		this.btnStartView.setOnClickListener(this.onClickListener);
-		//
-		super.onCreate(savedInstanceState);
 	}
 	//事件处理
 	private OnPageChangeListener onPageChangeListener = new OnPageChangeListener(){
@@ -111,6 +110,7 @@ public class GuideActivity extends Activity {
 	 */
 	@Override
 	protected void onStart() {
+		super.onStart();
 		Log.d(TAG, "重载启动...");
 		//初始化
 		final LayoutInflater layoutInflater = this.getLayoutInflater();
@@ -167,8 +167,6 @@ public class GuideActivity extends Activity {
 				adapter.notifyDataSetChanged();
 			}
 		}.execute((Void)null);
-		//
-		super.onStart();
 	};
 	//数据适配器。
 	private class GuidePagerAdapter extends PagerAdapter{

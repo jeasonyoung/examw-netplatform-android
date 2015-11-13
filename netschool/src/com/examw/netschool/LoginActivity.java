@@ -70,6 +70,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		Log.d(TAG, "重载创建...");
 		//设置布局文件
 		this.setContentView(R.layout.activity_login);
@@ -96,8 +97,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 		//离线登录
 		final View btnOfflineLogin = this.findViewById(R.id.btn_login_offline);
 		btnOfflineLogin.setOnClickListener(this);
-		//
-		super.onCreate(savedInstanceState);
 	}
 	//用户名编辑监听事件处理。
 	private OnEditorActionListener onEditorActionListener = new OnEditorActionListener() {
@@ -150,6 +149,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	 */
 	@Override
 	protected void onStart() {
+		super.onStart();
 		Log.d(TAG, "重载开始...");
 		//异步线程加载用户名
 		new AsyncTask<Void, Void, List<String>>(){
@@ -186,8 +186,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 			};
 			
 		}.execute((Void)null);
-		//
-		super.onStart();
 	}
 	/*
 	 * 按键事件处理。
@@ -486,6 +484,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	 */
 	@Override
 	protected void onResume() {
+		super.onResume();
 		Log.d(TAG, "重载初始化输入框");
 		try{
 			//初始化记住的用户/密码
@@ -512,8 +511,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 		}catch(Exception e){
 			Log.e(TAG, "初始化输入框异常:" + e.getMessage(), e);
 		}
-		//
-		super.onResume();
 	}
 	/*
 	 * 重载停止。
@@ -521,7 +518,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 	 */
 	@Override
 	protected void onStop() {
-		super.onDestroy();
+		super.onStop();
+		this.onDestroy();
 	}
 	/*
 	 * 重载销毁。

@@ -29,6 +29,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  *  答疑主题Activity。
@@ -64,6 +65,7 @@ public class AnswerActivity extends Activity implements OnClickListener,OnItemCl
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		Log.d(TAG, "重载创建...");
 		//加载布局XML文件。
 		this.setContentView(R.layout.activity_answer_main);
@@ -86,8 +88,6 @@ public class AnswerActivity extends Activity implements OnClickListener,OnItemCl
 		listView.setOnItemClickListener(this);
 		//设置数据适配器
 		listView.setAdapter(this.adapter);
-		//
-		super.onCreate(savedInstanceState);
 	}
 	/*
 	 * 重载启动。
@@ -95,6 +95,7 @@ public class AnswerActivity extends Activity implements OnClickListener,OnItemCl
 	 */
 	@Override
 	protected void onStart() {
+		super.onStart();
 		Log.d(TAG, "重载启动...");
 		//数据加载等待
 		if(this.progressDialog == null){
@@ -105,8 +106,6 @@ public class AnswerActivity extends Activity implements OnClickListener,OnItemCl
 		this.progressDialog.show();
 		//异步数据加载。
 		new AsyncLoadData().execute((Void)null);
-		//
-		super.onStart();
 	}
 	/*
 	 * 按钮点击事件处理。
@@ -161,6 +160,7 @@ public class AnswerActivity extends Activity implements OnClickListener,OnItemCl
 	}
 	//异步数据加载。
 	private class AsyncLoadData extends AsyncTask<Void, Void, List<AQTopic>>{
+		private String msg;
 		/*
 		 * 后台线程加载数据。
 		 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
@@ -181,7 +181,7 @@ public class AnswerActivity extends Activity implements OnClickListener,OnItemCl
 					final JSONCallback<AQTopic[]> callback = new APIUtils.CallbackJSON<AQTopic[]>(AQTopic[].class).sendGETRequest(getResources(),
 							R.string.api_topics_url, parameters);
 					//获取数据成功
-					if(callback.getSuccess() && callback.getData() != null && callback.getData().length > 0){
+					if(callback.getSuccess()){
 						//更新数据
 						for(AQTopic topic : callback.getData()){
 							if(topic == null || StringUtils.isBlank(topic.getId())) continue;
@@ -193,6 +193,9 @@ public class AnswerActivity extends Activity implements OnClickListener,OnItemCl
 								topicDao.insert(topic);
 							}
 						}
+					}else{
+						this.msg = callback.getMsg();
+						Log.d(TAG, this.msg);
 					}
 				}
 				//加载数据
@@ -211,6 +214,9 @@ public class AnswerActivity extends Activity implements OnClickListener,OnItemCl
 			Log.d(TAG, "前台主线程更新数据...");
 			//关闭等待动画
 			if(progressDialog != null) progressDialog.dismiss();
+			if(StringUtils.isNotBlank(this.msg)){
+				Toast.makeText(getApplicationContext(), this.msg, Toast.LENGTH_LONG).show();
+			}
 			//清除数据源
 			topics.clear();
 			//填充数据

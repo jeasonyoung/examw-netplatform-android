@@ -28,6 +28,7 @@ import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * 考试下套餐/班级Fragment.
@@ -64,6 +65,7 @@ public class FreeExperienceFragmentByPackages extends Fragment {
 	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		//super.onCreateView(inflater, container, savedInstanceState);
 		Log.d(TAG, "重载创建View... ");
 		//加载View布局文件
 		final View view = inflater.inflate(R.layout.activity_free_experience_packages, container, false);
@@ -84,11 +86,10 @@ public class FreeExperienceFragmentByPackages extends Fragment {
 	 */
 	@Override
 	public void onStart() {
+		super.onStart();
 		Log.d(TAG, "重载启动...");
 		//异步加载数据
 		new AsyncLoadData().execute((Void)null);
-		//
-		super.onStart();
 	}
 	//搜索事件处理
 	private OnClickListener onSearchClickListener = new OnClickListener(){
@@ -213,6 +214,7 @@ public class FreeExperienceFragmentByPackages extends Fragment {
 	}
 	//异步加载数据。
 	private class AsyncLoadData  extends AsyncTask<Void, Void, List<PackageClass>>{
+		private String msg;
 		/*
 		 * 后台线程加载数据。
 		 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
@@ -243,6 +245,7 @@ public class FreeExperienceFragmentByPackages extends Fragment {
 			    if(callback.getSuccess()){
 			    	return Arrays.asList(callback.getData());
 			    }else{
+			    	this.msg = callback.getMsg();
 			    	Log.e(TAG, "下载网络异常:" + callback.getMsg());
 			    }
 			}catch(Exception e){
@@ -257,6 +260,9 @@ public class FreeExperienceFragmentByPackages extends Fragment {
 		@Override
 		protected void onPostExecute(List<PackageClass> result) {
 			Log.d(TAG, "前台数据处理...");
+			if(StringUtils.isNotBlank(this.msg)){
+				Toast.makeText(getActivity(), this.msg, Toast.LENGTH_LONG).show();
+			}
 			//清空数据源
 			packageClasses.clear();
 			//填充结果数据

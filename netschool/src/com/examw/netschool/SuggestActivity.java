@@ -35,6 +35,7 @@ public class SuggestActivity extends Activity implements OnClickListener{
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		Log.d(TAG, "重载创建...");
 		//加载布局文件
 		this.setContentView(R.layout.activity_suggest);
@@ -52,8 +53,6 @@ public class SuggestActivity extends Activity implements OnClickListener{
 		//提交按钮
 		final View btnSubmit = this.findViewById(R.id.btn_suggest_submit);
 		btnSubmit.setOnClickListener(this);
-		//
-		super.onCreate(savedInstanceState);
 	}
 	/*
 	 * 按钮事件处理。

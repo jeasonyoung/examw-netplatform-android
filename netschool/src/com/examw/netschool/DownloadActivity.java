@@ -51,6 +51,7 @@ public class DownloadActivity extends FragmentActivity implements OnCheckedChang
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		Log.d(TAG, "重载创建....");
 		//设置布局文件 
 		this.setContentView(R.layout.activity_download);
@@ -86,8 +87,6 @@ public class DownloadActivity extends FragmentActivity implements OnCheckedChang
 		this.viewPager = (ViewPager)this.findViewById(R.id.download_pagers);
 		//设置数据适配器
 		this.viewPager.setAdapter(this.mAdapter);
-		//
-		super.onCreate(savedInstanceState);
 	}
 	/*
 	 * 重载启动。
@@ -95,6 +94,7 @@ public class DownloadActivity extends FragmentActivity implements OnCheckedChang
 	 */
 	@Override
 	protected void onStart() {
+		super.onStart();
 		Log.d(TAG, "重载启动...");
 		//异步加载数据
 		new AsyncTask<Void, Void, Void>() {
@@ -140,8 +140,6 @@ public class DownloadActivity extends FragmentActivity implements OnCheckedChang
 				 radioGroup.check(pageIndex == CONST_FRAGMENT_DOWNING ?  R.id.btn_downing : R.id.btn_finish);
 			}
 		}.execute((Void)null);
-		//
-		super.onStart();
 	}
 	/*
 	 * 选项卡事件处理。

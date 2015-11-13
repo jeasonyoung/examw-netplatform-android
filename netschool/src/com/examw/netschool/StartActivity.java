@@ -26,11 +26,10 @@ public class StartActivity extends Activity{
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		Log.d(TAG, "初始化...");
 		//设置布局文件
 		this.setContentView(R.layout.activity_start);
-		//
-		super.onCreate(savedInstanceState);
 	}
 	/*
 	 * 重载启动。
@@ -38,6 +37,7 @@ public class StartActivity extends Activity{
 	 */
 	@Override
 	protected void onStart() {
+		super.onStart();
 		Log.d(TAG, "重载启动...");
 		//异步加载。
 		new AsyncTask<Void, Void, Boolean>() {
@@ -82,8 +82,6 @@ public class StartActivity extends Activity{
 //				}
 			}
 		}.execute((Void)null);
-		//
-		super.onStart();
 	}
 	/*
 	 * 重载启动。
@@ -91,11 +89,10 @@ public class StartActivity extends Activity{
 	 */
 	@Override
 	protected void onRestart() {
+		super.onRestart();
 		Log.d(TAG, "重启...");
 		//跳转到登录
 		this.gotoLogin();
-		//
-		super.onRestart();
 	}
 	//登录
 	private void gotoLogin() {

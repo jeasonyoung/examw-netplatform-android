@@ -84,6 +84,7 @@ public class VideoPlayActivity extends Activity /*implements OnTouchListener, On
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		Log.d(TAG, "重载创建...");
 		//检查播放器依赖库
 		if(!LibsChecker.checkVitamioLibs(this)) return;
@@ -116,8 +117,6 @@ public class VideoPlayActivity extends Activity /*implements OnTouchListener, On
 		this.createGestureDetector();
 		//初始化更新工具栏
 		this.autoUpdateVideoSeekHandler = new AutoUpdateVideoSeekHandler(this);
-		//
-		super.onCreate(savedInstanceState);
 	}
 	//加载视频播放View
 	@SuppressLint("ClickableViewAccessibility")
@@ -364,6 +363,7 @@ public class VideoPlayActivity extends Activity /*implements OnTouchListener, On
 	 */
 	@Override
  	protected void onStart() {
+		super.onStart();
 		Log.d(TAG, "重置启动...");
 		//异步加载数据
 		new AsyncTask<Void, Void, Object>(){
@@ -479,8 +479,6 @@ public class VideoPlayActivity extends Activity /*implements OnTouchListener, On
 			}
 			
 		}.execute((Void)null);
-		//
-		super.onStart();
 	}
 	
 	//触摸事件处理。
@@ -718,10 +716,9 @@ public class VideoPlayActivity extends Activity /*implements OnTouchListener, On
 	 */
 	@Override
 	protected void onResume() {
+		super.onResume();
 		//播放
 		this.videoPlay();
-		//
-		super.onResume();
 	}
 	
 	/*
@@ -730,10 +727,9 @@ public class VideoPlayActivity extends Activity /*implements OnTouchListener, On
 	 */
 	@Override
 	protected void onPause() {
+		super.onPause();
 		//播放暂停
 		this.videoPause();
-		//
-		super.onPause();
 	}
 	
 	/*
@@ -742,10 +738,8 @@ public class VideoPlayActivity extends Activity /*implements OnTouchListener, On
 	 */
 	@Override
 	protected void onStop() {
-		//
-		this.backRecord();
-		//
 		super.onStop();
+		this.backRecord();
 	}
 	/*
 	 * 重载销毁处理。

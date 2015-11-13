@@ -254,7 +254,15 @@ public final class APIUtils {
 			//初始化JSON对象转换
 			final Gson gson = new Gson();
 			//返回结果
-			return gson.fromJson(json, type);
+			final JSONCallback<T> result = gson.fromJson(json, type);
+			if(!result.getSuccess() && result.getCode() != null && result.getCode() == -9){
+				Log.d(TAG, "返回结果:" + result.getCode() + "-" + result.getMsg());
+//				final Context context = AppContext.getContext();
+//				if(context != null){
+//					context.startActivity(new Intent(context, LoginActivity.class));
+//				}
+			}
+			return result;
 		}	
 		
 		//类型转换

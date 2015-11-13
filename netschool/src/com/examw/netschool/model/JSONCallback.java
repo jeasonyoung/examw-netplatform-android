@@ -12,6 +12,7 @@ public class JSONCallback<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Boolean success;
 	private T data;
+	private Integer code;
 	private String msg;
 	
 	/**
@@ -62,6 +63,21 @@ public class JSONCallback<T> implements Serializable {
 	 */
 	public void setData(T data) {
 		this.data = data;
+	}
+	/**
+	 * 获取错误代码。
+	 * @return 错误代码。
+	 */
+	public Integer getCode() {
+		return code;
+	}
+	/**
+	 * 设置错误代码。
+	 * @param code 
+	 *	  错误代码。
+	 */
+	public void setCode(Integer code) {
+		this.code = code;
 	}
 	/**
 	 * 获取反馈消息。

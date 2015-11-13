@@ -64,6 +64,7 @@ public class AnswerSubmitActivity extends Activity implements OnClickListener {
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		Log.d(TAG, "重载创建...");
 		//加载布局文件
 		this.setContentView(R.layout.activity_answer_submit);
@@ -116,8 +117,6 @@ public class AnswerSubmitActivity extends Activity implements OnClickListener {
 		//提交按钮
 		final View btnSubmit = this.findViewById(R.id.btn_submit);
 		btnSubmit.setOnClickListener(this);
-		//
-		super.onCreate(savedInstanceState);
 	}
 	//班级下拉选中事件处理。
 	private OnItemSelectedListener onClassItemSelectedListener = new OnItemSelectedListener(){
@@ -183,6 +182,7 @@ public class AnswerSubmitActivity extends Activity implements OnClickListener {
 	 */
 	@Override
 	protected void onStart() {
+		super.onStart();
 		Log.d(TAG, "重载开始...");
 		//异步加载班级数据处理
 		new AsyncTask<Void, Void, List<PackageClass>>(){
@@ -224,8 +224,6 @@ public class AnswerSubmitActivity extends Activity implements OnClickListener {
 				lessonAdapter.notifyDataSetChanged();
 			};
 		}.execute((Void)null);
-		//
-		super.onStart();
 	}
 	/*
 	 * 按钮点击事件处理。

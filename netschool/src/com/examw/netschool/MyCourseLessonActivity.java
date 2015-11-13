@@ -30,6 +30,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * 课程资源列表Activity.
@@ -59,6 +60,7 @@ public class MyCourseLessonActivity extends Activity {
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		Log.d(TAG, "重载创建...");
 		//设置布局文件
 		this.setContentView(R.layout.activity_my_course_lesson);
@@ -134,8 +136,6 @@ public class MyCourseLessonActivity extends Activity {
 				startActivity(new Intent(MyCourseLessonActivity.this, PlayRecordActivity.class));
 			}
 		});
-		//
-		super.onCreate(savedInstanceState);
 	}
 	/*
 	 * 重载启动。
@@ -143,9 +143,11 @@ public class MyCourseLessonActivity extends Activity {
 	 */
 	@Override
 	protected void onStart() {
+		super.onStart();
 		Log.d(TAG, "重载启动...");
 		//异步加载数据
 		new AsyncTask<Void, Void, List<Lesson>>() {
+			private String msg;
 			/*
 			 * 后台线程加载数据。
 			 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
@@ -178,6 +180,7 @@ public class MyCourseLessonActivity extends Activity {
 							//新增记录
 							lessonDao.add(classId, callback.getData());
 						}else{
+							this.msg = callback.getMsg();
 							Log.e(TAG, "下载课程资源失败:" + callback.getMsg());
 						}
 					}
@@ -195,6 +198,9 @@ public class MyCourseLessonActivity extends Activity {
 			@Override
 			protected void onPostExecute(List<Lesson> result) {
 				Log.d(TAG, "前台主线程更新数据...");
+				if(StringUtils.isNotBlank(this.msg)){
+					Toast.makeText(getApplicationContext(), this.msg, Toast.LENGTH_LONG).show();
+				}
 				//清除数据
 				lessons.clear();
 				//更新数据
@@ -208,8 +214,6 @@ public class MyCourseLessonActivity extends Activity {
 				adapter.notifyDataSetChanged();
 			}
 		}.execute((Void)null);
-		//
-		super.onStart();
 	}
 	//数据适配器
 	private class LessonAdapter extends BaseAdapter{
