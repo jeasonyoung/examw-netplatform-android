@@ -158,20 +158,25 @@ public class FreeExperienceFragmentByPackages extends Fragment {
 			Log.d(TAG, "分组点击事件处理..." + groupPosition);
 			// 如果没有子类
 			if(parent.getExpandableListAdapter().getChildrenCount(groupPosition) == 0){
-				//获取数据适配器
-				final PackageAdapter adapter = (PackageAdapter)parent.getExpandableListAdapter();
-				if(adapter == null){
-					Log.d(TAG, "获取数据适配器失败!分组:" + groupPosition);
-					return false;
-				}
-				//套餐/班级
-				final PackageClass data = (PackageClass)adapter.getGroup(groupPosition);
-				if(data != null && data.IsClass()){
-					//
-					gotoLessonFragment(data);
-					//返回
-					return true;
-				}
+				return this.groupClickLesson(parent, groupPosition);
+			}
+			return this.groupClickLesson(parent, groupPosition);
+		}
+		
+		private  boolean groupClickLesson(ExpandableListView parent, int groupPosition){
+			//获取数据适配器
+			final PackageAdapter adapter = (PackageAdapter)parent.getExpandableListAdapter();
+			if(adapter == null){
+				Log.d(TAG, "获取数据适配器失败!分组:" + groupPosition);
+				return false;
+			}
+			//套餐/班级
+			final PackageClass data = (PackageClass)adapter.getGroup(groupPosition);
+			if(data != null && data.IsClass()){
+				//
+				gotoLessonFragment(data);
+				//返回
+				return true;
 			}
 			return false;
 		}
@@ -383,24 +388,40 @@ public class FreeExperienceFragmentByPackages extends Fragment {
 		@Override
 		public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
 			Log.d(TAG, "获取分组数据View... " + groupPosition);
+			 final PackageClass data = (PackageClass)this.getGroup(groupPosition);
+			 if(data != null){
+				 if(data.IsClass()){
+					 return this.createChildView(convertView, parent, data, groupPosition);
+				 }else{
+					 return this.createGroupView(convertView, parent, data, groupPosition);
+				 }
+			 }
+			 return convertView;
+		}
+		
+		//创建子视图
+		private View createGroupView(View convertView, ViewGroup parent, PackageClass data, int position){
 			GroupViewHolder viewHolder = null;
-			if(convertView == null){
-				Log.d(TAG, "新建分组View..." + groupPosition);
+			if(convertView != null){
+				Log.d(TAG, "重用分组View..." + position);
+				viewHolder = (GroupViewHolder)convertView.getTag();
+			}
+			//创建
+			if(viewHolder == null){
+				Log.d(TAG, "新建分组View..." + position);
 				//加载布局文件
 				convertView = LayoutInflater.from(getActivity()).inflate(R.layout.activity_free_experience_packages_group, parent, false);
 				//初始化
 				viewHolder = new GroupViewHolder(convertView);
 				//缓存
 				convertView.setTag(viewHolder);
-			}else{
-				Log.d(TAG, "重用分组View..." + groupPosition);
-				viewHolder = (GroupViewHolder)convertView.getTag();
 			}
 			//加载数据
-			viewHolder.loadData((PackageClass)this.getGroup(groupPosition));
+			viewHolder.loadData(data);
 			//返回
 			return convertView;
 		}
+		
 		/*
 		 * 获取子数据View
 		 * @see android.widget.ExpandableListAdapter#getChildView(int, int, boolean, android.view.View, android.view.ViewGroup)
@@ -408,24 +429,33 @@ public class FreeExperienceFragmentByPackages extends Fragment {
 		@Override
 		public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 			Log.d(TAG, "获取分组["+groupPosition+"]子["+childPosition+"]数据View... ");
+			//创建子数据视图
+			return this.createChildView(convertView, parent, (PackageClass)this.getChild(groupPosition, childPosition), childPosition);
+		}
+		
+		//创建子视图
+		private View createChildView(View convertView, ViewGroup parent, PackageClass data, int position){
 			ChildViewHolder viewHolder = null;
-			if(convertView == null){
-				Log.d(TAG, "新建子数据View..." + childPosition);
+			if(convertView != null){
+				Log.d(TAG, "重用分组子View..." + position);
+				viewHolder = (ChildViewHolder)convertView.getTag();
+			}
+			//创建
+			if(viewHolder == null){
+				Log.d(TAG, "新建子数据View..." + position);
 				//加载布局
 				convertView = LayoutInflater.from(getActivity()).inflate(R.layout.activity_free_experience_packages_child, parent, false);
 				//初始化
 				viewHolder = new ChildViewHolder(convertView);
 				//缓存
 				convertView.setTag(viewHolder);
-			}else{
-				Log.d(TAG, "重用分组子View..." + childPosition);
-				viewHolder = (ChildViewHolder)convertView.getTag();
 			}
 			//加载数据
-			viewHolder.loadData((PackageClass)this.getChild(groupPosition, childPosition));
+			viewHolder.loadData(data);
 			//返回
 			return convertView;
 		}
+		
 		/*
 		 * 判断指定的子选择项是否被选择
 		 * @see android.widget.ExpandableListAdapter#isChildSelectable(int, int)

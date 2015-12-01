@@ -3,9 +3,9 @@
     <!--  接口API相关 -->
     
     <!-- API令牌 -->
-    <string name="api_token">examw</string>
+    <string name="api_token">huike</string>
     <!-- API密钥 -->
-    <string name="api_secretkey">12345</string>
+    <string name="api_secretkey">uR2bN5z0mX8mhf9JO</string>
     <!-- 0.API URL根路径 -->
     <string name="api_url_root">http://www.52huike.com/api.php</string>
     <!-- 1.用户登录 -->
