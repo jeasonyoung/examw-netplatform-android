@@ -28,6 +28,8 @@ public final class Constant {
 	 */
 	public static final String CONST_LESSON_RECORD_ID = "lesson_record_id";
 	
+	public static final String CONST_LESSON_PLAY_URL = "lesson_play_url";
+	
 	/**
 	 *  Handler消息Message的What类型为文本消息。
 	 */

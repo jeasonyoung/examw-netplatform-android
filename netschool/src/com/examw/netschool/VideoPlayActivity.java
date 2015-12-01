@@ -16,6 +16,7 @@ import com.examw.netschool.model.Download;
 import com.examw.netschool.model.Download.DownloadState;
 import com.examw.netschool.model.Lesson;
 import com.examw.netschool.model.PlayRecord;
+import com.examw.netschool.util.FileUtils;
 import com.examw.netschool.util.Utils;
 
 import android.annotation.SuppressLint;
@@ -58,7 +59,7 @@ import io.vov.vitamio.widget.VideoView;
  * @author jeasonyoung
  *
  */
-public class VideoPlayActivity extends Activity /*implements OnTouchListener, OnGestureListener*/ {
+public class VideoPlayActivity extends Activity {
 	private static final String TAG = "VideoPlayActivity";
 	private static final int VIDEO_STEP_SPEED = 5000;
 	
@@ -75,7 +76,9 @@ public class VideoPlayActivity extends Activity /*implements OnTouchListener, On
 	private GestureDetector gestureDetector;
 	
 	private int volumnMax,currentPlayTimeBySecond;
-	private String lessonId, lessonName,recordId;
+	private String lessonId, lessonName,recordId, lessonPlayUrl;
+	
+	private File lessonVideoFile;
 	
 	private AutoUpdateVideoSeekHandler autoUpdateVideoSeekHandler;
 	/*
@@ -100,6 +103,8 @@ public class VideoPlayActivity extends Activity /*implements OnTouchListener, On
 			this.lessonId = intent.getStringExtra(Constant.CONST_LESSON_ID);
 			//当前课程资源名称
 			this.lessonName = intent.getStringExtra(Constant.CONST_LESSON_NAME);
+			//播放URL
+			this.lessonPlayUrl = intent.getStringExtra(Constant.CONST_LESSON_PLAY_URL);
 			//当前播放记录ID
 			this.recordId = intent.getStringExtra(Constant.CONST_LESSON_RECORD_ID);
 		}
@@ -408,25 +413,31 @@ public class VideoPlayActivity extends Activity /*implements OnTouchListener, On
 						final Download download = downloadDao.getDownload(lessonId);
 						if(download != null && download.getState() == DownloadState.FINISH.getValue()){
 							lessonName = download.getLessonName();
-							final File file = new File(download.getFilePath());
-							if(file.exists()){
-								///TODO:解密视频
-								Log.d(TAG, "播放本地视频:" + file.getAbsolutePath());
-								return Uri.parse(file.getAbsolutePath());
+							lessonVideoFile = new File(download.getFilePath());
+							if(lessonVideoFile.exists()){
+								try{
+									//解密视频
+									FileUtils.encryptFile(lessonVideoFile, lessonId);
+								}catch(Exception e){
+									Log.e(TAG, "视频文件[课程ID:" + lessonId +"]解密异常:" + e.getMessage(), e);
+								}
+								//
+								Log.d(TAG, "播放本地视频:" + lessonVideoFile.getAbsolutePath());
+								return Uri.parse(lessonVideoFile.getAbsolutePath());
 							}
 						}
 					}
+					//播放URL
+					String url = lessonPlayUrl;
 					//加载课程资源。
 					final LessonDao lessonDao = new LessonDao();
 					final Lesson lesson = lessonDao.getLesson(lessonId);
-					if(lesson == null){
-						Log.e(TAG, "课程资源["+lessonId+"]不存在!");
-						return null;
+					if(lesson != null){
+						//设置课程名称
+						lessonName = lesson.getName();
+						//获取优先视频URL
+						url = lesson.getPriorityUrl();
 					}
-					//设置课程名称
-					lessonName = lesson.getName();
-					//获取优先视频URL
-					final String url = lesson.getPriorityUrl();
 					Log.d(TAG, "video-url:" + url);
 					//检查网络状态
 					final AppContext appContext = (AppContext)getApplicationContext();
@@ -747,27 +758,16 @@ public class VideoPlayActivity extends Activity /*implements OnTouchListener, On
 	 */
 	@Override
 	protected void onDestroy() {
-		///TODO:
-//		if(this.videoUri != null && !StringUtils.isEmpty(this.username) &&  
-//				ContentResolver.SCHEME_FILE.equals(this.videoUri.getScheme()) && this.videoUri.getPath().indexOf(this.username) > -1){
-//			Log.d(TAG, "开始加密...");
-//			File file = new File(this.videoUri.getPath());
-//			if(file.exists()){
-//				 try {
-//					 MultiThreadDownload.encryptFile(file, 0, this.username.getBytes("UTF-8"));
-//					 Log.d(TAG, "加密文件完成");
-//				} catch (Exception e) {
-//					Log.e(TAG, "加密时发生异常:" + e.getMessage(), e);
-//				}
-//			}
-//		}
-//		//this.endFlag = true;
-//		if(this.title != null && this.title.isShowing()){
-//			this.title.dismiss();
-//		}
-//		if(this.toolbar != null && this.toolbar.isShowing()){
-//			this.toolbar.dismiss();
-//		}
+		if(this.lessonVideoFile != null && this.lessonVideoFile.exists()){
+			try{
+				//加密
+				FileUtils.encryptFile(lessonVideoFile, lessonId);
+				 Log.d(TAG, "加密文件完成");
+			}catch(Exception e){
+				Log.e(TAG, "加密时发生异常:" + e.getMessage(), e);
+			}
+		}
+		//
 		super.onDestroy();
 	}
 	

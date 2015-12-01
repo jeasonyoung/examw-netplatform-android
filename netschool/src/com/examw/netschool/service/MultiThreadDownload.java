@@ -27,6 +27,7 @@ import com.examw.netschool.model.DowningTask;
 import com.examw.netschool.model.Download;
 import com.examw.netschool.model.Download.DownloadState;
 import com.examw.netschool.model.Lesson;
+import com.examw.netschool.util.FileUtils;
 
 import android.os.Environment;
 import android.os.StatFs;
@@ -263,6 +264,13 @@ public final class MultiThreadDownload {
 						this.download.setState(DownloadState.FINISH.getValue());
 						//更新到数据库
 						downloadDao.update(this.download);
+						try{
+							//加密下载文件
+							FileUtils.encryptFile(saveFile, this.download.getLessonId());
+							
+						}catch(Exception e){
+							Log.e(TAG, "加密下载文件异常:" + e.getMessage(), e);
+						}
 					}
 				}
 				//通知监听器
