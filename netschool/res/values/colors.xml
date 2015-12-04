@@ -10,9 +10,12 @@
     <color name="grey">#ffc0c7c7</color>
     <color name="darkgray">#ff363f46</color>
     <!-- top banner background color -->
-    <color name="main_top_bgcolor">#ff242a3a</color>
+    <!-- <color name="main_top_bgcolor">#ff242a3a</color> -->
+    <color name="main_top_bgcolor">#ff2bbdbc</color>
     <!-- footer banner color -->
-    <color name="footer_bg_color">#ff363f46</color>
+    <!-- <color name="footer_bg_color">#ff363f46</color> -->
+    <color name="footer_bg_color">#ffdedede</color>
+    <color name="footer_bg_highlight_color">#ff2bbdbc</color>
     
     <!-- 引导页 -->
     <color name="guide_bg_color">#fff6f6f6</color>
