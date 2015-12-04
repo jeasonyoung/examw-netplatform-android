@@ -3,11 +3,11 @@
     <!--  接口API相关 -->
     
     <!-- API令牌 -->
-    <string name="api_token">huike</string>
+    <string name="api_token">examw</string>
     <!-- API密钥 -->
-    <string name="api_secretkey">uR2bN5z0mX8mhf9JO</string>
+    <string name="api_secretkey">AQi6TZ4Nh8vy2ByMob</string>
     <!-- 0.API URL根路径 -->
-    <string name="api_url_root">http://www.52huike.com/api.php</string>
+    <string name="api_url_root">http://wx.examw.cn/api.php</string>
     <!-- 1.用户登录 -->
     <string name="api_user_login_url">/api/m/login</string>
     <!-- 2. 我的课程(套餐/班级集合)-->
@@ -32,7 +32,7 @@
     <string name="api_suggest_add_url">/api/m/aq/suggest/add</string>
     
     <!-- 通用 -->
-    <string name="app_name">汇课</string>
+    <string name="app_name">中华考试网校</string>
     <string name="btn_return_bg_img_desc">返回图标</string>
      <string name="progress_msg">努力加载中,请稍候. . .</string>
     <!-- 启动Activity -->

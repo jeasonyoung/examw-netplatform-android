@@ -2,8 +2,8 @@ package com.examw.netschool.adapter;
 
 import java.util.List;
 
-import com.examw.netschool.R;
 import com.examw.netschool.app.AppContext;
+import com.examw.netschool.ch.R;
 import com.examw.netschool.model.PackageClass;
 
 import android.util.Log;

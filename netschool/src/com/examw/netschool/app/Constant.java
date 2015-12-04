@@ -10,11 +10,6 @@ public final class Constant {
 	 * 终端类型(2-苹果,3-安卓,4-其他)。
 	 */
 	public static final int TERMINAL = 3;
-	
-//	/**
-//	 * 用户ID/用户姓名。
-//	 */
-//	public static final String CONST_USERID = "user_id", CONST_USERNAME = "user_name";
 	/**
 	 * 班级ID/班级名称。
 	 */

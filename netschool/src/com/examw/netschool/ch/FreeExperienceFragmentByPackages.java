@@ -1,4 +1,4 @@
-package com.examw.netschool;
+package com.examw.netschool.ch;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,8 +8,8 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.examw.netschool.FreeExperienceActivity.Search;
 import com.examw.netschool.app.AppContext;
+import com.examw.netschool.ch.FreeExperienceActivity.Search;
 import com.examw.netschool.model.JSONCallback;
 import com.examw.netschool.model.PackageClass;
 import com.examw.netschool.util.APIUtils;

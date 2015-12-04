@@ -1,4 +1,4 @@
-package com.examw.netschool;
+package com.examw.netschool.ch;
 
 import java.util.ArrayList;
 import java.util.HashMap;

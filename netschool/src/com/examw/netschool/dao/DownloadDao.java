@@ -6,8 +6,8 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 import com.examw.netschool.model.Download;
-import com.examw.netschool.model.Download.DownloadState;
 import com.examw.netschool.model.DownloadComplete;
+import com.examw.netschool.model.Download.DownloadState;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;

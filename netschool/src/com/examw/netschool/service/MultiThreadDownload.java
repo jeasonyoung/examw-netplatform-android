@@ -25,8 +25,8 @@ import com.examw.netschool.dao.LessonDao;
 import com.examw.netschool.model.Downing;
 import com.examw.netschool.model.DowningTask;
 import com.examw.netschool.model.Download;
-import com.examw.netschool.model.Download.DownloadState;
 import com.examw.netschool.model.Lesson;
+import com.examw.netschool.model.Download.DownloadState;
 import com.examw.netschool.util.FileUtils;
 
 import android.os.Environment;

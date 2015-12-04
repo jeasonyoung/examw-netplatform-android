@@ -1,4 +1,4 @@
-package com.examw.netschool;
+package com.examw.netschool.ch;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -10,8 +10,8 @@ import com.examw.netschool.app.AppContext;
 import com.examw.netschool.app.Constant;
 import com.examw.netschool.dao.DownloadDao;
 import com.examw.netschool.model.Download;
-import com.examw.netschool.model.Download.DownloadState;
 import com.examw.netschool.model.DownloadComplete;
+import com.examw.netschool.model.Download.DownloadState;
 import com.examw.netschool.service.DownloadService;
 import com.examw.netschool.service.IDownloadService;
 

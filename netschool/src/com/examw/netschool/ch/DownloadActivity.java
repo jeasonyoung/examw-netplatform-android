@@ -1,4 +1,4 @@
-package com.examw.netschool;
+package com.examw.netschool.ch;
 
 import org.apache.commons.lang3.StringUtils;
 

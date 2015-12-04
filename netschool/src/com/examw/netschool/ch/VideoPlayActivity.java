@@ -1,4 +1,4 @@
-package com.examw.netschool;
+package com.examw.netschool.ch;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -13,9 +13,9 @@ import com.examw.netschool.dao.DownloadDao;
 import com.examw.netschool.dao.LessonDao;
 import com.examw.netschool.dao.PlayRecordDao;
 import com.examw.netschool.model.Download;
-import com.examw.netschool.model.Download.DownloadState;
 import com.examw.netschool.model.Lesson;
 import com.examw.netschool.model.PlayRecord;
+import com.examw.netschool.model.Download.DownloadState;
 import com.examw.netschool.util.FileUtils;
 import com.examw.netschool.util.Utils;
 

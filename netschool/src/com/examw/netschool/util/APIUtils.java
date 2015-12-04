@@ -23,8 +23,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.util.EntityUtils;
 
-import com.examw.netschool.LoginActivity;
-import com.examw.netschool.R;
+import com.examw.netschool.ch.LoginActivity;
+import com.examw.netschool.ch.R;
 import com.examw.netschool.codec.digest.DigestUtils;
 import com.examw.netschool.model.JSONCallback;
 import com.google.gson.Gson;

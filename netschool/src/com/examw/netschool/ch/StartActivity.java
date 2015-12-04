@@ -1,4 +1,4 @@
-package com.examw.netschool;
+package com.examw.netschool.ch;
 
 import com.examw.netschool.app.AppContext;
 import com.examw.netschool.app.Constant;
